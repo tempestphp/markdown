@@ -28,16 +28,6 @@ final class TokenCollection implements IteratorAggregate, ArrayAccess
         return new ArrayIterator($this->tokens);
     }
 
-    public function __debugInfo(): array
-    {
-        return [
-            implode(
-                ', ' . PHP_EOL,
-                array_map(fn (Token $token) => $token->__debugInfo()[0], $this->tokens),
-            ),
-        ];
-    }
-
     public function offsetExists(mixed $offset): bool
     {
         return isset($this->tokens[$offset]);
