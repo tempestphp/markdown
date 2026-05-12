@@ -3,7 +3,7 @@
 namespace Tempest\Markdown\Tokens;
 
 use Tempest\Markdown\Token;
-use Tempest\Markdown\MarkdownParser;
+use Tempest\Markdown\Parser;
 
 final readonly class BoldToken implements Token
 {
@@ -11,7 +11,7 @@ final readonly class BoldToken implements Token
         public string $content,
     ) {}
 
-    public function parse(MarkdownParser $parser): string
+    public function parse(Parser $parser): string
     {
         return "<strong>{$this->content}</strong>";
     }

@@ -5,7 +5,20 @@ namespace Tempest\Markdown\Tests;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\MarkdownLexer;
+use Tempest\Markdown\LexerRules\BoldRule;
+use Tempest\Markdown\LexerRules\CodeRule;
+use Tempest\Markdown\LexerRules\HeadingRule;
+use Tempest\Markdown\LexerRules\ImageRule;
+use Tempest\Markdown\LexerRules\ItalicRule;
+use Tempest\Markdown\LexerRules\LinkRule;
+use Tempest\Markdown\LexerRules\NewLineRule;
+use Tempest\Markdown\LexerRules\ParagraphRule;
+use Tempest\Markdown\LexerRules\PreRule;
+use Tempest\Markdown\LexerRules\QuoteRule;
+use Tempest\Markdown\LexerRules\TextRule;
+use Tempest\Markdown\LexerRules\ThickRulerRule;
+use Tempest\Markdown\LexerRules\ThinRulerRule;
+use Tempest\Markdown\Lexer;
 use Tempest\Markdown\TokenCollection;
 use Tempest\Markdown\Tokens\BoldToken;
 use Tempest\Markdown\Tokens\CodeToken;
@@ -18,15 +31,29 @@ use Tempest\Markdown\Tokens\PreToken;
 use Tempest\Markdown\Tokens\QuoteToken;
 use Tempest\Markdown\Tokens\RulerToken;
 use Tempest\Markdown\Tokens\RulerType;
+use Tempest\Markdown\Tokens\TextToken;
 
-final class MarkdownLexerTest extends TestCase
+final class LexerTest extends TestCase
 {
-    private MarkdownLexer $lexer;
+    private Lexer $lexer;
 
     #[Before]
     public function setupParser(): void
     {
-        $this->lexer = new MarkdownLexer();
+        $this->lexer = new Lexer([
+            new NewLineRule(),
+            new HeadingRule(),
+            new BoldRule(),
+            new ItalicRule(),
+            new QuoteRule(),
+            new PreRule(),
+            new CodeRule(),
+            new LinkRule(),
+            new ImageRule(),
+            new ThinRulerRule(),
+            new ThickRulerRule(),
+            new ParagraphRule(),
+        ]);
     }
 
     #[Test]
@@ -336,6 +363,24 @@ final class MarkdownLexerTest extends TestCase
         $this->assertTokens(
             expected: [
                 new ImageToken('href', null),
+            ],
+            actual: $tokens,
+        );
+    }
+
+    #[Test]
+    public function test_text(): void
+    {
+        $tokens = new Lexer([
+            new BoldRule(),
+            new TextRule(),
+        ])->lex('Hello **world**!');
+
+        $this->assertTokens(
+            expected: [
+                new TextToken('Hello '),
+                new BoldToken('world'),
+                new TextToken('!'),
             ],
             actual: $tokens,
         );

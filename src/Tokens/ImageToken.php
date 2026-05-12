@@ -3,7 +3,7 @@
 namespace Tempest\Markdown\Tokens;
 
 use Tempest\Markdown\Token;
-use Tempest\Markdown\MarkdownParser;
+use Tempest\Markdown\Parser;
 
 final readonly class ImageToken implements Token
 {
@@ -12,7 +12,7 @@ final readonly class ImageToken implements Token
         public string|null $alt,
     ) {}
 
-    public function parse(MarkdownParser $parser): string
+    public function parse(Parser $parser): string
     {
         $alt = $this->alt ? " alt=\"{$this->alt}\"" : '';
 

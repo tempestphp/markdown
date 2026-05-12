@@ -2,13 +2,17 @@
 
 namespace Tempest\Markdown;
 
-final readonly class MarkdownParser
+final class Parser
 {
-    private MarkdownLexer $lexer;
+    public function __construct(
+        private Lexer $lexer = new Lexer(),
+    ) {}
 
-    public function __construct()
+    public function withRules(LexerRule ...$rules): self
     {
-        $this->lexer = new MarkdownLexer();
+        return clone($this, [
+            "lexer" => $this->lexer->withRules(...$rules),
+        ]);
     }
 
     public function parse(string $input): string

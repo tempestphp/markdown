@@ -5,28 +5,20 @@ namespace Tempest\Markdown\Tests;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\MarkdownParser;
+use Tempest\Markdown\Parser;
 
-final class MarkdownParserTest extends TestCase
+final class ParserTest extends TestCase
 {
-    private MarkdownParser $parser;
+    private Parser $parser;
 
     #[Before]
     public function setupParser(): void
     {
-        $this->parser = new MarkdownParser();
+        $this->parser = new Parser();
     }
 
     #[Test]
-    public function test_paragraph(): void
-    {
-        $html = $this->parser->parse('paragraph');
-
-        $this->assertSame('<p>paragraph</p>', $html);
-    }
-
-    #[Test]
-    public function test_paragraph_with_bold_text(): void
+    public function test_token_with_nested_tokens(): void
     {
         $html = $this->parser->parse('paragraph with **bold** text');
 

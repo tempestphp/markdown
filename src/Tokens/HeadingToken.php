@@ -3,7 +3,7 @@
 namespace Tempest\Markdown\Tokens;
 
 use Tempest\Markdown\Token;
-use Tempest\Markdown\MarkdownParser;
+use Tempest\Markdown\Parser;
 
 final readonly class HeadingToken implements Token
 {
@@ -12,7 +12,7 @@ final readonly class HeadingToken implements Token
         public int $level,
     ) {}
 
-    public function parse(MarkdownParser $parser): string
+    public function parse(Parser $parser): string
     {
         $tag = "h{$this->level}";
 

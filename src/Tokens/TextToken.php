@@ -2,17 +2,22 @@
 
 namespace Tempest\Markdown\Tokens;
 
-use Tempest\Markdown\Token;
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\Token;
 
-final readonly class NewLineToken implements Token
+final class TextToken implements Token
 {
     public function __construct(
-        public string $content,
+        private(set) string $content,
     ) {}
 
     public function parse(Parser $parser): string
     {
         return $this->content;
+    }
+
+    public function append(string $content): void
+    {
+        $this->content .= $content;
     }
 }

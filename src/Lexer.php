@@ -2,6 +2,13 @@
 
 namespace Tempest\Markdown;
 
+use Tempest\Markdown\LexerRules\HeadingRule;
+use Tempest\Markdown\LexerRules\NewLineRule;
+use Tempest\Markdown\LexerRules\ParagraphRule;
+use Tempest\Markdown\LexerRules\PreRule;
+use Tempest\Markdown\LexerRules\QuoteRule;
+use Tempest\Markdown\LexerRules\ThickRulerRule;
+use Tempest\Markdown\LexerRules\ThinRulerRule;
 use Tempest\Markdown\Tokens\BoldToken;
 use Tempest\Markdown\Tokens\CodeToken;
 use Tempest\Markdown\Tokens\ImageToken;
@@ -15,7 +22,7 @@ use Tempest\Markdown\Tokens\QuoteToken;
 use Tempest\Markdown\Tokens\RulerToken;
 use Tempest\Markdown\Tokens\RulerType;
 
-final class MarkdownLexer
+final class Lexer
 {
     public const string WHITESPACE = "\r\n\t\f ";
     public const string NEW_LINE = "\r\n";
@@ -24,6 +31,29 @@ final class MarkdownLexer
     private(set) int $line = 1;
     private(set) ?string $current;
     private(set) string $content;
+    private array $rules;
+    private(set) ?Token $lastToken = null;
+
+    /** @param null|LexerRule[] $rules */
+    public function __construct(?array $rules = null)
+    {
+        $this->rules = $rules ?? [
+            new NewLineRule(),
+            new HeadingRule(),
+            new QuoteRule(),
+            new PreRule(),
+            new ThinRulerRule(),
+            new ThickRulerRule(),
+            new ParagraphRule(),
+        ];
+    }
+
+    public function withRules(LexerRule ...$rules): self
+    {
+        return clone($this, [
+            'rules' => $rules,
+        ]);
+    }
 
     public function lex(string $content): TokenCollection
     {
@@ -37,31 +67,20 @@ final class MarkdownLexer
         $tokens = [];
 
         while ($lexer->current !== null) {
-            if ($lexer->current === "\n" || $lexer->current === "\r") {
-                $tokens[] = $lexer->lexNewLine();
-            } elseif ($lexer->comesNext('#')) {
-                $tokens[] = $lexer->lexHeading();
-            } elseif ($lexer->comesNext('*')) {
-                $tokens[] = $lexer->lexBold();
-            } elseif ($lexer->comesNext('_')) {
-                $tokens[] = $lexer->lexItalic();
-            } elseif ($lexer->comesNext('>')) {
-                $tokens[] = $lexer->lexQuote();
-            } elseif ($lexer->comesNext('```')) {
-                $tokens[] = $lexer->lexPre();
-            } elseif ($lexer->comesNext('`')) {
-                $tokens[] = $lexer->lexCode();
-            } elseif ($lexer->comesNext('[')) {
-                $tokens[] = $lexer->lexLink();
-            } elseif ($lexer->comesNext('![')) {
-                $tokens[] = $lexer->lexImage();
-            } elseif ($lexer->comesNext('---')) {
-                $tokens[] = $lexer->lexThinRuler();
-            } elseif ($lexer->comesNext('===')) {
-                $tokens[] = $lexer->lexThickRuler();
-            } else {
-                $tokens[] = $lexer->lexParagraph();
+            foreach ($this->rules as $rule) {
+                if ($rule->shouldLex($lexer)) {
+                    $token = $rule->lex($lexer);
+
+                    if ($token) {
+                        $tokens[] = $token;
+                        $lexer->lastToken = $token;
+                    }
+
+                    continue 2;
+                }
             }
+
+            $lexer->consume();
         }
 
         return new TokenCollection($tokens);

@@ -3,7 +3,7 @@
 namespace Tempest\Markdown\Tokens;
 
 use Tempest\Markdown\Token;
-use Tempest\Markdown\MarkdownParser;
+use Tempest\Markdown\Parser;
 
 final readonly class PreToken implements Token
 {
@@ -12,7 +12,7 @@ final readonly class PreToken implements Token
         public string $content,
     ) {}
 
-    public function parse(MarkdownParser $parser): string
+    public function parse(Parser $parser): string
     {
         return "<pre><code class=\"language-{$this->language}\">{$this->content}</code></pre>";
     }
