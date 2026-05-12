@@ -5,34 +5,26 @@ on:
     branches: [main]
 
 jobs:
-  validate-composer:
-    name: Validate Composer File
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.4
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
-          coverage: none
-
-      - name: Validate Composer
-        run: composer validate
-
-  style:
-    name: Check Styling
+  mago:
+    name: Run Mago
     runs-on: ubuntu-latest
     steps:
       -   name: Checkout code
           uses: actions/checkout@v4
 
-      -   name: Run PHP-CS-Fixer
-          uses: docker://oskarstark/php-cs-fixer-ga
-          with:
-            args: --config=.php-cs-fixer.dist.php --allow-risky=yes --dry-run -v
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.5
+          coverage: none
+
+      - name: Install composer dependencies
+        uses: ramsey/composer-install@v3
+
+      - name: Run Mago
+        run: |
+          composer github:fmt
+          composer github:lint
 
   phpstan:
     name: Perform Static Analysis
@@ -50,7 +42,7 @@ jobs:
         uses: ramsey/composer-install@v2
 
       - name: Run PHPStan
-        run: vendor/bin/phpstan --error-format=github
+        run: composer github:analyse
 
   phpunit:
     runs-on: ${{ matrix.os }}
@@ -72,24 +64,14 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
-          coverage: pcov
 
-      - name: Setup problem matchers
-        run: |
-          echo "::add-matcher::${{ runner.tool_cache }}/php.json"
-          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
       - name: Install dependencies
         run: |
           composer global require php-coveralls/php-coveralls
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
+
       - name: List Installed Dependencies
         run: composer show -D
 
       - name: Execute tests
-        run: vendor/bin/phpunit --coverage-clover build/reports/clover.xml
-
-      - name: Upload coverage results to Coveralls
-        env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          php-coveralls --coverage_clover=build/reports/clover.xml --json_path=build/reports/coveralls-upload.json -v
+        run: composer github:test
