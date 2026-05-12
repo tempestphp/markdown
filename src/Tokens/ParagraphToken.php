@@ -25,7 +25,7 @@ final class ParagraphToken implements Token
             new LinkRule(),
             new ImageRule(),
             new CodeRule(),
-            new TextRule(),
+            new TextRule('*_[!`'),
         );
 
         $content = $parser->parse($this->content);

@@ -26,7 +26,7 @@ final readonly class QuoteToken implements Token
                 new ItalicRule(),
                 new LinkRule(),
                 new ImageRule(),
-                new TextRule(),
+                new TextRule('>*_[!'),
             )
             ->parse($this->content);
 

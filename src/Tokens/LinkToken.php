@@ -21,7 +21,7 @@ final readonly class LinkToken implements Token
             ->withRules(
                 new BoldRule(),
                 new ItalicRule(),
-                new TextRule(),
+                new TextRule('_*'),
             )
             ->parse($this->content);
 

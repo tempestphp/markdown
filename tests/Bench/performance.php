@@ -16,6 +16,10 @@ $html = $markdown->parse($contents);
 //$html = $markdown->convert($contents)->getContent();
 // ##
 
+if (! str_contains($html, '<h2>')) {
+    throw new Exception('Failed to parse markdown');
+}
+
 $end = microtime(true);
 
 echo ($end - $start) . PHP_EOL;

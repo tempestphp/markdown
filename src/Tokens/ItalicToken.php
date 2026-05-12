@@ -20,7 +20,7 @@ final readonly class ItalicToken implements Token
             ->withRules(
                 new BoldRule(),
                 new LinkRule(),
-                new TextRule(),
+                new TextRule('[*'),
             )
             ->parse($this->content);
 

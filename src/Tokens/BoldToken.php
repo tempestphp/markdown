@@ -20,7 +20,7 @@ final readonly class BoldToken implements Token
             ->withRules(
                 new ItalicRule(),
                 new LinkRule(),
-                new TextRule(),
+                new TextRule('_['),
             )
             ->parse($this->content);
 
