@@ -1,0 +1,43 @@
+{
+    "name": "tempest/highlight",
+    "description": "Fast, extensible, server-side code highlighting",
+    "autoload": {
+        "psr-4": {
+            "Tempest\\Markdown\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tempest\\Markdown\\Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Brent Roose",
+            "email": "brendt@stitcher.io"
+        }
+    ],
+    "require": {
+        "php": "^8.5"
+    },
+    "require-dev": {
+        "carthage-software/mago": "1.16.0",
+        "phpunit/phpunit": "^12.0",
+        "phpstan/phpstan": "^2.1",
+        "phpbench/phpbench": "^1.4"
+    },
+    "scripts": {
+        "bench": "vendor/bin/phpbench run --report=aggregate",
+        "fmt": "vendor/bin/mago fmt",
+        "lint": "vendor/bin/mago lint --fix --format-after-fix",
+        "analyse": "vendor/bin/phpstan analyse src tests",
+        "test": "vendor/bin/phpunit --display-warnings --display-skipped --display-deprecations --display-errors --display-notices",
+        "qa": [
+            "composer fmt",
+            "composer lint",
+            "composer analyse",
+            "composer test"
+        ]
+    },
+    "license": "MIT"
+}
