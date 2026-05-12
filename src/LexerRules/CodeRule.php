@@ -2,12 +2,12 @@
 
 namespace Tempest\Markdown\LexerRules;
 
-use Tempest\Markdown\LexerRule;
 use Tempest\Markdown\Lexer;
+use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\CodeToken;
 
-final readonly class CodeRule implements LexerRule
+final readonly class CodeRule implements Rule
 {
     public function shouldLex(Lexer $lexer): bool
     {

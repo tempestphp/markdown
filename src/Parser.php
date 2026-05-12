@@ -8,10 +8,10 @@ final class Parser
         private Lexer $lexer = new Lexer(),
     ) {}
 
-    public function withRules(LexerRule ...$rules): self
+    public function withRules(Rule ...$rules): self
     {
         return clone($this, [
-            "lexer" => $this->lexer->withRules(...$rules),
+            'lexer' => $this->lexer->withRules(...$rules),
         ]);
     }
 

@@ -2,13 +2,13 @@
 
 namespace Tempest\Markdown\LexerRules;
 
-use Tempest\Markdown\LexerRule;
 use Tempest\Markdown\Lexer;
+use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\RulerToken;
 use Tempest\Markdown\Tokens\RulerType;
 
-final readonly class ThinRulerRule implements LexerRule
+final readonly class ThinRulerRule implements Rule
 {
     public function shouldLex(Lexer $lexer): bool
     {

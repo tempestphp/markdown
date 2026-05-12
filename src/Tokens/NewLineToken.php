@@ -2,8 +2,8 @@
 
 namespace Tempest\Markdown\Tokens;
 
-use Tempest\Markdown\Token;
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\Token;
 
 final readonly class NewLineToken implements Token
 {

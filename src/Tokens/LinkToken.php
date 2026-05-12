@@ -2,14 +2,14 @@
 
 namespace Tempest\Markdown\Tokens;
 
-use Tempest\Markdown\Token;
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\Token;
 
 final readonly class LinkToken implements Token
 {
     public function __construct(
         public string $content,
-        public string|null $href,
+        public ?string $href,
     ) {}
 
     public function parse(Parser $parser): string

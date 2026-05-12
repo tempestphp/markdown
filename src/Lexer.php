@@ -11,12 +11,12 @@ use Tempest\Markdown\LexerRules\ThickRulerRule;
 use Tempest\Markdown\LexerRules\ThinRulerRule;
 use Tempest\Markdown\Tokens\BoldToken;
 use Tempest\Markdown\Tokens\CodeToken;
+use Tempest\Markdown\Tokens\HeadingToken;
 use Tempest\Markdown\Tokens\ImageToken;
 use Tempest\Markdown\Tokens\ItalicToken;
 use Tempest\Markdown\Tokens\LinkToken;
-use Tempest\Markdown\Tokens\ParagraphToken;
-use Tempest\Markdown\Tokens\HeadingToken;
 use Tempest\Markdown\Tokens\NewLineToken;
+use Tempest\Markdown\Tokens\ParagraphToken;
 use Tempest\Markdown\Tokens\PreToken;
 use Tempest\Markdown\Tokens\QuoteToken;
 use Tempest\Markdown\Tokens\RulerToken;
@@ -34,7 +34,7 @@ final class Lexer
     private array $rules;
     private(set) ?Token $lastToken = null;
 
-    /** @param null|LexerRule[] $rules */
+    /** @param null|Rule[] $rules */
     public function __construct(?array $rules = null)
     {
         $this->rules = $rules ?? [
@@ -48,7 +48,7 @@ final class Lexer
         ];
     }
 
-    public function withRules(LexerRule ...$rules): self
+    public function withRules(Rule ...$rules): self
     {
         return clone($this, [
             'rules' => $rules,
@@ -68,16 +68,18 @@ final class Lexer
 
         while ($lexer->current !== null) {
             foreach ($this->rules as $rule) {
-                if ($rule->shouldLex($lexer)) {
-                    $token = $rule->lex($lexer);
-
-                    if ($token) {
-                        $tokens[] = $token;
-                        $lexer->lastToken = $token;
-                    }
-
-                    continue 2;
+                if (! $rule->shouldLex($lexer)) {
+                    continue;
                 }
+
+                $token = $rule->lex($lexer);
+
+                if ($token) {
+                    $tokens[] = $token;
+                    $lexer->lastToken = $token;
+                }
+
+                continue 2;
             }
 
             $lexer->consume();

@@ -2,8 +2,8 @@
 
 namespace Tempest\Markdown\Tokens;
 
-use Tempest\Markdown\Token;
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\Token;
 
 final readonly class RulerToken implements Token
 {
@@ -14,6 +14,6 @@ final readonly class RulerToken implements Token
 
     public function parse(Parser $parser): string
     {
-        return "<hr/>";
+        return '<hr/>';
     }
 }

@@ -5,6 +5,7 @@ namespace Tempest\Markdown\Tests;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Tempest\Markdown\Lexer;
 use Tempest\Markdown\LexerRules\BoldRule;
 use Tempest\Markdown\LexerRules\CodeRule;
 use Tempest\Markdown\LexerRules\HeadingRule;
@@ -18,7 +19,6 @@ use Tempest\Markdown\LexerRules\QuoteRule;
 use Tempest\Markdown\LexerRules\TextRule;
 use Tempest\Markdown\LexerRules\ThickRulerRule;
 use Tempest\Markdown\LexerRules\ThinRulerRule;
-use Tempest\Markdown\Lexer;
 use Tempest\Markdown\TokenCollection;
 use Tempest\Markdown\Tokens\BoldToken;
 use Tempest\Markdown\Tokens\CodeToken;
@@ -187,7 +187,7 @@ final class LexerTest extends TestCase
         $tokens = $this->lexer->lex(<<<'MD'
         ```md
         # Code
-        
+
         ## Test
         ```
         MD);
@@ -209,7 +209,7 @@ final class LexerTest extends TestCase
         $tokens = $this->lexer->lex(<<<'MD'
         ```
         # Code
-        
+
         ## Test
         ```
         MD);

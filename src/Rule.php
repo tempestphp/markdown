@@ -2,7 +2,7 @@
 
 namespace Tempest\Markdown;
 
-interface LexerRule
+interface Rule
 {
     public function shouldLex(Lexer $lexer): bool;
 
