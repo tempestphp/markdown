@@ -5,7 +5,6 @@ namespace Tempest\Markdown\Tests\Tokens;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tempest\Markdown\Parser;
-use Tempest\Markdown\Tokens\BoldToken;
 use Tempest\Markdown\Tokens\ItalicToken;
 
 class ItalicTokenTest extends TestCase

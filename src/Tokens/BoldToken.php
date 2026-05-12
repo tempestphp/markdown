@@ -16,11 +16,13 @@ final readonly class BoldToken implements Token
 
     public function parse(Parser $parser): string
     {
-        $content = $parser->withRules(
-            new ItalicRule(),
-            new LinkRule(),
-            new TextRule(),
-        )->parse($this->content);
+        $content = $parser
+            ->withRules(
+                new ItalicRule(),
+                new LinkRule(),
+                new TextRule(),
+            )
+            ->parse($this->content);
 
         return "<strong>{$content}</strong>";
     }

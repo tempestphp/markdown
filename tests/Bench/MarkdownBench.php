@@ -3,9 +3,9 @@
 namespace Tempest\Markdown\Tests\Bench;
 
 use League\CommonMark\CommonMarkConverter;
+use Michelf\Markdown as Michelf;
 use PhpBench\Attributes as Bench;
 use Tempest\Markdown\Parser;
-use Michelf\Markdown as Michelf;
 
 #[Bench\Warmup(1)]
 #[Bench\RetryThreshold(5)]

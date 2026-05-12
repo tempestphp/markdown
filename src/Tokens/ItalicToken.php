@@ -16,11 +16,13 @@ final readonly class ItalicToken implements Token
 
     public function parse(Parser $parser): string
     {
-        $content = $parser->withRules(
-            new BoldRule(),
-            new LinkRule(),
-            new TextRule(),
-        )->parse($this->content);
+        $content = $parser
+            ->withRules(
+                new BoldRule(),
+                new LinkRule(),
+                new TextRule(),
+            )
+            ->parse($this->content);
 
         return "<em>{$content}</em>";
     }

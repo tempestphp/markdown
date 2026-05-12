@@ -17,11 +17,13 @@ final readonly class LinkToken implements Token
 
     public function parse(Parser $parser): string
     {
-        $content = $parser->withRules(
-            new BoldRule(),
-            new ItalicRule(),
-            new TextRule(),
-        )->parse($this->content);
+        $content = $parser
+            ->withRules(
+                new BoldRule(),
+                new ItalicRule(),
+                new TextRule(),
+            )
+            ->parse($this->content);
 
         return "<a href=\"{$this->href}\">{$content}</a>";
     }

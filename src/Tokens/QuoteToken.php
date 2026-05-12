@@ -19,14 +19,16 @@ final readonly class QuoteToken implements Token
 
     public function parse(Parser $parser): string
     {
-        $content = $parser->withRules(
-            new QuoteRule(),
-            new BoldRule(),
-            new ItalicRule(),
-            new LinkRule(),
-            new ImageRule(),
-            new TextRule(),
-        )->parse($this->content);
+        $content = $parser
+            ->withRules(
+                new QuoteRule(),
+                new BoldRule(),
+                new ItalicRule(),
+                new LinkRule(),
+                new ImageRule(),
+                new TextRule(),
+            )
+            ->parse($this->content);
 
         return "<blockquote>{$content}</blockquote>";
     }
