@@ -1,6 +1,6 @@
 <?php
 
-namespace Tempest\Markdown\Tests\Lexer\LexerRules;
+namespace Tempest\Markdown\Tests\LexerRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
