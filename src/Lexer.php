@@ -16,7 +16,6 @@ final class Lexer
     public const string NEW_LINE = "\r\n";
 
     private(set) int $position = 0;
-    private(set) int $line = 1;
     private(set) ?string $current;
     private(set) string $content;
     private array $rules;
@@ -49,7 +48,6 @@ final class Lexer
 
         $lexer->content = $content;
         $lexer->position = 0;
-        $lexer->line = 1;
         $lexer->current = $lexer->content[$lexer->position] ?? null;
 
         $tokens = [];
@@ -76,34 +74,31 @@ final class Lexer
         return new TokenCollection($tokens);
     }
 
-    public function comesNext(string $search): bool
+    public function comesNext(string $search, ?int $length = null): bool
     {
-        return $this->seek(strlen($search)) === $search;
-    }
+        $length ??= strlen($search);
 
-    public function seek(int $length = 1, int $offset = 0): ?string
-    {
-        $seek = substr($this->content, $this->position + $offset, $length);
-
-        if ($seek === '') {
-            return null;
+        if ($length === 1) {
+            return ($this->content[$this->position] ?? null) === $search;
         }
 
-        return $seek;
-    }
-
-    public function seekIgnoringWhitespace(int $length = 1): ?string
-    {
-        $offset = strspn($this->content, self::WHITESPACE, $this->position);
-
-        return $this->seek(length: $length, offset: $offset);
+        return substr_compare($this->content, $search, $this->position, $length) === 0;
     }
 
     public function consume(int $length = 1): string
     {
+        if ($length === 0) {
+            return '';
+        }
+
+        if ($length === 1) {
+            $char = $this->content[$this->position++] ?? null;
+            $this->current = $this->content[$this->position] ?? null;
+            return $char ?? '';
+        }
+
         $buffer = substr($this->content, $this->position, $length);
         $this->position += $length;
-        $this->line += substr_count($buffer, "\n");
         $this->current = $this->content[$this->position] ?? null;
 
         return $buffer;

@@ -11,14 +11,14 @@ final readonly class QuoteRule implements Rule
 {
     public function shouldLex(Lexer $lexer): bool
     {
-        return $lexer->comesNext('>');
+        return $lexer->comesNext('>', 1);
     }
 
     public function lex(Lexer $lexer): Token
     {
         $lines = [];
 
-        while ($lexer->comesNext('>')) {
+        while ($lexer->comesNext('>', 1)) {
             $line = $lexer->consumeUntil(Lexer::NEW_LINE);
 
             if (str_starts_with($line, '> ')) {

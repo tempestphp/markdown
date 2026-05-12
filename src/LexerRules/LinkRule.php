@@ -11,7 +11,7 @@ final readonly class LinkRule implements Rule
 {
     public function shouldLex(Lexer $lexer): bool
     {
-        return $lexer->comesNext('[');
+        return $lexer->comesNext('[', 1);
     }
 
     public function lex(Lexer $lexer): Token
@@ -22,7 +22,7 @@ final readonly class LinkRule implements Rule
 
         $href = null;
 
-        if ($lexer->comesNext('(')) {
+        if ($lexer->comesNext('(', 1)) {
             $lexer->consumeIncluding('(');
             $href = $lexer->consumeUntil(')');
             $lexer->consumeIncluding(')');

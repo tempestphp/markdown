@@ -6,6 +6,8 @@ final class Markdown
 {
     public function parse(string $content): string
     {
-        return $content;
+        $parser = new Parser();
+
+        return $parser->parse($content);
     }
 }

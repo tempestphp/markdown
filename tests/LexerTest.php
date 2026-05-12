@@ -175,7 +175,7 @@ final class LexerTest extends TestCase
 
         $this->assertTokens(
             expected: [
-                new QuoteToken('quote', 4),
+                new QuoteToken('>>> quote'),
             ],
             actual: $tokens,
         );

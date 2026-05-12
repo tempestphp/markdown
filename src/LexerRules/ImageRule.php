@@ -11,7 +11,7 @@ final readonly class ImageRule implements Rule
 {
     public function shouldLex(Lexer $lexer): bool
     {
-        return $lexer->comesNext('![');
+        return $lexer->comesNext('![', 2);
     }
 
     public function lex(Lexer $lexer): Token
@@ -20,7 +20,7 @@ final readonly class ImageRule implements Rule
         $alt = $lexer->consumeUntil(']') ?: null;
         $lexer->consumeIncluding(']');
 
-        if (! $lexer->comesNext('(')) {
+        if (! $lexer->comesNext('(', 1)) {
             // TODO: throw error
         }
 

@@ -11,7 +11,7 @@ final readonly class HeadingRule implements Rule
 {
     public function shouldLex(Lexer $lexer): bool
     {
-        return $lexer->comesNext('#');
+        return $lexer->comesNext('#', 1);
     }
 
     public function lex(Lexer $lexer): Token

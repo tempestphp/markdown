@@ -11,7 +11,7 @@ final readonly class ItalicRule implements Rule
 {
     public function shouldLex(Lexer $lexer): bool
     {
-        return $lexer->comesNext('_');
+        return $lexer->comesNext('_', 1);
     }
 
     public function lex(Lexer $lexer): Token
