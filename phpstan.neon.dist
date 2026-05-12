@@ -1,7 +1,7 @@
 parameters:
-	level: 5
+    level: 5
     tmpDir: .cache/phpstan
-	reportUnmatchedIgnoredErrors: true
-	paths:
-		- src
-		- tests
+    reportUnmatchedIgnoredErrors: true
+    paths:
+        - src
+        - tests

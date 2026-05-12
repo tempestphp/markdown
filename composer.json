@@ -1,6 +1,6 @@
 {
-    "name": "tempest/highlight",
-    "description": "Fast, extensible, server-side code highlighting",
+    "name": "tempest/markdown",
+    "description": "A blazing fast Markdown parser for PHP",
     "autoload": {
         "psr-4": {
             "Tempest\\Markdown\\": "src/"
@@ -24,7 +24,8 @@
         "carthage-software/mago": "1.16.0",
         "phpunit/phpunit": "^12.0",
         "phpstan/phpstan": "^2.1",
-        "phpbench/phpbench": "^1.4"
+        "phpbench/phpbench": "^1.4",
+        "tempest/debug": "^3.10"
     },
     "scripts": {
         "bench": "vendor/bin/phpbench run --report=aggregate",
