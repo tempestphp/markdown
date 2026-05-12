@@ -20,8 +20,8 @@ final class ParserTest extends TestCase
     #[Test]
     public function test_token_with_nested_tokens(): void
     {
-        $html = $this->parser->parse('paragraph with **bold** text');
+        $html = $this->parser->parse('paragraph with [**bold and __italic__** link](#)');
 
-        $this->assertSame('<p>paragraph with <strong>bold</strong> text</p>', $html);
+        $this->assertSame('<p>paragraph with <a href="#"><strong>bold and <em>italic</em></strong> link</a></p>', $html);
     }
 }
