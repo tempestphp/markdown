@@ -16,10 +16,24 @@ final readonly class QuoteRule implements Rule
 
     public function lex(Lexer $lexer): Token
     {
-        $buffer = $lexer->consumeUntil(Lexer::NEW_LINE);
+        $lines = [];
 
-        $level = strspn($buffer, '>');
+        while ($lexer->comesNext('>')) {
+            $line = $lexer->consumeUntil(Lexer::NEW_LINE);
 
-        return new QuoteToken(substr($buffer, $level) |> trim(...), $level);
+            if (str_starts_with($line, '> ')) {
+                $line = substr($line, 2);
+            } else {
+                $line = substr($line, 1);
+            }
+
+            $lines[] = $line;
+
+            $lexer->consumeWhile(Lexer::NEW_LINE);
+        }
+
+        $content = implode(PHP_EOL, $lines);
+
+        return new QuoteToken($content);
     }
 }
