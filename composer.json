@@ -32,7 +32,7 @@
     "scripts": {
         "bench": "vendor/bin/phpbench run --report=aggregate",
         "fmt": "vendor/bin/mago fmt",
-        "lint": "vendor/bin/mago lint --fix --format-after-fix",
+        "lint": "vendor/bin/mago lint --reporting-format=rich && vendor/bin/mago lint --fix --format-after-fix",
         "analyse": "vendor/bin/mago analyse",
         "test": "vendor/bin/phpunit --display-warnings --display-skipped --display-deprecations --display-errors --display-notices",
         "qa": [
