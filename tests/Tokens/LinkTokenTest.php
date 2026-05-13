@@ -32,4 +32,20 @@ class LinkTokenTest extends TestCase
 
         $this->assertEquals('<a href="#">click <em>here</em></a>', $token->parse(new Parser()));
     }
+
+    #[Test]
+    public function test_parse_with_strikethrough_text(): void
+    {
+        $token = new LinkToken('click ~~here~~', '#');
+
+        $this->assertEquals('<a href="#">click <s>here</s></a>', $token->parse(new Parser()));
+    }
+
+    #[Test]
+    public function test_parse_with_target_blank_text(): void
+    {
+        $token = new LinkToken('click here', '*https://tempestphp.com');
+
+        $this->assertEquals('<a href="https://tempestphp.com" target="_blank" rel="noopener noreferrer">click here</a>', $token->parse(new Parser()));
+    }
 }

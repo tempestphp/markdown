@@ -33,6 +33,7 @@
     },
     "scripts": {
         "bench": "vendor/bin/phpbench run --report=aggregate",
+        "bench:tempest": "vendor/bin/phpbench run tests/Bench/MarkdownBench.php --filter=benchTempest --report=aggregate",
         "fmt": "vendor/bin/mago fmt",
         "lint": "vendor/bin/mago lint --reporting-format=rich && vendor/bin/mago lint --fix --format-after-fix",
         "analyse": "vendor/bin/mago analyse",
@@ -41,7 +42,8 @@
             "composer fmt",
             "composer lint",
             "composer analyse",
-            "composer test"
+            "composer test",
+            "composer bench:tempest"
         ],
         "github:lint": "vendor/bin/mago lint --potentially-unsafe --minimum-fail-level=note --reporting-format=github",
         "github:fmt": "vendor/bin/mago fmt --check",
