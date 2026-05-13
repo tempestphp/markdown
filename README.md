@@ -1,6 +1,6 @@
 TODO:
 
-- Highlighter support
+- Streaming support
 - raw HTML support
 - `:::` support
 - `[](*)` support
