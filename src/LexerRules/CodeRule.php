@@ -21,10 +21,18 @@ final class CodeRule implements Rule, ProvidesStopChar
     {
         $lexer->consumeIncluding('`');
 
+        $language = null;
+
+        if ($lexer->comesNext('{', 1)) {
+            $lexer->consume();
+            $language = $lexer->consumeUntil('}');
+            $lexer->consume();
+        }
+
         $content = $lexer->consumeUntil('`');
 
         $lexer->consumeIncluding('`');
 
-        return new CodeToken($content);
+        return new CodeToken($language, $content);
     }
 }

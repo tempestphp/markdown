@@ -8,11 +8,26 @@ use Tempest\Markdown\Token;
 final readonly class CodeToken implements Token
 {
     public function __construct(
+        public ?string $language,
         public string $content,
     ) {}
 
     public function parse(Parser $parser): string
     {
-        return "<code>{$this->content}</code>";
+        $language = $this->language;
+
+        if (! $language && $parser->highlighter) {
+            $language = $parser->highlighter->fallbackLanguage?->getName();
+        }
+
+        if ($parser->highlighter) {
+            $content = $parser->highlighter->parse($this->content, $language);
+        } else {
+            $content = $this->content;
+        }
+
+        $class = $language ? " class=\"language-{$language}\"" : '';
+
+        return "<code{$class}>{$content}</code>";
     }
 }

@@ -15,6 +15,14 @@ class CodeRuleTest extends TestCase
     {
         $token = new Lexer([new CodeRule()])->lex('`code`')[0];
 
-        $this->assertEquals(new CodeToken('code'), $token);
+        $this->assertEquals(new CodeToken(null, 'code'), $token);
+    }
+
+    #[Test]
+    public function test_lex_with_language(): void
+    {
+        $token = new Lexer([new CodeRule()])->lex('`{php}code`')[0];
+
+        $this->assertEquals(new CodeToken('php', 'code'), $token);
     }
 }

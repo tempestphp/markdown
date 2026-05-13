@@ -53,9 +53,9 @@ class ListTokenTest extends TestCase
     #[Test]
     public function test_parse_with_code(): void
     {
-        $token = new ListToken([new ListItem('run `php artisan`')]);
+        $token = new ListToken([new ListItem('run `php tempest`')]);
 
-        $this->assertEquals('<ul><li>run <code>php artisan</code></li></ul>', $token->parse(new Parser()));
+        $this->assertEquals('<ul><li>run <code class="language-txt">php tempest</code></li></ul>', $token->parse(new Parser()));
     }
 
     #[Test]

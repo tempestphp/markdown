@@ -1,7 +1,6 @@
 TODO:
 
-- Streaming support
-- raw HTML support
+- Frontmatter support
 - `:::` support
 - `[](*)` support
 - Table support

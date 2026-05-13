@@ -62,7 +62,7 @@ class ParagraphTokenTest extends TestCase
     {
         $token = new ParagraphToken('Hello, `world`!');
 
-        $expectedHtml = '<p>Hello, <code>world</code>!</p>';
+        $expectedHtml = '<p>Hello, <code class="language-txt">world</code>!</p>';
 
         $actualHtml = $token->parse(new Parser());
 

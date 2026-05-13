@@ -53,9 +53,9 @@ class OrderedListTokenTest extends TestCase
     #[Test]
     public function test_parse_with_code(): void
     {
-        $token = new OrderedListToken([new ListItem('run `php artisan`')]);
+        $token = new OrderedListToken([new ListItem('run `php tempest`')]);
 
-        $this->assertEquals('<ol><li>run <code>php artisan</code></li></ol>', $token->parse(new Parser()));
+        $this->assertEquals('<ol><li>run <code class="language-txt">php tempest</code></li></ol>', $token->parse(new Parser()));
     }
 
     #[Test]
