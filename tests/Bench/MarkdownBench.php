@@ -4,6 +4,7 @@ namespace Tempest\Markdown\Tests\Bench;
 
 use League\CommonMark\CommonMarkConverter;
 use Michelf\Markdown as Michelf;
+use ParsedownExtra;
 use PhpBench\Attributes as Bench;
 use Tempest\Markdown\Parser;
 
@@ -17,11 +18,13 @@ final readonly class MarkdownBench
     private Parser $tempest;
     private CommonMarkConverter $league;
     private string $contents;
+    private ParsedownExtra $erusev;
 
     public function __construct()
     {
         $this->tempest = new Parser();
         $this->league = new CommonMarkConverter();
+        $this->erusev = new ParsedownExtra();
         $this->contents = file_get_contents(__DIR__ . '/Fixtures/large.md');
     }
 
@@ -38,5 +41,10 @@ final readonly class MarkdownBench
     public function benchMichelf(): void
     {
         Michelf::defaultTransform($this->contents);
+    }
+
+    public function benchErusev(): void
+    {
+        $this->erusev->text($this->contents);
     }
 }

@@ -31,8 +31,9 @@ final class ListToken implements Token
         $list = '<ul>';
 
         foreach ($this->items as $item) {
-            $content = $parser->parse($item);
-            $list .= '<li>' . $content . '</li>';
+            $content = $parser->parse($item->content);
+            $children = $item->children?->parse($parser) ?? '';
+            $list .= '<li>' . $content . $children . '</li>';
         }
 
         $list .= '</ul>';
