@@ -3,6 +3,7 @@
 namespace Tempest\Markdown;
 
 use Tempest\Markdown\LexerRules\HeadingRule;
+use Tempest\Markdown\LexerRules\HtmlRule;
 use Tempest\Markdown\LexerRules\NewLineRule;
 use Tempest\Markdown\LexerRules\ParagraphRule;
 use Tempest\Markdown\LexerRules\PreRule;
@@ -32,6 +33,7 @@ final class Lexer
             new PreRule(),
             new ThinRulerRule(),
             new ThickRulerRule(),
+            new HtmlRule(),
             new ParagraphRule(),
         ];
     }

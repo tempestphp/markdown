@@ -16,7 +16,7 @@ final readonly class ParagraphRule implements Rule
 
     public function lex(Lexer $lexer): Token
     {
-        $content = $lexer->consumeIncluding(Lexer::NEW_LINE);
+        $content = $lexer->consumeUntil(Lexer::NEW_LINE) . $lexer->consumeWhile(Lexer::NEW_LINE);
 
         return new ParagraphToken($content);
     }

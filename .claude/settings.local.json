@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./vendor/bin/phpunit tests/LexerRules/HtmlRuleTest.php --testdox)",
+      "Bash(./vendor/bin/phpunit tests/LexerRules/HtmlRuleTest.php tests/LexerRules/ParagraphRuleTest.php --testdox)",
+      "Bash(./vendor/bin/phpunit --testdox)",
+      "Bash(git stash:*)",
+      "Bash(./vendor/bin/phpunit tests/ParserTest.php::test_with_html_snippets --testdox)",
+      "Bash(./vendor/bin/phpunit tests/ParserTest.php --testdox)"
+    ]
+  }
+}
