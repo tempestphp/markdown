@@ -2,8 +2,14 @@ php-version = "8.5.0"
 
 [source]
 paths = ["src", "tests"]
-excludes = [
-    "vendor",
+includes = ["vendor"]
+excludes = []
+
+[analyzer]
+ignore = [
+    "mixed-argument",
+    "mixed-assignment",
+    { code = "unused-parameter", in = ["tests/", "src/Generated/"] },
 ]
 
 [formatter]

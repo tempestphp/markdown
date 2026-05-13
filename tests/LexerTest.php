@@ -6,6 +6,7 @@ use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tempest\Markdown\Lexer;
+use Tempest\Markdown\Token;
 use Tempest\Markdown\TokenCollection;
 use Tempest\Markdown\Tokens\HeadingToken;
 use Tempest\Markdown\Tokens\NewLineToken;
@@ -44,10 +45,16 @@ final class LexerTest extends TestCase
         $this->assertCount(count($expected), $actual);
 
         foreach ($actual as $i => $token) {
+            /** @var Token $expected */
+            // @mago-expect analysis:mixed-array-index
+            // @mago-expect analysis:invalid-array-access
+            $expected = $expected[$i];
+            // @mago-expect analysis:invalid-type-cast
             $actualProperties = (array) $token;
-            $expectedProperties = (array) $expected[$i];
+            // @mago-expect analysis:invalid-type-cast
+            $expectedProperties = (array) $expected;
 
-            $this->assertSame($token::class, $expected[$i]::class);
+            $this->assertSame($token::class, $expected::class);
             $this->assertSame($expectedProperties, $actualProperties);
         }
     }

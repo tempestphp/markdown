@@ -32,7 +32,7 @@ final class ListToken implements Token
 
         foreach ($this->items as $item) {
             $content = $parser->parse($item->content);
-            $children = $item->children?->parse($parser) ?? '';
+            $children = (string) ($item->children?->parse($parser) ?? '');
             $list .= '<li>' . $content . $children . '</li>';
         }
 

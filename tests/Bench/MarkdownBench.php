@@ -25,6 +25,7 @@ final readonly class MarkdownBench
         $this->tempest = new Parser();
         $this->league = new CommonMarkConverter();
         $this->erusev = new ParsedownExtra();
+        // @mago-expect analysis:invalid-property-assignment-value
         $this->contents = file_get_contents(__DIR__ . '/Fixtures/large.md');
     }
 

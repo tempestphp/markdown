@@ -18,6 +18,7 @@ final class Lexer
     private(set) int $position = 0;
     private(set) ?string $current;
     private(set) string $content;
+    /** @var \Tempest\Markdown\Rule[] */
     private array $rules;
     private(set) ?Token $lastToken = null;
 
@@ -48,7 +49,7 @@ final class Lexer
 
         $lexer->content = $content;
         $lexer->position = 0;
-        $lexer->current = $lexer->content[$lexer->position] ?? null;
+        $lexer->current = $lexer->content[$lexer->position];
 
         $tokens = [];
 
@@ -60,7 +61,7 @@ final class Lexer
 
                 $token = $rule->lex($lexer);
 
-                if ($token) {
+                if ($token instanceof Token) {
                     $tokens[] = $token;
                     $lexer->lastToken = $token;
                 }
@@ -93,13 +94,13 @@ final class Lexer
 
         if ($length === 1) {
             $char = $this->content[$this->position++] ?? null;
-            $this->current = $this->content[$this->position] ?? null;
+            $this->current = $this->content[$this->position];
             return $char ?? '';
         }
 
         $buffer = substr($this->content, $this->position, $length);
         $this->position += $length;
-        $this->current = $this->content[$this->position] ?? null;
+        $this->current = $this->content[$this->position];
 
         return $buffer;
     }

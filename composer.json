@@ -23,7 +23,6 @@
     "require-dev": {
         "carthage-software/mago": "1.16.0",
         "phpunit/phpunit": "^12.0",
-        "phpstan/phpstan": "^2.1",
         "phpbench/phpbench": "^1.4",
         "tempest/debug": "^3.10",
         "league/commonmark": "^2.8",
@@ -34,7 +33,7 @@
         "bench": "vendor/bin/phpbench run --report=aggregate",
         "fmt": "vendor/bin/mago fmt",
         "lint": "vendor/bin/mago lint --fix --format-after-fix",
-        "analyse": "vendor/bin/phpstan analyse src tests",
+        "analyse": "vendor/bin/mago analyse",
         "test": "vendor/bin/phpunit --display-warnings --display-skipped --display-deprecations --display-errors --display-notices",
         "qa": [
             "composer fmt",
@@ -44,7 +43,7 @@
         ],
         "github:lint": "vendor/bin/mago lint --potentially-unsafe --minimum-fail-level=note --reporting-format=github",
         "github:fmt": "vendor/bin/mago fmt --check",
-        "github:analyse": "vendor/bin/phpstan --error-format=github",
+        "github:analyse": "vendor/bin/mago analyse",
         "github:test": "vendor/bin/phpunit"
     },
     "license": "MIT"
