@@ -16,6 +16,10 @@ final readonly class HeadingToken implements Token
     {
         $tag = "h{$this->level}";
 
-        return "<{$tag}>{$this->content}</{$tag}>";
+        $slug = $this->content |> trim(...) |> strtolower(...) |> (fn (string $x) => str_replace(' ', '-', $x));
+
+        $id = " id=\"{$slug}\"";
+
+        return "<{$tag}{$id}>{$this->content}</{$tag}>";
     }
 }
