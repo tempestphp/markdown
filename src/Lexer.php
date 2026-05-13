@@ -100,7 +100,7 @@ final class Lexer
 
         $buffer = substr($this->content, $this->position, $length);
         $this->position += $length;
-        $this->current = $this->content[$this->position] ?? null;
+        $this->current = $this->content[$this->position] ?? null; // @mago-ignore analysis:redundant-isset-check
 
         return $buffer;
     }
