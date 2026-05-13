@@ -19,9 +19,9 @@ final class ItalicRule implements Rule, ProvidesStopChar
 
     public function lex(Lexer $lexer): Token
     {
-        $buffer = $lexer->consumeWhile('_');
-        $buffer .= $lexer->consumeUntil('_');
-        $buffer .= $lexer->consumeWhile('_');
+        $lexer->consumeWhile('_');
+        $buffer = $lexer->consumeUntil('_');
+        $lexer->consumeWhile('_');
 
         return new ItalicToken(trim($buffer, '_'));
     }

@@ -86,7 +86,7 @@ final class ParserTest extends TestCase
     {
         $parsed = $this->parser->parse(":::\nHello\n:::");
 
-        $this->assertSame('<div>Hello\n</div>', $parsed->html);
+        $this->assertSame("<div>Hello\n</div>", $parsed->html);
     }
 
     #[Test]
@@ -94,6 +94,6 @@ final class ParserTest extends TestCase
     {
         $parsed = $this->parser->parse(":::warning\nHello\n:::");
 
-        $this->assertSame('<div class="warning">Hello\n</div>', $parsed->html);
+        $this->assertSame("<div class=\"warning\">Hello\n</div>", $parsed->html);
     }
 }

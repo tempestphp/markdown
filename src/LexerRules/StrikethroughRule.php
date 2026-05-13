@@ -6,7 +6,6 @@ use Tempest\Markdown\Lexer;
 use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
-use Tempest\Markdown\Tokens\BoldToken;
 use Tempest\Markdown\Tokens\StrikethroughToken;
 
 final class StrikethroughRule implements Rule, ProvidesStopChar

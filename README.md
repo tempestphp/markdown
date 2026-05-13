@@ -1,6 +1,5 @@
 TODO:
 
-- `:::` div support
 - `[](*)` support
 - Table support
 - {} class support

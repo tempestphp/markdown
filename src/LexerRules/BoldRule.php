@@ -19,10 +19,10 @@ final class BoldRule implements Rule, ProvidesStopChar
 
     public function lex(Lexer $lexer): Token
     {
-        $buffer = $lexer->consumeWhile('*');
-        $buffer .= $lexer->consumeUntil('*');
-        $buffer .= $lexer->consumeWhile('*');
+        $lexer->consumeWhile('*');
+        $buffer = $lexer->consumeUntil('*');
+        $lexer->consumeWhile('*');
 
-        return new BoldToken(trim($buffer, '*'));
+        return new BoldToken($buffer);
     }
 }
