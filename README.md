@@ -18,7 +18,7 @@ use Tempest\Markdown\Markdown;
 
 $markdown = new Markdown();
 
-$parsed = $markdown->render(file_get_contents('README.md'));
+$parsed = $markdown->parse(file_get_contents('README.md'));
 
 echo $parsed->frontMatter['title'];
 echo $parsed->html;
