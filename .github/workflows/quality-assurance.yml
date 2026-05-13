@@ -8,7 +8,7 @@ on:
 
 jobs:
   mago:
-    name: Run Mago
+    name: "github:fmt & github:lint"
     runs-on: ubuntu-latest
     steps:
       -   name: Checkout code
@@ -23,13 +23,14 @@ jobs:
       - name: Install composer dependencies
         uses: ramsey/composer-install@v3
 
-      - name: Run Mago
-        run: |
-          composer github:fmt
-          composer github:lint
+      - name: github:fmt
+        run: composer github:fmt
+
+      - name: github:lint
+        run: composer github:lint
 
   phpstan:
-    name: Perform Static Analysis
+    name: "github:analyse"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -43,7 +44,7 @@ jobs:
       - name: Install composer dependencies
         uses: ramsey/composer-install@v2
 
-      - name: Run Mago
+      - name: github:analyse
         run: composer github:analyse
 
   phpunit:
@@ -55,7 +56,7 @@ jobs:
         php: [8.5]
         stability: [prefer-stable]
 
-    name: Run Tests - P${{ matrix.php }} - ${{ matrix.stability }} - ${{ matrix.os }}
+    name: github:test - P${{ matrix.php }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
     steps:
       - name: Checkout code
