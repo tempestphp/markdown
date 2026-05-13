@@ -96,4 +96,20 @@ final class ParserTest extends TestCase
 
         $this->assertSame("<div class=\"warning\">Hello\n</div>", $parsed->html);
     }
+
+    #[Test]
+    public function test_table(): void
+    {
+        $parsed = $this->parser->parse(<<<MD
+        | Name | Age |
+        | --- | --- |
+        | Alice | 30 |
+        | Bob | 25 |
+        MD);
+
+        $this->assertSame(
+            '<table><thead><tr><th>Name</th><th>Age</th></tr></thead><tbody><tr><td>Alice</td><td>30</td></tr><tr><td>Bob</td><td>25</td></tr></tbody></table>',
+            $parsed->html,
+        );
+    }
 }
