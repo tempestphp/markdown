@@ -2,11 +2,20 @@
 
 namespace Tempest\Markdown;
 
-final class Markdown
+use Tempest\Highlight\Highlighter;
+
+final readonly class Markdown
 {
+    public function __construct(
+        public Highlighter $highlighter = new Highlighter(),
+    ) {}
+
     public function parse(string $content): string
     {
-        $parser = new Parser();
+        $parser = new Parser(
+            new Lexer(),
+            $this->highlighter,
+        );
 
         return $parser->parse($content);
     }

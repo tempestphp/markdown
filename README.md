@@ -1,8 +1,7 @@
 TODO:
 
-- Improved stop at char support
-- raw HTML support
 - Highlighter support
+- raw HTML support
 - `:::` support
 - `[](*)` support
 - Table support

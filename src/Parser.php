@@ -2,10 +2,13 @@
 
 namespace Tempest\Markdown;
 
-final class Parser
+use Tempest\Highlight\Highlighter;
+
+final readonly class Parser
 {
     public function __construct(
-        private Lexer $lexer = new Lexer(),
+        public Lexer $lexer = new Lexer(),
+        public Highlighter $highlighter = new Highlighter(),
     ) {}
 
     public function withRules(Rule ...$rules): self

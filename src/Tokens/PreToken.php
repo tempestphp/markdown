@@ -14,6 +14,12 @@ final readonly class PreToken implements Token
 
     public function parse(Parser $parser): string
     {
-        return "<pre><code class=\"language-{$this->language}\">{$this->content}</code></pre>";
+        $highlighter = $parser->highlighter;
+
+        $language = $this->language ?? 'txt';
+
+        $content = $highlighter->parse($this->content, $language);
+
+        return "<pre><code class=\"language-{$language}\">{$content}</code></pre>";
     }
 }
