@@ -9,11 +9,15 @@ use ParsedownExtra;
 use PhpBench\Attributes as Bench;
 use Tempest\Markdown\Parser;
 
-#[Bench\Warmup(1)]
-#[Bench\RetryThreshold(5)]
+// Each iteration is a fresh subprocess, so JIT must warm up inside Warmup.
+// phpbench.json drops opcache.jit_hot_func/loop to 2 so JIT settles within a
+// handful of calls; Warmup(15) covers it, Revs(15)/Iterations(3) keeps stddev
+// tight without blowing up wall time.
+#[Bench\Warmup(15)]
+#[Bench\RetryThreshold(2)]
 #[Bench\OutputTimeUnit('milliseconds', 3)]
-#[Bench\Iterations(5)]
-#[Bench\Revs(3)]
+#[Bench\Iterations(3)]
+#[Bench\Revs(15)]
 #[Bench\ParamProviders('provideFiles')]
 final readonly class MarkdownBench
 {
