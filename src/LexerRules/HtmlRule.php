@@ -18,16 +18,22 @@ final readonly class HtmlRule implements Rule
     {
         $openingTag = $lexer->consumeIncluding('>');
 
+        // Self-closing tags (<img />, <br />) need no closing tag.
         if (str_ends_with($openingTag, '/>')) {
             return new HtmlToken($openingTag . $lexer->consumeWhile(Lexer::NEW_LINE));
         }
 
+        // Extract tag name from opening tag: "<div class..." → "div".
         $tagName = substr($openingTag, 1, strcspn($openingTag, " \t\n\r/>", 1));
 
         $content = $openingTag;
         $depth = 1;
 
+        // Track nesting depth for the same tag name so that e.g.
+        // <div><div>…</div></div> is consumed as a single token.
         while ($depth > 0 && $lexer->current !== null) {
+            // Bulk-skip to '<' on each iteration so comesNext is only called
+            // at actual tag boundaries, not character-by-character.
             $content .= $lexer->consumeUntil('<');
 
             if ($lexer->current === null) {
@@ -41,6 +47,7 @@ final readonly class HtmlRule implements Rule
                 $depth++;
                 $content .= $lexer->consumeIncluding('>');
             } else {
+                // Some other tag — consume the '<' and continue.
                 $content .= $lexer->consume();
             }
         }
