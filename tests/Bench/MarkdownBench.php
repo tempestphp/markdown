@@ -50,7 +50,9 @@ final readonly class MarkdownBench
 
     public function provideFiles(): Generator
     {
-        foreach (glob(__DIR__ . '/Fixtures/*.md') as $path) {
+        $files = glob(__DIR__ . '/Fixtures/*.md') ?: [];
+
+        foreach ($files as $path) {
             yield pathinfo($path, PATHINFO_FILENAME) => ['contents' => file_get_contents($path)];
         }
     }

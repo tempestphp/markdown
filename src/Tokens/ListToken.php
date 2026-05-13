@@ -14,6 +14,7 @@ use Tempest\Markdown\Token;
 final class ListToken implements Token
 {
     public function __construct(
+        /** @var \Tempest\Markdown\Tokens\ListItem[] */
         public array $items = [],
     ) {}
 
@@ -32,8 +33,8 @@ final class ListToken implements Token
 
         foreach ($this->items as $item) {
             $content = $parser->parse($item->content);
-            $children = (string) ($item->children?->parse($parser) ?? '');
-            $list .= '<li>' . $content . $children . '</li>';
+            $children = $item->children?->parse($parser) ?? '';
+            $list .= "<li>{$content}{$children}</li>";
         }
 
         $list .= '</ul>';

@@ -6,12 +6,14 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tempest\Markdown\Lexer;
 use Tempest\Markdown\LexerRules\QuoteRule;
+use Tempest\Markdown\Tokens\QuoteToken;
 
 class QuoteRuleTest extends TestCase
 {
     #[Test]
     public function test_lex(): void
     {
+        /** @var QuoteToken $token */
         $token = new Lexer([new QuoteRule()])->lex('> quote')[0];
 
         $this->assertSame('quote', $token->content);
@@ -20,6 +22,7 @@ class QuoteRuleTest extends TestCase
     #[Test]
     public function test_lex_multiline(): void
     {
+        /** @var QuoteToken $token */
         $token = new Lexer([new QuoteRule()])->lex(<<<'MD'
         > line 1
         > > line 2

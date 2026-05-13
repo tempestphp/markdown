@@ -9,6 +9,7 @@ use Traversable;
 
 /**
  * @implements IteratorAggregate<\Tempest\Markdown\Token>
+ * @implements ArrayAccess<int, \Tempest\Markdown\Token>
  */
 final class TokenCollection implements IteratorAggregate, ArrayAccess
 {

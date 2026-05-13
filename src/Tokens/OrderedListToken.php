@@ -14,6 +14,7 @@ use Tempest\Markdown\Token;
 final class OrderedListToken implements Token
 {
     public function __construct(
+        /** @var \Tempest\Markdown\Tokens\ListItem[] */
         public array $items = [],
     ) {}
 
@@ -33,7 +34,7 @@ final class OrderedListToken implements Token
         foreach ($this->items as $item) {
             $content = $parser->parse($item->content);
             $children = $item->children?->parse($parser) ?? '';
-            $list .= '<li>' . $content . $children . '</li>';
+            $list .= "<li>{$content}{$children}</li>";
         }
 
         $list .= '</ol>';

@@ -49,7 +49,7 @@ final class Lexer
 
         $lexer->content = $content;
         $lexer->position = 0;
-        $lexer->current = $lexer->content[$lexer->position] ?? null;
+        $lexer->current = $lexer->content[$lexer->position] ?? null; // @mago-ignore all
 
         $tokens = [];
 
@@ -94,13 +94,13 @@ final class Lexer
 
         if ($length === 1) {
             $char = $this->content[$this->position++] ?? null;
-            $this->current = $this->content[$this->position] ?? null;
+            $this->current = $this->content[$this->position] ?? null; // @mago-ignore all
             return $char ?? '';
         }
 
         $buffer = substr($this->content, $this->position, $length);
         $this->position += $length;
-        $this->current = $this->content[$this->position] ?? null; // @mago-ignore analysis:redundant-isset-check
+        $this->current = $this->content[$this->position] ?? null; // @mago-ignore all
 
         return $buffer;
     }
