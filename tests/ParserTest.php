@@ -80,4 +80,20 @@ final class ParserTest extends TestCase
             $parsed->frontMatter,
         );
     }
+
+    #[Test]
+    public function test_div_without_class(): void
+    {
+        $parsed = $this->parser->parse(":::\nHello\n:::");
+
+        $this->assertSame('<div>Hello\n</div>', $parsed->html);
+    }
+
+    #[Test]
+    public function test_div_with_class(): void
+    {
+        $parsed = $this->parser->parse(":::warning\nHello\n:::");
+
+        $this->assertSame('<div class="warning">Hello\n</div>', $parsed->html);
+    }
 }

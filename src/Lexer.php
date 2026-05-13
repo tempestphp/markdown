@@ -2,6 +2,7 @@
 
 namespace Tempest\Markdown;
 
+use Tempest\Markdown\LexerRules\DivRule;
 use Tempest\Markdown\LexerRules\FrontMatterRule;
 use Tempest\Markdown\LexerRules\HeadingRule;
 use Tempest\Markdown\LexerRules\HtmlRule;
@@ -33,6 +34,7 @@ final class Lexer
             new HeadingRule(),
             new QuoteRule(),
             new PreRule(),
+            new DivRule(),
             new ThinRulerRule(),
             new ThickRulerRule(),
             new HtmlRule(),
