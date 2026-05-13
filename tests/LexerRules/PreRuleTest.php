@@ -33,4 +33,16 @@ class PreRuleTest extends TestCase
 
         $this->assertEquals(new PreToken(language: null, content: 'echo "hi";'), $token);
     }
+
+    #[Test]
+    public function test_lex_with_backtick_in_content(): void
+    {
+        $token = new Lexer([new PreRule()])->lex(<<<'MD'
+        ```php
+        echo `uname`;
+        ```
+        MD)[0];
+
+        $this->assertEquals(new PreToken(language: 'php', content: 'echo `uname`;'), $token);
+    }
 }

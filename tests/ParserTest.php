@@ -20,19 +20,19 @@ final class ParserTest extends TestCase
     #[Test]
     public function test_token_with_nested_tokens(): void
     {
-        $html = $this->parser->parse('paragraph with [**bold and __italic__** link](#)');
+        $parsed = $this->parser->parse('paragraph with [**bold and __italic__** link](#)');
 
-        $this->assertSame('<p>paragraph with <a href="#"><strong>bold and <em>italic</em></strong> link</a></p>', $html);
+        $this->assertSame('<p>paragraph with <a href="#"><strong>bold and <em>italic</em></strong> link</a></p>', $parsed->html);
     }
 
     #[Test]
     public function test_with_html_snippets(): void
     {
-        $html = $this->parser->parse('paragraph with<br> break');
+        $parsed = $this->parser->parse('paragraph with<br> break');
 
-        $this->assertSame('<p>paragraph with<br> break</p>', $html);
+        $this->assertSame('<p>paragraph with<br> break</p>', $parsed->html);
 
-        $html = $this->parser->parse(<<<'MD'
+        $parsed = $this->parser->parse(<<<'MD'
         Hello
 
         <div>Hello</div>
@@ -56,6 +56,28 @@ final class ParserTest extends TestCase
         </p>
         HTML;
 
-        $this->assertSame($expected, $html);
+        $this->assertSame($expected, $parsed->html);
+    }
+
+    #[Test]
+    public function test_with_front_matter(): void
+    {
+        $parsed = $this->parser->parse(<<<'MD'
+        ---
+        title: Hello
+        foo: bar
+        ---
+
+        Hello
+        MD);
+
+        $this->assertSame('<p>Hello</p>', (string) $parsed);
+        $this->assertSame(
+            [
+                'title' => 'Hello',
+                'foo' => 'bar',
+            ],
+            $parsed->frontMatter,
+        );
     }
 }

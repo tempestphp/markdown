@@ -2,6 +2,7 @@
 
 namespace Tempest\Markdown;
 
+use Tempest\Markdown\LexerRules\FrontMatterRule;
 use Tempest\Markdown\LexerRules\HeadingRule;
 use Tempest\Markdown\LexerRules\HtmlRule;
 use Tempest\Markdown\LexerRules\NewLineRule;
@@ -28,6 +29,7 @@ final class Lexer
     {
         $this->rules = $rules ?? [
             new NewLineRule(),
+            new FrontMatterRule(),
             new HeadingRule(),
             new QuoteRule(),
             new PreRule(),
@@ -130,6 +132,17 @@ final class Lexer
         $offset = strcspn($this->content, $stopAt, $this->position);
 
         return $this->consume($offset);
+    }
+
+    public function consumeUntilString(string $stopAt): string
+    {
+        $pos = strpos($this->content, $stopAt, $this->position);
+
+        if ($pos === false) {
+            return $this->consume(strlen($this->content) - $this->position);
+        }
+
+        return $this->consume($pos - $this->position);
     }
 
     public function consumeWhile(string $continueWhile): string

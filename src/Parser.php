@@ -3,6 +3,7 @@
 namespace Tempest\Markdown;
 
 use Tempest\Highlight\Highlighter;
+use Tempest\Markdown\Tokens\FrontMatterToken;
 
 final readonly class Parser
 {
@@ -18,16 +19,22 @@ final readonly class Parser
         ]);
     }
 
-    public function parse(string $input): string
+    public function parse(string $input): ParsedMarkdown
     {
         $tokens = $this->lexer->lex($input);
 
         $html = '';
 
+        $frontMatter = [];
+
         foreach ($tokens as $token) {
             $html .= $token->parse($this);
+
+            if ($token instanceof FrontMatterToken) {
+                $frontMatter = [...$frontMatter, ...$token->data];
+            }
         }
 
-        return $html;
+        return new ParsedMarkdown($html, $frontMatter);
     }
 }

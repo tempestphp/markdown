@@ -22,7 +22,7 @@ final readonly class PreRule implements Rule
 
         $lexer->consumeWhile(Lexer::NEW_LINE);
 
-        $content = $lexer->consumeUntil('```');
+        $content = $lexer->consumeUntilString('```');
 
         $lexer->consumeIncluding('```');
         $lexer->consumeWhile(Lexer::NEW_LINE);

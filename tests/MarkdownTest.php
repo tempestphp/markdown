@@ -22,6 +22,6 @@ final class MarkdownTest extends TestCase
     {
         $parsed = $this->markdown->parse('**Hello**');
 
-        $this->assertSame('<p><strong>Hello</strong></p>', $parsed);
+        $this->assertSame('<p><strong>Hello</strong></p>', $parsed->html);
     }
 }
