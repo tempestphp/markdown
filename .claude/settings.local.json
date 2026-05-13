@@ -6,7 +6,12 @@
       "Bash(./vendor/bin/phpunit --testdox)",
       "Bash(git stash:*)",
       "Bash(./vendor/bin/phpunit tests/ParserTest.php::test_with_html_snippets --testdox)",
-      "Bash(./vendor/bin/phpunit tests/ParserTest.php --testdox)"
+      "Bash(./vendor/bin/phpunit tests/ParserTest.php --testdox)",
+      "Bash(./vendor/bin/phpunit)",
+      "Bash(./vendor/bin/phpunit --cache-result=false)",
+      "Bash(./vendor/bin/phpunit --do-not-cache-result)",
+      "Bash(./vendor/bin/phpunit --count)",
+      "Bash(./vendor/bin/phpunit --list-tests)"
     ]
   }
 }

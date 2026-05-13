@@ -21,6 +21,14 @@ class HtmlRuleTest extends TestCase
     }
 
     #[Test]
+    public function test_lex_nested(): void
+    {
+        $token = new Lexer([new HtmlRule()])->lex('<div><div>Hi</div></div>')[0];
+
+        $this->assertEquals(new HtmlToken('<div><div>Hi</div></div>'), $token);
+    }
+
+    #[Test]
     public function test_lex_multiline(): void
     {
         $html = <<<'HTML'

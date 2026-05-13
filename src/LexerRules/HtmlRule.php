@@ -22,7 +22,24 @@ final readonly class HtmlRule implements Rule
             return new HtmlToken($openingTag . $lexer->consumeWhile(Lexer::NEW_LINE));
         }
 
-        $content = $openingTag . $lexer->consumeUntil('</') . $lexer->consumeIncluding('>') . $lexer->consumeWhile(Lexer::NEW_LINE);
+        $tagName = substr($openingTag, 1, strcspn($openingTag, " \t\n\r/>", 1));
+
+        $content = $openingTag;
+        $depth = 1;
+
+        while ($depth > 0 && $lexer->current !== null) {
+            if ($lexer->comesNext("<{$tagName}")) {
+                $depth++;
+                $content .= $lexer->consumeIncluding('>');
+            } elseif ($lexer->comesNext("</{$tagName}")) {
+                $depth--;
+                $content .= $lexer->consumeIncluding('>');
+            } else {
+                $content .= $lexer->consume();
+            }
+        }
+
+        $content .= $lexer->consumeWhile(Lexer::NEW_LINE);
 
         return new HtmlToken($content);
     }
