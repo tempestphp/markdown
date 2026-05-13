@@ -26,6 +26,14 @@ class BoldTokenTest extends TestCase
     }
 
     #[Test]
+    public function test_parse_with_strikethrough_text(): void
+    {
+        $token = new BoldToken('hello ~~world~~');
+
+        $this->assertEquals('<strong>hello <s>world</s></strong>', $token->parse(new Parser()));
+    }
+
+    #[Test]
     public function test_parse_with_link(): void
     {
         $token = new BoldToken('hello [world](#)');

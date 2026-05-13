@@ -2,6 +2,7 @@
 
 namespace Tempest\Markdown\Tokens;
 
+use Tempest\Markdown\LexerRules\BoldRule;
 use Tempest\Markdown\LexerRules\ItalicRule;
 use Tempest\Markdown\LexerRules\LinkRule;
 use Tempest\Markdown\LexerRules\TextRule;
@@ -19,6 +20,7 @@ final readonly class StrikethroughToken implements Token
         $content = $parser
             ->withRules(
                 new ItalicRule(),
+                new BoldRule(),
                 new LinkRule(),
                 new TextRule(),
             )

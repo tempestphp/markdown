@@ -4,6 +4,7 @@ namespace Tempest\Markdown\Tokens;
 
 use Tempest\Markdown\LexerRules\ItalicRule;
 use Tempest\Markdown\LexerRules\LinkRule;
+use Tempest\Markdown\LexerRules\StrikethroughRule;
 use Tempest\Markdown\LexerRules\TextRule;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\Token;
@@ -19,6 +20,7 @@ final readonly class BoldToken implements Token
         $content = $parser
             ->withRules(
                 new ItalicRule(),
+                new StrikethroughRule(),
                 new LinkRule(),
                 new TextRule(),
             )

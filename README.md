@@ -4,7 +4,6 @@ TODO:
 - Table support
 - {} class support
 - heading IDs
-- ~~ strikethrough ~~
 - Task lists - [ ]
 
 ```

@@ -6,7 +6,6 @@ use Tempest\Markdown\Lexer;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\DivToken;
-use Tempest\Markdown\Tokens\PreToken;
 
 final readonly class DivRule implements Rule
 {
