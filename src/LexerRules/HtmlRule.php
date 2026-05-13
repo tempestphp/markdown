@@ -28,11 +28,17 @@ final readonly class HtmlRule implements Rule
         $depth = 1;
 
         while ($depth > 0 && $lexer->current !== null) {
-            if ($lexer->comesNext("<{$tagName}")) {
-                $depth++;
-                $content .= $lexer->consumeIncluding('>');
-            } elseif ($lexer->comesNext("</{$tagName}")) {
+            $content .= $lexer->consumeUntil('<');
+
+            if ($lexer->current === null) {
+                break;
+            }
+
+            if ($lexer->comesNext("</{$tagName}")) {
                 $depth--;
+                $content .= $lexer->consumeIncluding('>');
+            } elseif ($lexer->comesNext("<{$tagName}")) {
+                $depth++;
                 $content .= $lexer->consumeIncluding('>');
             } else {
                 $content .= $lexer->consume();
