@@ -3,12 +3,15 @@
 namespace Tempest\Markdown\LexerRules;
 
 use Tempest\Markdown\Lexer;
+use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\BoldToken;
 
-final readonly class BoldRule implements Rule
+final class BoldRule implements Rule, ProvidesStopChar
 {
+    private(set) string $stopChar = '*';
+
     public function shouldLex(Lexer $lexer): bool
     {
         return $lexer->comesNext('*', 1);

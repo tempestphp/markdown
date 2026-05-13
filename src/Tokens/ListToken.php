@@ -26,7 +26,7 @@ final class ListToken implements Token
             new LinkRule(),
             new ImageRule(),
             new CodeRule(),
-            new TextRule('*_[!`'),
+            new TextRule(),
         );
 
         $list = '<ul>';

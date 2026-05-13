@@ -2,15 +2,16 @@
 
 namespace Tempest\Markdown\LexerRules;
 
+use Tempest\Markdown\NeedsStopChars;
 use Tempest\Markdown\Lexer;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\TextToken;
 
-final readonly class TextRule implements Rule
+final class TextRule implements Rule, NeedsStopChars
 {
     public function __construct(
-        private string $stopChars = '',
+        public string $stopChars = '',
     ) {}
 
     public function shouldLex(Lexer $lexer): bool

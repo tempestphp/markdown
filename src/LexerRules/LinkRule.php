@@ -3,12 +3,15 @@
 namespace Tempest\Markdown\LexerRules;
 
 use Tempest\Markdown\Lexer;
+use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\LinkToken;
 
-final readonly class LinkRule implements Rule
+final class LinkRule implements Rule, ProvidesStopChar
 {
+    private(set) string $stopChar = '[';
+
     public function shouldLex(Lexer $lexer): bool
     {
         return $lexer->comesNext('[', 1);

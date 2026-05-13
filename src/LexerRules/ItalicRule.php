@@ -3,12 +3,15 @@
 namespace Tempest\Markdown\LexerRules;
 
 use Tempest\Markdown\Lexer;
+use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\ItalicToken;
 
-final readonly class ItalicRule implements Rule
+final class ItalicRule implements Rule, ProvidesStopChar
 {
+    private(set) string $stopChar = '_';
+
     public function shouldLex(Lexer $lexer): bool
     {
         return $lexer->comesNext('_', 1);

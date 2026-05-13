@@ -26,7 +26,7 @@ final class OrderedListToken implements Token
             new LinkRule(),
             new ImageRule(),
             new CodeRule(),
-            new TextRule('*_[!`'),
+            new TextRule(),
         );
 
         $list = '<ol>';

@@ -6,6 +6,7 @@ use Tempest\Markdown\LexerRules\ItalicRule;
 use Tempest\Markdown\LexerRules\LinkRule;
 use Tempest\Markdown\LexerRules\TextRule;
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Token;
 
 final readonly class BoldToken implements Token
@@ -20,7 +21,7 @@ final readonly class BoldToken implements Token
             ->withRules(
                 new ItalicRule(),
                 new LinkRule(),
-                new TextRule('_['),
+                new TextRule(),
             )
             ->parse($this->content);
 

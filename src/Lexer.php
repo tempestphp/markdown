@@ -53,6 +53,24 @@ final class Lexer
 
         $tokens = [];
 
+        /** @var \Tempest\Markdown\NeedsStopChars[] $needsStopChars */
+        $needsStopChars = [];
+        $providedStopChars = '';
+
+        foreach ($this->rules as $rule) {
+            if ($rule instanceof ProvidesStopChar) {
+                $providedStopChars .= $rule->stopChar;
+            }
+
+            if ($rule instanceof NeedsStopChars) {
+                $needsStopChars[] = $rule;
+            }
+        }
+
+        foreach ($needsStopChars as $rule) {
+            $rule->stopChars .= $providedStopChars;
+        }
+
         while ($lexer->current !== null) {
             foreach ($this->rules as $rule) {
                 if (! $rule->shouldLex($lexer)) {
