@@ -5,3 +5,4 @@ TODO:
 - `[](*)` support
 - {} class support
 - raw HTML support
+- Table support
