@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-$contents = file_get_contents(__DIR__ . '/Fixtures/large.md');
+$contents = file_get_contents(__DIR__ . '/Fixtures/02-large.md');
 
 // ## SETUP
 $markdown = new Tempest\Markdown\Markdown();

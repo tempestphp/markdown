@@ -8,7 +8,7 @@ final readonly class Parser
 {
     public function __construct(
         public Lexer $lexer = new Lexer(),
-        public Highlighter $highlighter = new Highlighter(),
+        public ?Highlighter $highlighter = new Highlighter(),
     ) {}
 
     public function withRules(Rule ...$rules): self

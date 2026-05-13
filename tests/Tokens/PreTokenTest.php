@@ -30,4 +30,15 @@ class PreTokenTest extends TestCase
             $token->parse(new Parser()),
         );
     }
+
+    #[Test]
+    public function test_parse_without_highlighter(): void
+    {
+        $token = new PreToken(language: null, content: 'echo "hi";');
+
+        $this->assertEquals(
+            '<pre><code>echo "hi";</code></pre>',
+            $token->parse(new Parser(highlighter: null)),
+        );
+    }
 }

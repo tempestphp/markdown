@@ -7,7 +7,7 @@ use Tempest\Highlight\Highlighter;
 final readonly class Markdown
 {
     public function __construct(
-        public Highlighter $highlighter = new Highlighter(),
+        public ?Highlighter $highlighter = new Highlighter(),
     ) {}
 
     public function parse(string $content): string

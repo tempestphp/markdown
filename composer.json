@@ -19,7 +19,7 @@
     ],
     "require": {
         "php": "^8.5",
-        "tempest/highlight": "^2.22"
+        "tempest/highlight": "^2.23.1"
     },
     "require-dev": {
         "carthage-software/mago": "1.16.0",

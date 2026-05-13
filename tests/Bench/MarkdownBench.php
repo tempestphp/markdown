@@ -23,7 +23,7 @@ final readonly class MarkdownBench
 
     public function __construct()
     {
-        $this->tempest = new Parser();
+        $this->tempest = new Parser(highlighter: null);
         $this->league = new CommonMarkConverter();
         $this->erusev = new ParsedownExtra();
     }
