@@ -4,7 +4,7 @@
 
 ## Quickstart
 
-```php
+```sh
 composer require tempest/markdown
 ```
 
