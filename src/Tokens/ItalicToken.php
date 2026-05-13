@@ -6,7 +6,6 @@ use Tempest\Markdown\LexerRules\BoldRule;
 use Tempest\Markdown\LexerRules\LinkRule;
 use Tempest\Markdown\LexerRules\TextRule;
 use Tempest\Markdown\Parser;
-use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Token;
 
 final readonly class ItalicToken implements Token

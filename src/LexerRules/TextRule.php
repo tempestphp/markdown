@@ -2,8 +2,8 @@
 
 namespace Tempest\Markdown\LexerRules;
 
-use Tempest\Markdown\NeedsStopChars;
 use Tempest\Markdown\Lexer;
+use Tempest\Markdown\NeedsStopChars;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\TextToken;
