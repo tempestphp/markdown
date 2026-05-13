@@ -2,6 +2,7 @@
 
 namespace Tempest\Markdown\Tests\Bench;
 
+use Generator;
 use League\CommonMark\CommonMarkConverter;
 use Michelf\Markdown as Michelf;
 use ParsedownExtra;
@@ -13,11 +14,11 @@ use Tempest\Markdown\Parser;
 #[Bench\OutputTimeUnit('microseconds')]
 #[Bench\Iterations(3)]
 #[Bench\Revs(1)]
+#[Bench\ParamProviders('provideFiles')]
 final readonly class MarkdownBench
 {
     private Parser $tempest;
     private CommonMarkConverter $league;
-    private string $contents;
     private ParsedownExtra $erusev;
 
     public function __construct()
@@ -25,27 +26,32 @@ final readonly class MarkdownBench
         $this->tempest = new Parser();
         $this->league = new CommonMarkConverter();
         $this->erusev = new ParsedownExtra();
-        // @mago-expect analysis:invalid-property-assignment-value
-        $this->contents = file_get_contents(__DIR__ . '/Fixtures/large.md');
     }
 
-    public function benchTempest(): void
+    public function benchTempest(array $params): void
     {
-        $this->tempest->parse($this->contents);
+        $this->tempest->parse($params['contents']);
     }
 
-    public function benchLeague(): void
+    public function benchLeague(array $params): void
     {
-        $this->league->convert($this->contents);
+        $this->league->convert($params['contents']);
     }
 
-    public function benchMichelf(): void
+    public function benchMichelf(array $params): void
     {
-        Michelf::defaultTransform($this->contents);
+        Michelf::defaultTransform($params['contents']);
     }
 
-    public function benchErusev(): void
+    public function benchErusev(array $params): void
     {
-        $this->erusev->text($this->contents);
+        $this->erusev->text($params['contents']);
+    }
+
+    public function provideFiles(): Generator
+    {
+        foreach (glob(__DIR__ . '/Fixtures/*.md') as $path) {
+            yield pathinfo($path, PATHINFO_FILENAME) => ['contents' => file_get_contents($path)];
+        }
     }
 }

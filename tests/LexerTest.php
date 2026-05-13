@@ -48,13 +48,13 @@ final class LexerTest extends TestCase
             /** @var Token $expected */
             // @mago-expect analysis:mixed-array-index
             // @mago-expect analysis:invalid-array-access
-            $expected = $expected[$i];
+            $expectedToken = $expected[$i];
             // @mago-expect analysis:invalid-type-cast
             $actualProperties = (array) $token;
             // @mago-expect analysis:invalid-type-cast
-            $expectedProperties = (array) $expected;
+            $expectedProperties = (array) $expectedToken;
 
-            $this->assertSame($token::class, $expected::class);
+            $this->assertSame($token::class, $expectedToken::class);
             $this->assertSame($expectedProperties, $actualProperties);
         }
     }
