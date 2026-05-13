@@ -4,8 +4,6 @@ on:
   workflow_run:
     workflows: [Benchmark]
     types: [completed]
-  push:
-    branches: [main]
 
 jobs:
   comment:
