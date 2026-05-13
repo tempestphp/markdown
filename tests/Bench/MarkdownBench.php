@@ -11,9 +11,9 @@ use Tempest\Markdown\Parser;
 
 #[Bench\Warmup(1)]
 #[Bench\RetryThreshold(5)]
-#[Bench\OutputTimeUnit('microseconds')]
-#[Bench\Iterations(3)]
-#[Bench\Revs(1)]
+#[Bench\OutputTimeUnit('milliseconds', 3)]
+#[Bench\Iterations(5)]
+#[Bench\Revs(3)]
 #[Bench\ParamProviders('provideFiles')]
 final readonly class MarkdownBench
 {
