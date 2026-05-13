@@ -18,12 +18,14 @@ use Tempest\Markdown\Parser;
 final readonly class MarkdownBench
 {
     private Parser $tempest;
+    private Parser $tempestWithHighlight;
     private CommonMarkConverter $league;
     private ParsedownExtra $erusev;
 
     public function __construct()
     {
         $this->tempest = new Parser(highlighter: null);
+        $this->tempestWithHighlight = new Parser();
         $this->league = new CommonMarkConverter();
         $this->erusev = new ParsedownExtra();
     }
@@ -31,6 +33,11 @@ final readonly class MarkdownBench
     public function benchTempest(array $params): void
     {
         $this->tempest->parse($params['contents']);
+    }
+
+    public function benchTempestWithHighlight(array $params): void
+    {
+        $this->tempestWithHighlight->parse($params['contents']);
     }
 
     public function benchLeague(array $params): void
