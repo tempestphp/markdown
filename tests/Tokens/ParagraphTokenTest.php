@@ -22,6 +22,18 @@ class ParagraphTokenTest extends TestCase
     }
 
     #[Test]
+    public function test_parse_with_strikethrough(): void
+    {
+        $token = new ParagraphToken('Hello, ~~world~~!');
+
+        $expectedHtml = '<p>Hello, <s>world</s>!</p>';
+
+        $actualHtml = $token->parse(new Parser());
+
+        $this->assertEquals($expectedHtml, $actualHtml);
+    }
+
+    #[Test]
     public function test_parse_with_italic(): void
     {
         $token = new ParagraphToken('Hello, __world__!');
