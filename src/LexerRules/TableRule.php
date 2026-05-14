@@ -12,7 +12,26 @@ final readonly class TableRule implements Rule
 {
     public function shouldLex(Lexer $lexer): bool
     {
-        return $lexer->comesNext('|', 1);
+        if (! $lexer->comesNext('|', 1)) {
+            return false;
+        }
+
+        if ($lexer->lastToken instanceof TableToken) {
+            return true;
+        }
+
+        $nextTwoLines = $lexer->lookaheadUntil(Lexer::NEW_LINE, Lexer::NEW_LINE);
+
+        if (count($nextTwoLines) !== 2) {
+            return false;
+        }
+
+        // The second line must be a separator and only contain these characters: `:| -\r\n`
+        if (trim($nextTwoLines[1], ":| -\r\n") !== '') {
+            return false;
+        }
+
+        return true;
     }
 
     public function lex(Lexer $lexer): ?Token
@@ -20,6 +39,15 @@ final readonly class TableRule implements Rule
         $line = $lexer->consumeUntil(Lexer::NEW_LINE);
         $lexer->consumeWhile(Lexer::NEW_LINE);
 
+        // Filter out separator rows
+        $isSeparator = trim($line, ':| -') === '';
+
+        if ($isSeparator) {
+            // TODO: determine alignment based on the separator
+            return null;
+        }
+
+        // Create cells
         $cells = $line
             |> (fn ($x) => trim($x, '| '))
             |> (fn ($x) => explode('|', $x))
@@ -27,22 +55,19 @@ final readonly class TableRule implements Rule
             |> (fn ($x) => array_filter($x, fn (string $cell) => $cell !== ''))
             |> array_values(...);
 
-        // Filter out separator rows
-        $isSeparator = array_filter($cells, fn (string $cell) => trim($cell, '-: ') !== '') === [];
-
-        if ($isSeparator) {
-            return null;
-        }
-
-        $isHeader = ! $lexer->lastToken instanceof TableToken;
+        // Determine if is header row
+        $token = $lexer->lastToken;
+        $isHeader = ! $token instanceof TableToken;
 
         $row = new TableRow($cells, $isHeader);
 
-        if ($lexer->lastToken instanceof TableToken) {
-            $lexer->lastToken->rows[] = $row;
-            return null;
+        if ($isHeader) {
+            return new TableToken([$row]);
         }
 
-        return new TableToken([$row]);
+        /** @var TableToken $token */
+        $token->rows[] = $row;
+
+        return null;
     }
 }

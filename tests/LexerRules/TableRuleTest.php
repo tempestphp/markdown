@@ -5,7 +5,9 @@ namespace Tempest\Markdown\Tests\LexerRules;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tempest\Markdown\Lexer;
+use Tempest\Markdown\LexerRules\ParagraphRule;
 use Tempest\Markdown\LexerRules\TableRule;
+use Tempest\Markdown\Tokens\ParagraphToken;
 use Tempest\Markdown\Tokens\TableRow;
 use Tempest\Markdown\Tokens\TableToken;
 
@@ -14,13 +16,13 @@ class TableRuleTest extends TestCase
     #[Test]
     public function test_lex_header_only(): void
     {
-        $token = new Lexer([new TableRule()])->lex("| A | B |\n| --- | --- |")[0];
+        $tokens = new Lexer([new TableRule()])->lex("| A | B |\n| --- | --- |");
 
         $this->assertEquals(
             new TableToken([
                 new TableRow(['A', 'B'], isHeader: true),
             ]),
-            $token,
+            $tokens[0],
         );
     }
 
@@ -65,5 +67,15 @@ class TableRuleTest extends TestCase
             ]),
             $token,
         );
+    }
+
+    #[Test]
+    public function test_paragraphs_with_pipe_are_not_treated_as_tables(): void
+    {
+        $tokens = new Lexer([new TableRule(), new ParagraphRule()])->lex("| Hello |\nHello");
+
+        $this->assertCount(2, $tokens);
+        $this->assertInstanceOf(ParagraphToken::class, $tokens[0]);
+        $this->assertInstanceOf(ParagraphToken::class, $tokens[1]);
     }
 }

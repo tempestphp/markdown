@@ -23,7 +23,7 @@ final readonly class HtmlRule implements Rule
         $tagClose = $lexer->consumeIncluding('>');
         $openingTag = $tagOpen . $tagName . $tagClose;
 
-        if (in_array($tagName, $voidTags)) {
+        if (in_array($tagName, $voidTags, strict: true)) {
             return new HtmlToken($openingTag);
         }
 

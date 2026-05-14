@@ -22,6 +22,7 @@ final class Lexer
     public const string NEW_LINE = "\r\n";
 
     private(set) int $position = 0;
+    private(set) int $length = 0;
     private(set) ?string $current;
     private(set) string $content;
     /** @var \Tempest\Markdown\Rule[] */
@@ -55,13 +56,21 @@ final class Lexer
         ]);
     }
 
+    public function setContent(string $content): self
+    {
+        $this->content = $content;
+        $this->position = 0;
+        $this->current = $this->content[$this->position] ?? null;
+        $this->length = strlen($content);
+
+        return $this;
+    }
+
     public function lex(string $content): TokenCollection
     {
         $lexer = clone $this;
 
-        $lexer->content = $content;
-        $lexer->position = 0;
-        $lexer->current = $lexer->content[$lexer->position] ?? null;
+        $lexer->setContent($content);
 
         $tokens = [];
 
@@ -163,5 +172,30 @@ final class Lexer
     public function consumeIncluding(string $search): string
     {
         return $this->consumeUntil($search) . $this->consume(strlen($search));
+    }
+
+    public function lookaheadUntil(string ...$stopAt): array
+    {
+        $results = [];
+        $position = $this->position;
+
+        foreach ($stopAt as $stopAtChar) {
+            $offset = strcspn($this->content, $stopAtChar, $position) + 1;
+
+            if ($offset > $this->length) {
+                break;
+            }
+
+            $substr = substr($this->content, $position, $offset);
+
+            if ($substr === '') {
+                break;
+            }
+
+            $results[] = $substr;
+            $position += $offset;
+        }
+
+        return $results;
     }
 }
