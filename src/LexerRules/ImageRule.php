@@ -2,6 +2,8 @@
 
 namespace Tempest\Markdown\LexerRules;
 
+use Tempest\Markdown\Exceptions\ImageSourceWasMissing;
+use Tempest\Markdown\Exceptions\ImageSourceWasNotClosed;
 use Tempest\Markdown\Lexer;
 use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Rule;
@@ -24,11 +26,16 @@ final class ImageRule implements Rule, ProvidesStopChar
         $lexer->consumeIncluding(']');
 
         if (! $lexer->comesNext('(', 1)) {
-            // TODO: throw error
+            throw new ImageSourceWasMissing();
         }
 
         $lexer->consumeIncluding('(');
-        $href = $lexer->consumeUntil(')');
+        $href = $lexer->consumeUntil(')' . Lexer::NEW_LINE);
+
+        if (! $lexer->comesNext(')')) {
+            throw new ImageSourceWasNotClosed();
+        }
+
         $lexer->consumeIncluding(')');
 
         return new ImageToken($href, $alt);
