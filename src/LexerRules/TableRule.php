@@ -48,12 +48,15 @@ final readonly class TableRule implements Rule
         }
 
         // Create cells
-        $cells = $line
-            |> (fn ($x) => trim($x, '| '))
-            |> (fn ($x) => explode('|', $x))
-            |> (fn ($x) => array_map(trim(...), $x))
-            |> (fn ($x) => array_filter($x, fn (string $cell) => $cell !== ''))
-            |> array_values(...);
+        if (str_starts_with($line, '|')) {
+            $line = substr($line, 1);
+        }
+
+        if (str_ends_with($line, '|')) {
+            $line = substr($line, 0, -1);
+        }
+
+        $cells = $line |> (fn ($x) => explode('|', $x)) |> (fn ($x) => array_map(trim(...), $x)) |> array_values(...);
 
         // Determine if is header row
         $token = $lexer->lastToken;

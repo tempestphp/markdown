@@ -70,6 +70,20 @@ class TableRuleTest extends TestCase
     }
 
     #[Test]
+    public function test_table_with_empty_cells(): void
+    {
+        $token = new Lexer([new TableRule()])->lex("| A | B | C |\n| :--- | :---: | ---: |\n| | | 3 |")[0];
+
+        $this->assertEquals(
+            new TableToken([
+                new TableRow(['A', 'B', 'C'], isHeader: true),
+                new TableRow(['', '', '3'], isHeader: false),
+            ]),
+            $token,
+        );
+    }
+
+    #[Test]
     public function test_paragraphs_with_pipe_are_not_treated_as_tables(): void
     {
         $tokens = new Lexer([new TableRule(), new ParagraphRule()])->lex("| Hello |\nHello");
