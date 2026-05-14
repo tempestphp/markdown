@@ -6,17 +6,19 @@ use Tempest\Highlight\Highlighter;
 
 final readonly class Markdown
 {
+    private Parser $parser;
+
     public function __construct(
         public ?Highlighter $highlighter = new Highlighter(),
-    ) {}
-
-    public function parse(string $content): ParsedMarkdown
-    {
-        $parser = new Parser(
+    ) {
+        $this->parser = new Parser(
             new Lexer(),
             $this->highlighter,
         );
+    }
 
-        return $parser->parse($content);
+    public function parse(string $content): ParsedMarkdown
+    {
+        return $this->parser->parse($content);
     }
 }
