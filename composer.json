@@ -1,6 +1,6 @@
 {
     "name": "tempest/markdown",
-    "description": "Fast and extensible Markdown rendering with PHP",
+    "description": "Fast and extensible Markdown in PHP",
     "autoload": {
         "psr-4": {
             "Tempest\\Markdown\\": "src/"
