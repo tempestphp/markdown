@@ -3,6 +3,8 @@
 namespace Tempest\Markdown\LexerRules;
 
 use Symfony\Component\Yaml\Yaml;
+use Tempest\Markdown\Exceptions\FrontMatterCouldNotBeParsed;
+use Tempest\Markdown\Exceptions\FrontMatterWasNotProperlyClosed;
 use Tempest\Markdown\Lexer;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
@@ -29,14 +31,18 @@ final readonly class FrontMatterRule implements Rule
         $lexer->consumeWhile('-');
         $lexer->consumeWhile(Lexer::NEW_LINE);
         $content = $lexer->consumeUntilString('---');
+
+        if (! $lexer->comesNext('---', 3)) {
+            throw new FrontMatterWasNotProperlyClosed($content);
+        }
+
         $lexer->consumeWhile('-');
         $lexer->consumeWhile(Lexer::NEW_LINE);
 
         try {
             $data = Yaml::parse($content);
-        } catch (Throwable) {
-            // TODO: proper error
-            return null;
+        } catch (Throwable $cause) {
+            throw new FrontMatterCouldNotBeParsed($content, $cause);
         }
 
         return new FrontMatterToken($data);

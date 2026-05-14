@@ -4,6 +4,8 @@ namespace Tempest\Markdown\Tests\LexerRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Tempest\Markdown\Exceptions\FrontMatterCouldNotBeParsed;
+use Tempest\Markdown\Exceptions\FrontMatterWasNotProperlyClosed;
 use Tempest\Markdown\Lexer;
 use Tempest\Markdown\LexerRules\FrontMatterRule;
 use Tempest\Markdown\LexerRules\NewLineRule;
@@ -69,5 +71,30 @@ final class FrontMatterRuleTest extends TestCase
             $tokens[0],
         );
         $this->assertEquals(new ParagraphToken('Bar'), $tokens[1]);
+    }
+
+    #[Test]
+    public function invalid_frontmatter_throws_exception(): void
+    {
+        $this->expectException(FrontMatterCouldNotBeParsed::class);
+
+        new Lexer([new FrontMatterRule()])->lex(<<<'MD'
+        ---
+        title: "Introduction
+        ---
+        MD);
+    }
+
+    #[Test]
+    public function unclosed_frontmatter_throws_exception(): void
+    {
+        $this->expectException(FrontMatterWasNotProperlyClosed::class);
+
+        new Lexer([new FrontMatterRule()])->lex(<<<'MD'
+        ---
+        title: "Introduction
+
+        Paragraph
+        MD);
     }
 }
