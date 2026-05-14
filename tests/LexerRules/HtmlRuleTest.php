@@ -8,6 +8,7 @@ use Tempest\Markdown\Lexer;
 use Tempest\Markdown\LexerRules\HtmlRule;
 use Tempest\Markdown\LexerRules\NewLineRule;
 use Tempest\Markdown\LexerRules\ParagraphRule;
+use Tempest\Markdown\LexerRules\TextRule;
 use Tempest\Markdown\Tokens\HtmlToken;
 
 class HtmlRuleTest extends TestCase
@@ -43,5 +44,15 @@ class HtmlRuleTest extends TestCase
 
         $this->assertCount(3, $tokens);
         $this->assertEquals(new HtmlToken("<p>\nHi\n</p>\n"), $tokens[1]);
+    }
+
+    #[Test]
+    public function test_void_tags(): void
+    {
+        $html = '<area><base><br><col><embed><hr><img><input><link><meta><param><source><track><wbr>Hello';
+
+        $tokens = new Lexer([new HtmlRule(), new TextRule()])->lex($html);
+
+        $this->assertCount(15, $tokens);
     }
 }

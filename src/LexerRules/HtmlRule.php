@@ -16,7 +16,16 @@ final readonly class HtmlRule implements Rule
 
     public function lex(Lexer $lexer): Token
     {
-        $openingTag = $lexer->consumeIncluding('>');
+        $voidTags = ['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
+
+        $tagOpen = $lexer->consume() . $lexer->consumeWhile(Lexer::WHITESPACE);
+        $tagName = $lexer->consumeUntil(' >');
+        $tagClose = $lexer->consumeIncluding('>');
+        $openingTag = $tagOpen . $tagName . $tagClose;
+
+        if (in_array($tagName, $voidTags)) {
+            return new HtmlToken($openingTag);
+        }
 
         // Self-closing tags (<img />, <br />) need no closing tag.
         if (str_ends_with($openingTag, '/>')) {
