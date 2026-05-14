@@ -6,7 +6,9 @@ use Tempest\Markdown\LexerRules\DivRule;
 use Tempest\Markdown\LexerRules\FrontMatterRule;
 use Tempest\Markdown\LexerRules\HeadingRule;
 use Tempest\Markdown\LexerRules\HtmlRule;
+use Tempest\Markdown\LexerRules\ListRule;
 use Tempest\Markdown\LexerRules\NewLineRule;
+use Tempest\Markdown\LexerRules\OrderedListRule;
 use Tempest\Markdown\LexerRules\ParagraphRule;
 use Tempest\Markdown\LexerRules\PreRule;
 use Tempest\Markdown\LexerRules\QuoteRule;
@@ -38,6 +40,8 @@ final class Lexer
             new DivRule(),
             new ThinRulerRule(),
             new ThickRulerRule(),
+            new ListRule(),
+            new OrderedListRule(),
             new TableRule(),
             new HtmlRule(),
             new ParagraphRule(),

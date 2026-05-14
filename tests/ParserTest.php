@@ -112,4 +112,26 @@ final class ParserTest extends TestCase
             $parsed->html,
         );
     }
+
+    #[Test]
+    public function test_list(): void
+    {
+        $parsed = $this->parser->parse(<<<'MD'
+        - a
+        - b
+        MD);
+
+        $this->assertSame('<ul><li>a</li><li>b</li></ul>', $parsed->html);
+    }
+
+    #[Test]
+    public function test_ordered_list(): void
+    {
+        $parsed = $this->parser->parse(<<<'MD'
+        1. a
+        2. b
+        MD);
+
+        $this->assertSame('<ol><li>a</li><li>b</li></ol>', $parsed->html);
+    }
 }
