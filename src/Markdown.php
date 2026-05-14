@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tempest\Markdown;
 
 use Tempest\Highlight\Highlighter;
@@ -12,11 +14,6 @@ final readonly class Markdown
 
     public function parse(string $content): ParsedMarkdown
     {
-        $parser = new Parser(
-            new Lexer(),
-            $this->highlighter,
-        );
-
-        return $parser->parse($content);
+        return parse_markdown($content, $this->highlighter);
     }
 }
