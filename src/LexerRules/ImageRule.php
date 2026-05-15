@@ -26,14 +26,14 @@ final class ImageRule implements Rule, ProvidesStopChar
         $lexer->consumeIncluding(']');
 
         if (! $lexer->comesNext('(', 1)) {
-            throw new ImageSourceWasMissing();
+            throw new ImageSourceWasMissing($lexer);
         }
 
         $lexer->consumeIncluding('(');
         $href = $lexer->consumeUntil(')' . Lexer::NEW_LINE);
 
         if (! $lexer->comesNext(')')) {
-            throw new ImageSourceWasNotClosed();
+            throw new ImageSourceWasNotClosed($lexer);
         }
 
         $lexer->consumeIncluding(')');

@@ -3,19 +3,21 @@
 namespace Tempest\Markdown\Exceptions;
 
 use Exception;
+use Symfony\Component\Yaml\Exception\ParseException;
+use Tempest\Markdown\Lexer;
 use Tempest\Markdown\MarkdownException;
-use Throwable;
+use Tempest\Markdown\RendersSnippet;
 
 final class FrontMatterCouldNotBeParsed extends Exception implements MarkdownException
 {
-    public function __construct(
-        private readonly string $content,
-        private readonly Throwable $cause,
-    ) {
+    use RendersSnippet;
+
+    public function __construct(Lexer $lexer, ParseException $cause)
+    {
         $message = sprintf(
-            "Could not parse FrontMatter: \n\n```\n%s\n```\n\n%s\n",
-            rtrim($this->content, "\n"),
-            $this->cause->getMessage(),
+            "Could not parse FrontMatter: %s \n\n%s\n",
+            $cause->getMessage(),
+            $this->renderSnippet($lexer),
         );
 
         parent::__construct(message: $message, previous: $cause);

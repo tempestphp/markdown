@@ -76,25 +76,37 @@ final class FrontMatterRuleTest extends TestCase
     #[Test]
     public function invalid_frontmatter_throws_exception(): void
     {
-        $this->expectException(FrontMatterCouldNotBeParsed::class);
-
-        new Lexer([new FrontMatterRule()])->lex(<<<'MD'
-        ---
-        title: "Introduction
-        ---
-        MD);
+        try {
+            new Lexer([new FrontMatterRule()])->lex(<<<'MD'
+            ---
+            title: "Introduction
+            ---
+            MD);
+        } catch (FrontMatterCouldNotBeParsed $e) {
+            $this->assertStringContainsString(<<<'TXT'
+            01 > ---
+            02 | title: "Introduction
+            03 | ---
+            TXT, $e->getMessage());
+        }
     }
 
     #[Test]
     public function unclosed_frontmatter_throws_exception(): void
     {
-        $this->expectException(FrontMatterWasNotProperlyClosed::class);
+        try {
+            new Lexer([new FrontMatterRule()])->lex(<<<'MD'
+            ---
+            title: "Introduction"
 
-        new Lexer([new FrontMatterRule()])->lex(<<<'MD'
-        ---
-        title: "Introduction
-
-        Paragraph
-        MD);
+            Paragraph
+            MD);
+        } catch (FrontMatterWasNotProperlyClosed $e) {
+            $this->assertStringContainsString(<<<'TXT'
+            01 > ---
+            02 | title: "Introduction"
+            03 |
+            TXT, $e->getMessage());
+        }
     }
 }

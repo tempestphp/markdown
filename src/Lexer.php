@@ -198,4 +198,11 @@ final class Lexer
 
         return $results;
     }
+
+    public function withPosition(int $originalPosition): self
+    {
+        return clone($this, [
+            'position' => $originalPosition,
+        ]);
+    }
 }

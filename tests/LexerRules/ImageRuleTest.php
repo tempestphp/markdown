@@ -31,16 +31,24 @@ class ImageRuleTest extends TestCase
     #[Test]
     public function test_invalid_image_throws_exception(): void
     {
-        $this->expectException(ImageSourceWasMissing::class);
-
-        new Lexer([new ImageRule()])->lex('Hello ![alt] world');
+        try {
+            new Lexer([new ImageRule()])->lex('Hello ![alt] world');
+        } catch (ImageSourceWasMissing $e) {
+            $this->assertStringContainsString(<<<'TXT'
+            01 > Hello ![alt] world
+            TXT, $e->getMessage());
+        }
     }
 
     #[Test]
     public function test_invalid_image_source_throws_exception(): void
     {
-        $this->expectException(ImageSourceWasNotClosed::class);
-
-        new Lexer([new ImageRule()])->lex('Hello ![alt](foo world');
+        try {
+            new Lexer([new ImageRule()])->lex('Hello ![alt](foo world');
+        } catch (ImageSourceWasNotClosed $e) {
+            $this->assertStringContainsString(<<<'TXT'
+            01 > Hello ![alt](foo world
+            TXT, $e->getMessage());
+        }
     }
 }
