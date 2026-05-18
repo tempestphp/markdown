@@ -5,6 +5,7 @@ namespace Tempest\Markdown\Tests\LexerRules;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tempest\Markdown\Exceptions\FrontMatterCouldNotBeParsed;
+use Tempest\Markdown\Exceptions\FrontMatterShouldBeAnArray;
 use Tempest\Markdown\Exceptions\FrontMatterWasNotProperlyClosed;
 use Tempest\Markdown\Lexer;
 use Tempest\Markdown\LexerRules\FrontMatterRule;
@@ -52,17 +53,21 @@ final class FrontMatterRuleTest extends TestCase
     #[Test]
     public function scalar_frontmatter_is_normalized_to_empty_data(): void
     {
-        $tokens = new Lexer([new FrontMatterRule(), new NewLineRule(), new ParagraphRule()])->lex(<<<'MD'
-        ---
-        just text
-        ---
+        try {
+            $tokens = new Lexer([new FrontMatterRule(), new NewLineRule(), new ParagraphRule()])->lex(<<<'MD'
+            ---
+            just text
+            ---
 
-        Body
-        MD);
-
-        $this->assertCount(2, $tokens);
-        $this->assertEquals(new FrontMatterToken([]), $tokens[0]);
-        $this->assertEquals(new ParagraphToken('Body'), $tokens[1]);
+            Body
+            MD);
+        } catch (FrontMatterShouldBeAnArray $e) {
+            $this->assertStringContainsString(<<<'TXT'
+            01 > ---
+            02 | just text
+            03 | ---
+            TXT, $e->getMessage());
+        }
     }
 
     #[Test]

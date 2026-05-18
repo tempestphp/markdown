@@ -5,6 +5,7 @@ namespace Tempest\Markdown\LexerRules;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 use Tempest\Markdown\Exceptions\FrontMatterCouldNotBeParsed;
+use Tempest\Markdown\Exceptions\FrontMatterShouldBeAnArray;
 use Tempest\Markdown\Exceptions\FrontMatterWasNotProperlyClosed;
 use Tempest\Markdown\Lexer;
 use Tempest\Markdown\Rule;
@@ -44,6 +45,10 @@ final readonly class FrontMatterRule implements Rule
             $data = Yaml::parse($content);
         } catch (ParseException $cause) {
             throw new FrontMatterCouldNotBeParsed($lexer->withPosition($originalPosition), $cause);
+        }
+
+        if (! is_array($data)) {
+            throw new FrontMatterShouldBeAnArray($lexer->withPosition($originalPosition));
         }
 
         return new FrontMatterToken($data);

@@ -12,7 +12,17 @@ final readonly class OrderedListRule implements Rule
 {
     public function shouldLex(Lexer $lexer): bool
     {
-        return ctype_digit($lexer->current ?? '');
+        if (! ctype_digit($lexer->current ?? '')) {
+            return false;
+        }
+
+        $search = $lexer->lookaheadUntil('.', PHP_EOL);
+
+        if (count($search) !== 2) {
+            return false;
+        }
+
+        return true;
     }
 
     public function lex(Lexer $lexer): ?Token

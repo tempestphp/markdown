@@ -12,12 +12,12 @@ final readonly class ListRule implements Rule
 {
     public function shouldLex(Lexer $lexer): bool
     {
-        return $lexer->comesNext('-', 1);
+        return $lexer->comesNext('- ', 2);
     }
 
     public function lex(Lexer $lexer): ?Token
     {
-        $lexer->consumeIncluding('-');
+        $lexer->consumeIncluding('- ');
         $content = trim($lexer->consumeUntil(Lexer::NEW_LINE));
         $lexer->consumeWhile(Lexer::NEW_LINE);
 

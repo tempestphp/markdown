@@ -31,6 +31,11 @@ final readonly class TableRule implements Rule
             return false;
         }
 
+        // The separate line MUST contain at least one dash
+        if (! str_contains($nextTwoLines[1], '-')) {
+            return false;
+        }
+
         return true;
     }
 
@@ -40,7 +45,7 @@ final readonly class TableRule implements Rule
         $lexer->consumeWhile(Lexer::NEW_LINE);
 
         // Filter out separator rows
-        $isSeparator = trim($line, ':| -') === '';
+        $isSeparator = trim($line, ':| -') === '' && str_contains($line, '-');
 
         if ($isSeparator) {
             // TODO: determine alignment based on the separator

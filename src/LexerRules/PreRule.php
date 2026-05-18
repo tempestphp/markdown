@@ -27,9 +27,14 @@ final readonly class PreRule implements Rule
         $lexer->consumeIncluding('```');
         $lexer->consumeWhile(Lexer::NEW_LINE);
 
+        // Remove trailing newline.
+        if (str_ends_with($content, PHP_EOL)) {
+            $content = substr($content, 0, -1);
+        }
+
         return new PreToken(
             language: $language ?: null,
-            content: trim($content),
+            content: $content,
         );
     }
 }

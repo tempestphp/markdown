@@ -13,13 +13,17 @@ use Traversable;
  */
 final class TokenCollection implements IteratorAggregate, ArrayAccess
 {
+    private int $i = 0;
+
     public function __construct(
         private array $tokens = [],
     ) {}
 
     public function add(Token $token): self
     {
-        $this->tokens[] = $token;
+        $this->tokens[$this->i] = $token;
+
+        $this->i++;
 
         return $this;
     }
@@ -41,6 +45,11 @@ final class TokenCollection implements IteratorAggregate, ArrayAccess
 
     public function offsetSet(mixed $offset, mixed $value): void
     {
+        if (! $offset) {
+            $offset = $this->i;
+            $this->i++;
+        }
+
         $this->tokens[$offset] = $value;
     }
 
