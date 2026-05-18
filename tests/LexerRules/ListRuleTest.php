@@ -6,8 +6,10 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tempest\Markdown\Lexer;
 use Tempest\Markdown\LexerRules\ListRule;
+use Tempest\Markdown\LexerRules\TextRule;
 use Tempest\Markdown\Tokens\ListItem;
 use Tempest\Markdown\Tokens\ListToken;
+use Tempest\Markdown\Tokens\TextToken;
 
 class ListRuleTest extends TestCase
 {
@@ -25,6 +27,14 @@ class ListRuleTest extends TestCase
         $token = new Lexer([new ListRule()])->lex("- one\n- two\n")[0];
 
         $this->assertEquals(new ListToken([new ListItem('one'), new ListItem('two')]), $token);
+    }
+
+    #[Test]
+    public function test_hyphen_without_whitespace_is_not_a_list(): void
+    {
+        $tokens = new Lexer([new ListRule(), new TextRule()])->lex('-not list');
+
+        $this->assertEquals(new TextToken('-not list'), $tokens[0]);
     }
 
     #[Test]

@@ -6,8 +6,10 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tempest\Markdown\Lexer;
 use Tempest\Markdown\LexerRules\OrderedListRule;
+use Tempest\Markdown\LexerRules\TextRule;
 use Tempest\Markdown\Tokens\ListItem;
 use Tempest\Markdown\Tokens\OrderedListToken;
+use Tempest\Markdown\Tokens\TextToken;
 
 class OrderedListRuleTest extends TestCase
 {
@@ -33,6 +35,14 @@ class OrderedListRuleTest extends TestCase
         $token = new Lexer([new OrderedListRule()])->lex("10. ten\n11. eleven\n")[0];
 
         $this->assertEquals(new OrderedListToken([new ListItem('ten'), new ListItem('eleven')]), $token);
+    }
+
+    #[Test]
+    public function test_numeric_text_without_marker_is_not_an_ordered_list(): void
+    {
+        $tokens = new Lexer([new OrderedListRule(), new TextRule()])->lex('2026 is year');
+
+        $this->assertEquals(new TextToken('2026 is year'), $tokens[0]);
     }
 
     #[Test]

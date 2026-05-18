@@ -35,6 +35,14 @@ class PreRuleTest extends TestCase
     }
 
     #[Test]
+    public function test_lex_preserves_significant_whitespace(): void
+    {
+        $token = new Lexer([new PreRule()])->lex("```\n  keep  \n```")[0];
+
+        $this->assertEquals(new PreToken(language: null, content: '  keep  '), $token);
+    }
+
+    #[Test]
     public function test_lex_with_backtick_in_content(): void
     {
         $token = new Lexer([new PreRule()])->lex(<<<'MD'

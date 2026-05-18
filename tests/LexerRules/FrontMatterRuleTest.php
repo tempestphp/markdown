@@ -50,6 +50,22 @@ final class FrontMatterRuleTest extends TestCase
     }
 
     #[Test]
+    public function scalar_frontmatter_is_normalized_to_empty_data(): void
+    {
+        $tokens = new Lexer([new FrontMatterRule(), new NewLineRule(), new ParagraphRule()])->lex(<<<'MD'
+        ---
+        just text
+        ---
+
+        Body
+        MD);
+
+        $this->assertCount(2, $tokens);
+        $this->assertEquals(new FrontMatterToken([]), $tokens[0]);
+        $this->assertEquals(new ParagraphToken('Body'), $tokens[1]);
+    }
+
+    #[Test]
     public function test_complex_frontmatter(): void
     {
         $tokens = new Lexer([new FrontMatterRule(), new NewLineRule(), new ParagraphRule()])->lex(<<<'MD'
