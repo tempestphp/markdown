@@ -10,6 +10,7 @@ use Tempest\Markdown\LexerRules\NewLineRule;
 use Tempest\Markdown\LexerRules\ParagraphRule;
 use Tempest\Markdown\LexerRules\TextRule;
 use Tempest\Markdown\Tokens\HtmlToken;
+use Tempest\Markdown\Tokens\ParagraphToken;
 
 class HtmlRuleTest extends TestCase
 {
@@ -54,5 +55,15 @@ class HtmlRuleTest extends TestCase
         $tokens = new Lexer([new HtmlRule(), new TextRule()])->lex($html);
 
         $this->assertCount(15, $tokens);
+    }
+
+    #[Test]
+    public function test_void_tags_are_case_insensitive(): void
+    {
+        $tokens = new Lexer([new HtmlRule(), new NewLineRule(), new ParagraphRule()])->lex("<BR>\nHello");
+
+        $this->assertCount(3, $tokens);
+        $this->assertEquals(new HtmlToken('<BR>'), $tokens[0]);
+        $this->assertEquals(new ParagraphToken('Hello'), $tokens[2]);
     }
 }

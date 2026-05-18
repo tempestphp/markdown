@@ -84,9 +84,33 @@ class TableRuleTest extends TestCase
     }
 
     #[Test]
+    public function test_table_with_all_empty_cells(): void
+    {
+        $token = new Lexer([new TableRule()])->lex("| A | B |\n| --- | --- |\n| | |")[0];
+
+        $this->assertEquals(
+            new TableToken([
+                new TableRow(['A', 'B'], isHeader: true),
+                new TableRow(['', ''], isHeader: false),
+            ]),
+            $token,
+        );
+    }
+
+    #[Test]
     public function test_paragraphs_with_pipe_are_not_treated_as_tables(): void
     {
         $tokens = new Lexer([new TableRule(), new ParagraphRule()])->lex("| Hello |\nHello");
+
+        $this->assertCount(2, $tokens);
+        $this->assertInstanceOf(ParagraphToken::class, $tokens[0]);
+        $this->assertInstanceOf(ParagraphToken::class, $tokens[1]);
+    }
+
+    #[Test]
+    public function test_separator_cells_must_contain_hyphens(): void
+    {
+        $tokens = new Lexer([new TableRule(), new ParagraphRule()])->lex("| not | table |\n| : | : |");
 
         $this->assertCount(2, $tokens);
         $this->assertInstanceOf(ParagraphToken::class, $tokens[0]);
