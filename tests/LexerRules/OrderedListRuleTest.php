@@ -46,6 +46,14 @@ class OrderedListRuleTest extends TestCase
     }
 
     #[Test]
+    public function test_ordered_list_marker_requires_whitespace_after_period(): void
+    {
+        $tokens = new Lexer([new OrderedListRule(), new TextRule()])->lex('1.not list');
+
+        $this->assertEquals(new TextToken('1.not list'), $tokens[0]);
+    }
+
+    #[Test]
     public function test_lex_nested(): void
     {
         $token = new Lexer([new OrderedListRule()])->lex("1. parent\n  1. child\n")[0];
