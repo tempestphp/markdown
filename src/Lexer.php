@@ -27,7 +27,6 @@ final class Lexer
     private(set) string $content;
     /** @var \Tempest\Markdown\Rule[] */
     private array $rules;
-    private(set) ?Token $lastToken = null;
 
     /** @param null|Rule[] $rules */
     public function __construct(?array $rules = null)
@@ -78,6 +77,9 @@ final class Lexer
         $needsStopChars = [];
         $providedStopChars = '';
 
+        /** @var \Tempest\Markdown\NeedsRules[] $needsRules */
+        $needsRules = [];
+
         foreach ($this->rules as $rule) {
             if ($rule instanceof ProvidesStopChar) {
                 $providedStopChars .= $rule->stopChar;
@@ -86,10 +88,18 @@ final class Lexer
             if ($rule instanceof NeedsStopChars) {
                 $needsStopChars[] = $rule;
             }
+
+            if ($rule instanceof NeedsRules) {
+                $needsRules[] = $rule;
+            }
         }
 
         foreach ($needsStopChars as $rule) {
             $rule->stopChars .= $providedStopChars;
+        }
+
+        foreach ($needsRules as $rule) {
+            $rule->otherRules = array_values(array_filter($this->rules, fn ($r) => $r !== $rule));
         }
 
         while ($lexer->current !== null) {
@@ -102,7 +112,6 @@ final class Lexer
 
                 if ($token instanceof Token) {
                     $tokens[] = $token;
-                    $lexer->lastToken = $token;
                 }
 
                 continue 2;

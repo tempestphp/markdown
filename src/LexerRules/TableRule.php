@@ -16,10 +16,6 @@ final readonly class TableRule implements Rule
             return false;
         }
 
-        if ($lexer->lastToken instanceof TableToken) {
-            return true;
-        }
-
         $nextTwoLines = $lexer->lookaheadUntil(Lexer::NEW_LINE, Lexer::NEW_LINE);
 
         if (count($nextTwoLines) !== 2) {
@@ -31,7 +27,7 @@ final readonly class TableRule implements Rule
             return false;
         }
 
-        // The separate line MUST contain at least one dash
+        // The separator line MUST contain at least one dash
         if (! str_contains($nextTwoLines[1], '-')) {
             return false;
         }
@@ -39,20 +35,31 @@ final readonly class TableRule implements Rule
         return true;
     }
 
-    public function lex(Lexer $lexer): ?Token
+    public function lex(Lexer $lexer): Token
+    {
+        // Parse header row
+        $headerRow = $this->parseRow($lexer, isHeader: true);
+
+        // Skip separator row
+        $lexer->consumeUntil(Lexer::NEW_LINE);
+        // TODO: determine alignment based on the separator
+        $lexer->consumeWhile(Lexer::NEW_LINE);
+
+        $rows = [$headerRow];
+
+        // Parse data rows
+        while ($lexer->comesNext('|', 1)) {
+            $rows[] = $this->parseRow($lexer, isHeader: false);
+        }
+
+        return new TableToken($rows);
+    }
+
+    private function parseRow(Lexer $lexer, bool $isHeader): TableRow
     {
         $line = $lexer->consumeUntil(Lexer::NEW_LINE);
         $lexer->consumeWhile(Lexer::NEW_LINE);
 
-        // Filter out separator rows
-        $isSeparator = trim($line, ':| -') === '' && str_contains($line, '-');
-
-        if ($isSeparator) {
-            // TODO: determine alignment based on the separator
-            return null;
-        }
-
-        // Create cells
         if (str_starts_with($line, '|')) {
             $line = substr($line, 1);
         }
@@ -63,19 +70,6 @@ final readonly class TableRule implements Rule
 
         $cells = $line |> (fn ($x) => explode('|', $x)) |> (fn ($x) => array_map(trim(...), $x)) |> array_values(...);
 
-        // Determine if is header row
-        $token = $lexer->lastToken;
-        $isHeader = ! $token instanceof TableToken;
-
-        $row = new TableRow($cells, $isHeader);
-
-        if ($isHeader) {
-            return new TableToken([$row]);
-        }
-
-        /** @var TableToken $token */
-        $token->rows[] = $row;
-
-        return null;
+        return new TableRow($cells, $isHeader);
     }
 }
