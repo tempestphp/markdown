@@ -2,5 +2,14 @@
     "$schema": "./vendor/phpbench/phpbench/phpbench.schema.json",
     "runner.bootstrap": "vendor/autoload.php",
     "runner.path": "tests/Bench",
-    "runner.file_pattern": "*Bench.php"
+    "runner.file_pattern": "*Bench.php",
+    "report.outputs": {
+        "benchmark-comment": {
+            "extends": "markdown",
+            "outlier_min_diff": 5.0
+        }
+    },
+    "core.extensions": [
+        "Tempest\\Markdown\\Tests\\Bench\\Extension\\MarkdownExtension"
+    ]
 }
