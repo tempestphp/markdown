@@ -9,8 +9,6 @@ use Tempest\Markdown\Exceptions\FrontMatterShouldBeAnArray;
 use Tempest\Markdown\Exceptions\FrontMatterWasNotProperlyClosed;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rule;
-use Tempest\Markdown\Token;
-use Tempest\Markdown\Tokens\FrontMatterToken;
 
 final readonly class FrontMatterRule implements Rule
 {
@@ -27,7 +25,7 @@ final readonly class FrontMatterRule implements Rule
         return true;
     }
 
-    public function parse(Parser $parser): ?Token
+    public function parse(Parser $parser): string
     {
         $originalPosition = $parser->position;
         $parser->consumeWhile('-');
@@ -51,6 +49,8 @@ final readonly class FrontMatterRule implements Rule
             throw new FrontMatterShouldBeAnArray($parser->withPosition($originalPosition));
         }
 
-        return new FrontMatterToken($data);
+        $parser->frontMatter = [...$parser->frontMatter, ...$data];
+
+        return '';
     }
 }

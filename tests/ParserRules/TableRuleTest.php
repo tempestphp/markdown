@@ -79,4 +79,22 @@ class TableRuleTest extends TestCase
 
         $this->assertSame('<p>| not | table |' . "\n" . '</p><p>| : | : |</p>', $result->html);
     }
+
+    #[Test]
+    public function test_parse_with_inline_formatting(): void
+    {
+        $this->assertSame(
+            '<table><thead><tr><th>Name</th><th>Notes</th></tr></thead><tbody><tr><td><strong>Alice</strong></td><td><code class="language-txt">code</code></td></tr></tbody></table>',
+            (string) new Parser([new TableRule()])->parse("| Name | Notes |\n| --- | --- |\n| **Alice** | `code` |"),
+        );
+    }
+
+    #[Test]
+    public function test_parse_with_image(): void
+    {
+        $this->assertSame(
+            '<table><thead><tr><th>A</th><th>B</th></tr></thead><tbody><tr><td><img src="#" alt="image"></td><td><code class="language-txt">code</code></td></tr></tbody></table>',
+            (string) new Parser([new TableRule()])->parse("| A | B |\n| --- | --- |\n| ![image](#) | `code` |"),
+        );
+    }
 }

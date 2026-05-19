@@ -4,9 +4,6 @@ namespace Tempest\Markdown\ParserRules;
 
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rule;
-use Tempest\Markdown\Token;
-use Tempest\Markdown\Tokens\RulerToken;
-use Tempest\Markdown\Tokens\RulerType;
 
 final readonly class ThickRulerRule implements Rule
 {
@@ -15,13 +12,10 @@ final readonly class ThickRulerRule implements Rule
         return $parser->comesNext('===', 3);
     }
 
-    public function parse(Parser $parser): Token
+    public function parse(Parser $parser): string
     {
-        $content = $parser->consumeWhile('=');
+        $parser->consumeWhile('=');
 
-        return new RulerToken(
-            $content,
-            RulerType::THICK,
-        );
+        return '<hr/>';
     }
 }

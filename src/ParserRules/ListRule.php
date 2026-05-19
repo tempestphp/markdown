@@ -4,9 +4,6 @@ namespace Tempest\Markdown\ParserRules;
 
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rule;
-use Tempest\Markdown\Token;
-use Tempest\Markdown\Tokens\ListItem;
-use Tempest\Markdown\Tokens\ListToken;
 
 final readonly class ListRule implements Rule
 {
@@ -15,7 +12,7 @@ final readonly class ListRule implements Rule
         return $parser->comesNext('- ', 2);
     }
 
-    public function parse(Parser $parser): Token
+    public function parse(Parser $parser): string
     {
         $items = [];
 
@@ -34,11 +31,29 @@ final readonly class ListRule implements Rule
 
             $children = $childContent !== ''
                 ? (string) new Parser([new ListRule()])->parse($childContent)
-                : null;
+                : '';
 
-            $items[] = new ListItem($content, $children);
+            $items[] = [$content, $children];
         }
 
-        return new ListToken($items);
+        $inlineParser = $parser->withRules(
+            new BoldRule(),
+            new ItalicRule(),
+            new LinkRule(),
+            new ImageRule(),
+            new CodeRule(),
+            new TextRule(),
+        );
+
+        $list = '<ul>';
+
+        foreach ($items as [$content, $children]) {
+            $parsed = $inlineParser->parse($content);
+            $list .= "<li>{$parsed}{$children}</li>";
+        }
+
+        $list .= '</ul>';
+
+        return $list;
     }
 }

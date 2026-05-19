@@ -20,4 +20,22 @@ class ItalicRuleTest extends TestCase
     {
         $this->assertSame('<em>italic</em>', (string) new Parser([new ItalicRule()])->parse('_italic_'));
     }
+
+    #[Test]
+    public function test_parse_with_bold_text(): void
+    {
+        $this->assertSame('<em>hello <strong>world</strong></em>', (string) new Parser([new ItalicRule()])->parse('__hello **world**__'));
+    }
+
+    #[Test]
+    public function test_parse_with_strikethrough_text(): void
+    {
+        $this->assertSame('<em>hello <s>world</s></em>', (string) new Parser([new ItalicRule()])->parse('__hello ~~world~~__'));
+    }
+
+    #[Test]
+    public function test_parse_with_link(): void
+    {
+        $this->assertSame('<em>hello <a href="#">world</a></em>', (string) new Parser([new ItalicRule()])->parse('__hello [world](#)__'));
+    }
 }

@@ -23,4 +23,13 @@ class CodeRuleTest extends TestCase
             (string) new Parser([new CodeRule()])->parse('`{php}echo "hi";`'),
         );
     }
+
+    #[Test]
+    public function test_parse_with_language_without_highlighter(): void
+    {
+        $this->assertSame(
+            '<code class="language-php">echo "hi";</code>',
+            (string) new Parser([new CodeRule()], highlighter: null)->parse('`{php}echo "hi";`'),
+        );
+    }
 }

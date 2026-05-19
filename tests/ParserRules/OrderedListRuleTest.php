@@ -60,4 +60,28 @@ class OrderedListRuleTest extends TestCase
             (string) new Parser([new OrderedListRule()])->parse("1. one\n  1. child\n2. two\n"),
         );
     }
+
+    #[Test]
+    public function test_parse_with_bold(): void
+    {
+        $this->assertSame('<ol><li>hello <strong>world</strong></li></ol>', (string) new Parser([new OrderedListRule()])->parse("1. hello **world**\n"));
+    }
+
+    #[Test]
+    public function test_parse_with_italic(): void
+    {
+        $this->assertSame('<ol><li>hello <em>world</em></li></ol>', (string) new Parser([new OrderedListRule()])->parse("1. hello __world__\n"));
+    }
+
+    #[Test]
+    public function test_parse_with_link(): void
+    {
+        $this->assertSame('<ol><li><a href="#">world</a></li></ol>', (string) new Parser([new OrderedListRule()])->parse("1. [world](#)\n"));
+    }
+
+    #[Test]
+    public function test_parse_with_code(): void
+    {
+        $this->assertSame('<ol><li>run <code class="language-txt">php tempest</code></li></ol>', (string) new Parser([new OrderedListRule()])->parse("1. run `php tempest`\n"));
+    }
 }

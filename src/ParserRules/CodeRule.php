@@ -5,8 +5,6 @@ namespace Tempest\Markdown\ParserRules;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Rule;
-use Tempest\Markdown\Token;
-use Tempest\Markdown\Tokens\CodeToken;
 
 final class CodeRule implements Rule, ProvidesStopChar
 {
@@ -17,7 +15,7 @@ final class CodeRule implements Rule, ProvidesStopChar
         return $parser->comesNext('`', 1);
     }
 
-    public function parse(Parser $parser): Token
+    public function parse(Parser $parser): string
     {
         $parser->consumeIncluding('`');
 
@@ -33,6 +31,16 @@ final class CodeRule implements Rule, ProvidesStopChar
 
         $parser->consumeIncluding('`');
 
-        return new CodeToken($language, $content);
+        if (! $language && $parser->highlighter) {
+            $language = $parser->highlighter->fallbackLanguage?->getName();
+        }
+
+        if ($parser->highlighter) {
+            $content = $parser->highlighter->parse($content, $language);
+        }
+
+        $class = $language ? " class=\"language-{$language}\"" : '';
+
+        return "<code{$class}>{$content}</code>";
     }
 }

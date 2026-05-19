@@ -4,8 +4,6 @@ namespace Tempest\Markdown\ParserRules;
 
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rule;
-use Tempest\Markdown\Token;
-use Tempest\Markdown\Tokens\HeadingToken;
 
 final readonly class HeadingRule implements Rule
 {
@@ -14,12 +12,16 @@ final readonly class HeadingRule implements Rule
         return $parser->comesNext('#', 1);
     }
 
-    public function parse(Parser $parser): Token
+    public function parse(Parser $parser): string
     {
         $buffer = $parser->consumeUntil(Parser::NEW_LINE);
 
         $level = strspn($buffer, '#');
+        $content = substr($buffer, $level) |> trim(...);
 
-        return new HeadingToken(substr($buffer, $level) |> trim(...), $level);
+        $tag = "h{$level}";
+        $slug = $content |> trim(...) |> strtolower(...) |> (fn (string $x) => str_replace(' ', '-', $x));
+
+        return "<{$tag} id=\"{$slug}\">{$content}</{$tag}>";
     }
 }

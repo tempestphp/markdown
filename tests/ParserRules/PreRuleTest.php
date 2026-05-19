@@ -56,4 +56,13 @@ class PreRuleTest extends TestCase
             MD),
         );
     }
+
+    #[Test]
+    public function test_parse_without_highlighter(): void
+    {
+        $this->assertSame(
+            '<pre><code>echo "hi";</code></pre>',
+            (string) new Parser([new PreRule()], highlighter: null)->parse("```\necho \"hi\";\n```"),
+        );
+    }
 }

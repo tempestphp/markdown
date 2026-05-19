@@ -4,8 +4,6 @@ namespace Tempest\Markdown\ParserRules;
 
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rule;
-use Tempest\Markdown\Token;
-use Tempest\Markdown\Tokens\NewLineToken;
 
 final readonly class NewLineRule implements Rule
 {
@@ -14,10 +12,8 @@ final readonly class NewLineRule implements Rule
         return $parser->current === "\n" || $parser->current === "\r";
     }
 
-    public function parse(Parser $parser): Token
+    public function parse(Parser $parser): string
     {
-        $buffer = $parser->consumeWhile(Parser::NEW_LINE);
-
-        return new NewLineToken($buffer);
+        return $parser->consumeWhile(Parser::NEW_LINE);
     }
 }

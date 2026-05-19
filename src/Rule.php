@@ -6,5 +6,5 @@ interface Rule
 {
     public function shouldParse(Parser $parser): bool;
 
-    public function parse(Parser $parser): ?Token;
+    public function parse(Parser $parser): string;
 }

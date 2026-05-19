@@ -16,7 +16,6 @@ use Tempest\Markdown\ParserRules\QuoteRule;
 use Tempest\Markdown\ParserRules\TableRule;
 use Tempest\Markdown\ParserRules\ThickRulerRule;
 use Tempest\Markdown\ParserRules\ThinRulerRule;
-use Tempest\Markdown\Tokens\FrontMatterToken;
 
 final class Parser
 {
@@ -27,6 +26,7 @@ final class Parser
     private(set) int $length = 0;
     private(set) ?string $current;
     private(set) string $content;
+    public array $frontMatter = [];
     /** @var \Tempest\Markdown\Rule[] */
     private array $rules;
 
@@ -105,7 +105,6 @@ final class Parser
         }
 
         $html = '';
-        $frontMatter = [];
 
         while ($parser->current !== null) {
             foreach ($this->rules as $rule) {
@@ -113,15 +112,7 @@ final class Parser
                     continue;
                 }
 
-                $token = $rule->parse($parser);
-
-                if ($token instanceof Token) {
-                    $html .= $token->parse($parser);
-
-                    if ($token instanceof FrontMatterToken) {
-                        $frontMatter = [...$frontMatter, ...$token->data];
-                    }
-                }
+                $html .= $rule->parse($parser);
 
                 continue 2;
             }
@@ -129,7 +120,7 @@ final class Parser
             $parser->consume();
         }
 
-        return new ParsedMarkdown($html, $frontMatter);
+        return new ParsedMarkdown($html, $parser->frontMatter);
     }
 
     public function comesNext(string $search, ?int $length = null): bool

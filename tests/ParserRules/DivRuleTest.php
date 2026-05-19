@@ -32,4 +32,22 @@ class DivRuleTest extends TestCase
     {
         $this->assertSame("<div class=\"warning\">line one\nline two\n</div>", (string) new Parser([new DivRule()])->parse(":::warning\nline one\nline two\n:::\n"));
     }
+
+    #[Test]
+    public function test_parse_with_bold(): void
+    {
+        $this->assertSame("<div>Hello <strong>world</strong>\n</div>", (string) new Parser([new DivRule()])->parse(":::\nHello **world**\n:::"));
+    }
+
+    #[Test]
+    public function test_parse_with_italic(): void
+    {
+        $this->assertSame("<div>Hello <em>world</em>\n</div>", (string) new Parser([new DivRule()])->parse(":::\nHello __world__\n:::"));
+    }
+
+    #[Test]
+    public function test_parse_with_link(): void
+    {
+        $this->assertSame("<div>Hello <a href=\"#\">world</a>\n</div>", (string) new Parser([new DivRule()])->parse(":::\nHello [world](#)\n:::"));
+    }
 }

@@ -5,8 +5,6 @@ namespace Tempest\Markdown\ParserRules;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Rule;
-use Tempest\Markdown\Token;
-use Tempest\Markdown\Tokens\StrikethroughToken;
 
 final class StrikethroughRule implements Rule, ProvidesStopChar
 {
@@ -17,12 +15,21 @@ final class StrikethroughRule implements Rule, ProvidesStopChar
         return $parser->comesNext('~', 1);
     }
 
-    public function parse(Parser $parser): Token
+    public function parse(Parser $parser): string
     {
         $parser->consumeWhile('~');
         $buffer = $parser->consumeUntil('~');
         $parser->consumeWhile('~');
 
-        return new StrikethroughToken($buffer);
+        $content = $parser
+            ->withRules(
+                new ItalicRule(),
+                new BoldRule(),
+                new LinkRule(),
+                new TextRule(),
+            )
+            ->parse($buffer);
+
+        return "<s>{$content}</s>";
     }
 }

@@ -4,9 +4,6 @@ namespace Tempest\Markdown\ParserRules;
 
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rule;
-use Tempest\Markdown\Token;
-use Tempest\Markdown\Tokens\ListItem;
-use Tempest\Markdown\Tokens\OrderedListToken;
 
 final readonly class OrderedListRule implements Rule
 {
@@ -25,7 +22,7 @@ final readonly class OrderedListRule implements Rule
         return true;
     }
 
-    public function parse(Parser $parser): Token
+    public function parse(Parser $parser): string
     {
         $items = [];
 
@@ -45,11 +42,29 @@ final readonly class OrderedListRule implements Rule
 
             $children = $childContent !== ''
                 ? (string) new Parser([new OrderedListRule()])->parse($childContent)
-                : null;
+                : '';
 
-            $items[] = new ListItem($content, $children);
+            $items[] = [$content, $children];
         }
 
-        return new OrderedListToken($items);
+        $inlineParser = $parser->withRules(
+            new BoldRule(),
+            new ItalicRule(),
+            new LinkRule(),
+            new ImageRule(),
+            new CodeRule(),
+            new TextRule(),
+        );
+
+        $list = '<ol>';
+
+        foreach ($items as [$content, $children]) {
+            $parsed = $inlineParser->parse($content);
+            $list .= "<li>{$parsed}{$children}</li>";
+        }
+
+        $list .= '</ol>';
+
+        return $list;
     }
 }

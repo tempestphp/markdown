@@ -7,8 +7,6 @@ use Tempest\Markdown\Exceptions\ImageSourceWasNotClosed;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Rule;
-use Tempest\Markdown\Token;
-use Tempest\Markdown\Tokens\ImageToken;
 
 final class ImageRule implements Rule, ProvidesStopChar
 {
@@ -19,7 +17,7 @@ final class ImageRule implements Rule, ProvidesStopChar
         return $parser->comesNext('![', 2);
     }
 
-    public function parse(Parser $parser): Token
+    public function parse(Parser $parser): string
     {
         $parser->consumeIncluding('![');
         $alt = $parser->consumeUntil(']') ?: null;
@@ -38,6 +36,8 @@ final class ImageRule implements Rule, ProvidesStopChar
 
         $parser->consumeIncluding(')');
 
-        return new ImageToken($href, $alt);
+        $alt = $alt ? " alt=\"{$alt}\"" : '';
+
+        return "<img src=\"{$href}\"{$alt}>";
     }
 }

@@ -4,8 +4,6 @@ namespace Tempest\Markdown\ParserRules;
 
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rule;
-use Tempest\Markdown\Token;
-use Tempest\Markdown\Tokens\ParagraphToken;
 
 final readonly class ParagraphRule implements Rule
 {
@@ -14,10 +12,22 @@ final readonly class ParagraphRule implements Rule
         return true;
     }
 
-    public function parse(Parser $parser): Token
+    public function parse(Parser $parser): string
     {
         $content = $parser->consumeUntil(Parser::NEW_LINE) . $parser->consumeWhile(Parser::NEW_LINE);
 
-        return new ParagraphToken($content);
+        $inner = $parser
+            ->withRules(
+                new BoldRule(),
+                new ItalicRule(),
+                new StrikethroughRule(),
+                new LinkRule(),
+                new ImageRule(),
+                new CodeRule(),
+                new TextRule(),
+            )
+            ->parse($content);
+
+        return "<p>{$inner}</p>";
     }
 }

@@ -4,9 +4,7 @@ namespace Tempest\Markdown\ParserRules;
 
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rule;
-use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\TableRow;
-use Tempest\Markdown\Tokens\TableToken;
 
 final readonly class TableRule implements Rule
 {
@@ -35,7 +33,7 @@ final readonly class TableRule implements Rule
         return true;
     }
 
-    public function parse(Parser $parser): Token
+    public function parse(Parser $parser): string
     {
         // Parse header row
         $headerRow = $this->parseRow($parser, isHeader: true);
@@ -52,7 +50,55 @@ final readonly class TableRule implements Rule
             $rows[] = $this->parseRow($parser, isHeader: false);
         }
 
-        return new TableToken($rows);
+        $inlineParser = $parser->withRules(
+            new BoldRule(),
+            new ItalicRule(),
+            new LinkRule(),
+            new CodeRule(),
+            new ImageRule(),
+            new TextRule(),
+        );
+
+        $headerRows = array_values(array_filter($rows, fn (TableRow $row) => $row->isHeader));
+        $dataRows = array_values(array_filter($rows, fn (TableRow $row) => ! $row->isHeader));
+
+        $table = '<table>';
+
+        if ($headerRows !== []) {
+            $table .= '<thead>';
+
+            foreach ($headerRows as $row) {
+                $table .= '<tr>';
+
+                foreach ($row->cells as $cell) {
+                    $table .= '<th>' . $inlineParser->parse($cell)->html . '</th>';
+                }
+
+                $table .= '</tr>';
+            }
+
+            $table .= '</thead>';
+        }
+
+        if ($dataRows !== []) {
+            $table .= '<tbody>';
+
+            foreach ($dataRows as $row) {
+                $table .= '<tr>';
+
+                foreach ($row->cells as $cell) {
+                    $table .= '<td>' . $inlineParser->parse($cell)->html . '</td>';
+                }
+
+                $table .= '</tr>';
+            }
+
+            $table .= '</tbody>';
+        }
+
+        $table .= '</table>';
+
+        return $table;
     }
 
     private function parseRow(Parser $parser, bool $isHeader): TableRow

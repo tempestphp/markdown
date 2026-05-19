@@ -5,8 +5,6 @@ namespace Tempest\Markdown\ParserRules;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Rule;
-use Tempest\Markdown\Token;
-use Tempest\Markdown\Tokens\QuoteToken;
 
 final class QuoteRule implements Rule, ProvidesStopChar
 {
@@ -17,7 +15,7 @@ final class QuoteRule implements Rule, ProvidesStopChar
         return $parser->comesNext('>', 1);
     }
 
-    public function parse(Parser $parser): Token
+    public function parse(Parser $parser): string
     {
         $lines = [];
 
@@ -37,6 +35,17 @@ final class QuoteRule implements Rule, ProvidesStopChar
 
         $content = implode(PHP_EOL, $lines);
 
-        return new QuoteToken($content);
+        $inner = $parser
+            ->withRules(
+                new QuoteRule(),
+                new BoldRule(),
+                new ItalicRule(),
+                new LinkRule(),
+                new ImageRule(),
+                new TextRule(),
+            )
+            ->parse($content);
+
+        return "<blockquote>{$inner}</blockquote>";
     }
 }

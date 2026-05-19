@@ -4,8 +4,6 @@ namespace Tempest\Markdown\ParserRules;
 
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rule;
-use Tempest\Markdown\Token;
-use Tempest\Markdown\Tokens\PreToken;
 
 final readonly class PreRule implements Rule
 {
@@ -14,7 +12,7 @@ final readonly class PreRule implements Rule
         return $parser->comesNext('```', 3);
     }
 
-    public function parse(Parser $parser): Token
+    public function parse(Parser $parser): string
     {
         $parser->consumeIncluding('```');
 
@@ -32,9 +30,18 @@ final readonly class PreRule implements Rule
             $content = substr($content, 0, -1);
         }
 
-        return new PreToken(
-            language: $language ?: null,
-            content: $content,
-        );
+        $language = $language ?: null;
+
+        if (! $language && $parser->highlighter) {
+            $language = $parser->highlighter->fallbackLanguage?->getName();
+        }
+
+        if ($parser->highlighter) {
+            $content = $parser->highlighter->parse($content, $language);
+        }
+
+        $class = $language ? " class=\"language-{$language}\"" : '';
+
+        return "<pre><code{$class}>{$content}</code></pre>";
     }
 }

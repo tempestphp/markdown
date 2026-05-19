@@ -27,4 +27,28 @@ class QuoteRuleTest extends TestCase
             MD),
         );
     }
+
+    #[Test]
+    public function test_bold_text(): void
+    {
+        $this->assertSame('<blockquote>Hello <strong>world</strong></blockquote>', (string) new Parser([new QuoteRule()])->parse('> Hello **world**'));
+    }
+
+    #[Test]
+    public function test_italic_text(): void
+    {
+        $this->assertSame('<blockquote>Hello <em>world</em></blockquote>', (string) new Parser([new QuoteRule()])->parse('> Hello __world__'));
+    }
+
+    #[Test]
+    public function test_link(): void
+    {
+        $this->assertSame('<blockquote>Hello <a href="#">world</a></blockquote>', (string) new Parser([new QuoteRule()])->parse('> Hello [world](#)'));
+    }
+
+    #[Test]
+    public function test_image(): void
+    {
+        $this->assertSame('<blockquote>Hello <img src="#" alt="world"></blockquote>', (string) new Parser([new QuoteRule()])->parse('> Hello ![world](#)'));
+    }
 }

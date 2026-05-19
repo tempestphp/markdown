@@ -54,4 +54,28 @@ class ListRuleTest extends TestCase
             (string) new Parser([new ListRule()])->parse("- one\n  - child\n- two\n"),
         );
     }
+
+    #[Test]
+    public function test_parse_with_bold(): void
+    {
+        $this->assertSame('<ul><li>hello <strong>world</strong></li></ul>', (string) new Parser([new ListRule()])->parse("- hello **world**\n"));
+    }
+
+    #[Test]
+    public function test_parse_with_italic(): void
+    {
+        $this->assertSame('<ul><li>hello <em>world</em></li></ul>', (string) new Parser([new ListRule()])->parse("- hello __world__\n"));
+    }
+
+    #[Test]
+    public function test_parse_with_link(): void
+    {
+        $this->assertSame('<ul><li><a href="#">world</a></li></ul>', (string) new Parser([new ListRule()])->parse("- [world](#)\n"));
+    }
+
+    #[Test]
+    public function test_parse_with_code(): void
+    {
+        $this->assertSame('<ul><li>run <code class="language-txt">php tempest</code></li></ul>', (string) new Parser([new ListRule()])->parse("- run `php tempest`\n"));
+    }
 }

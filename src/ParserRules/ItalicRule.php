@@ -5,8 +5,6 @@ namespace Tempest\Markdown\ParserRules;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Rule;
-use Tempest\Markdown\Token;
-use Tempest\Markdown\Tokens\ItalicToken;
 
 final class ItalicRule implements Rule, ProvidesStopChar
 {
@@ -17,12 +15,21 @@ final class ItalicRule implements Rule, ProvidesStopChar
         return $parser->comesNext('_', 1);
     }
 
-    public function parse(Parser $parser): Token
+    public function parse(Parser $parser): string
     {
         $parser->consumeWhile('_');
         $buffer = $parser->consumeUntil('_');
         $parser->consumeWhile('_');
 
-        return new ItalicToken(trim($buffer, '_'));
+        $content = $parser
+            ->withRules(
+                new BoldRule(),
+                new StrikethroughRule(),
+                new LinkRule(),
+                new TextRule(),
+            )
+            ->parse(trim($buffer, '_'));
+
+        return "<em>{$content}</em>";
     }
 }

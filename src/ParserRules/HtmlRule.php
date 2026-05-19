@@ -4,8 +4,6 @@ namespace Tempest\Markdown\ParserRules;
 
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rule;
-use Tempest\Markdown\Token;
-use Tempest\Markdown\Tokens\HtmlToken;
 
 final readonly class HtmlRule implements Rule
 {
@@ -14,7 +12,7 @@ final readonly class HtmlRule implements Rule
         return $parser->comesNext('<');
     }
 
-    public function parse(Parser $parser): Token
+    public function parse(Parser $parser): string
     {
         $voidTags = ['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
 
@@ -24,12 +22,12 @@ final readonly class HtmlRule implements Rule
         $openingTag = $tagOpen . $tagName . $tagClose;
 
         if (in_array(strtolower($tagName), $voidTags, strict: true)) {
-            return new HtmlToken($openingTag);
+            return $openingTag;
         }
 
         // Self-closing tags (<img />, <br />) need no closing tag.
         if (str_ends_with($openingTag, '/>')) {
-            return new HtmlToken($openingTag . $parser->consumeWhile(Parser::NEW_LINE));
+            return $openingTag . $parser->consumeWhile(Parser::NEW_LINE);
         }
 
         // Extract tag name from opening tag: "<div class..." → "div".
@@ -63,6 +61,6 @@ final readonly class HtmlRule implements Rule
 
         $content .= $parser->consumeWhile(Parser::NEW_LINE);
 
-        return new HtmlToken($content);
+        return $content;
     }
 }

@@ -5,8 +5,6 @@ namespace Tempest\Markdown\ParserRules;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Rule;
-use Tempest\Markdown\Token;
-use Tempest\Markdown\Tokens\LinkToken;
 
 final class LinkRule implements Rule, ProvidesStopChar
 {
@@ -17,7 +15,7 @@ final class LinkRule implements Rule, ProvidesStopChar
         return $parser->comesNext('[', 1);
     }
 
-    public function parse(Parser $parser): Token
+    public function parse(Parser $parser): string
     {
         $parser->consumeIncluding('[');
         $content = $parser->consumeUntil(']');
@@ -31,6 +29,23 @@ final class LinkRule implements Rule, ProvidesStopChar
             $parser->consumeIncluding(')');
         }
 
-        return new LinkToken($content, $href);
+        $parsedContent = $parser
+            ->withRules(
+                new BoldRule(),
+                new ItalicRule(),
+                new StrikethroughRule(),
+                new TextRule(),
+            )
+            ->parse($content);
+
+        $href ??= '';
+        $blank = '';
+
+        if (str_starts_with($href, '*')) {
+            $href = substr($href, 1);
+            $blank = ' target="_blank" rel="noopener noreferrer"';
+        }
+
+        return "<a href=\"{$href}\"{$blank}>{$parsedContent}</a>";
     }
 }

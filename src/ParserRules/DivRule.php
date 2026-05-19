@@ -4,8 +4,6 @@ namespace Tempest\Markdown\ParserRules;
 
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rule;
-use Tempest\Markdown\Token;
-use Tempest\Markdown\Tokens\DivToken;
 
 final readonly class DivRule implements Rule
 {
@@ -14,7 +12,7 @@ final readonly class DivRule implements Rule
         return $parser->comesNext(':::', 3);
     }
 
-    public function parse(Parser $parser): Token
+    public function parse(Parser $parser): string
     {
         $parser->consumeWhile(':');
 
@@ -27,9 +25,19 @@ final readonly class DivRule implements Rule
         $parser->consumeWhile(':');
         $parser->consumeWhile(Parser::NEW_LINE);
 
-        return new DivToken(
-            class: $class,
-            content: $content,
-        );
+        $inner = $parser
+            ->withRules(
+                new QuoteRule(),
+                new BoldRule(),
+                new ItalicRule(),
+                new LinkRule(),
+                new ImageRule(),
+                new TextRule(),
+            )
+            ->parse($content);
+
+        $classAttr = $class ? " class=\"{$class}\"" : '';
+
+        return "<div{$classAttr}>{$inner}</div>";
     }
 }
