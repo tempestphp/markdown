@@ -62,9 +62,7 @@ class ListTokenTest extends TestCase
     public function test_parse_nested(): void
     {
         $token = new ListToken([
-            new ListItem('parent', new ListToken([
-                new ListItem('child'),
-            ])),
+            new ListItem('parent', '<ul><li>child</li></ul>'),
         ]);
 
         $this->assertEquals('<ul><li>parent<ul><li>child</li></ul></li></ul>', $token->parse(new Parser()));
@@ -74,10 +72,7 @@ class ListTokenTest extends TestCase
     public function test_parse_nested_multiple_children(): void
     {
         $token = new ListToken([
-            new ListItem('parent', new ListToken([
-                new ListItem('child one'),
-                new ListItem('child two'),
-            ])),
+            new ListItem('parent', '<ul><li>child one</li><li>child two</li></ul>'),
         ]);
 
         $this->assertEquals('<ul><li>parent<ul><li>child one</li><li>child two</li></ul></li></ul>', $token->parse(new Parser()));
@@ -87,9 +82,7 @@ class ListTokenTest extends TestCase
     public function test_parse_nested_sibling_after_sublist(): void
     {
         $token = new ListToken([
-            new ListItem('one', new ListToken([
-                new ListItem('child'),
-            ])),
+            new ListItem('one', '<ul><li>child</li></ul>'),
             new ListItem('two'),
         ]);
 

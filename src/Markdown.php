@@ -11,10 +11,7 @@ final readonly class Markdown
     public function __construct(
         public ?Highlighter $highlighter = new Highlighter(),
     ) {
-        $this->parser = new Parser(
-            new Lexer(),
-            $this->highlighter,
-        );
+        $this->parser = new Parser(highlighter: $this->highlighter);
     }
 
     public function parse(string $content): ParsedMarkdown

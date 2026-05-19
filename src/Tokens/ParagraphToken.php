@@ -2,14 +2,14 @@
 
 namespace Tempest\Markdown\Tokens;
 
-use Tempest\Markdown\LexerRules\BoldRule;
-use Tempest\Markdown\LexerRules\CodeRule;
-use Tempest\Markdown\LexerRules\ImageRule;
-use Tempest\Markdown\LexerRules\ItalicRule;
-use Tempest\Markdown\LexerRules\LinkRule;
-use Tempest\Markdown\LexerRules\StrikethroughRule;
-use Tempest\Markdown\LexerRules\TextRule;
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\ParserRules\BoldRule;
+use Tempest\Markdown\ParserRules\CodeRule;
+use Tempest\Markdown\ParserRules\ImageRule;
+use Tempest\Markdown\ParserRules\ItalicRule;
+use Tempest\Markdown\ParserRules\LinkRule;
+use Tempest\Markdown\ParserRules\StrikethroughRule;
+use Tempest\Markdown\ParserRules\TextRule;
 use Tempest\Markdown\Token;
 
 final class ParagraphToken implements Token
@@ -20,17 +20,17 @@ final class ParagraphToken implements Token
 
     public function parse(Parser $parser): string
     {
-        $parser = $parser->withRules(
-            new BoldRule(),
-            new ItalicRule(),
-            new StrikethroughRule(),
-            new LinkRule(),
-            new ImageRule(),
-            new CodeRule(),
-            new TextRule(),
-        );
-
-        $content = $parser->parse($this->content);
+        $content = $parser
+            ->withRules(
+                new BoldRule(),
+                new ItalicRule(),
+                new StrikethroughRule(),
+                new LinkRule(),
+                new ImageRule(),
+                new CodeRule(),
+                new TextRule(),
+            )
+            ->parse($this->content);
 
         return "<p>{$content}</p>";
     }

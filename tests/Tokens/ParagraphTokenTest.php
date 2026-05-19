@@ -14,11 +14,7 @@ class ParagraphTokenTest extends TestCase
     {
         $token = new ParagraphToken('Hello, **world**!');
 
-        $expectedHtml = '<p>Hello, <strong>world</strong>!</p>';
-
-        $actualHtml = $token->parse(new Parser());
-
-        $this->assertEquals($expectedHtml, $actualHtml);
+        $this->assertEquals('<p>Hello, <strong>world</strong>!</p>', $token->parse(new Parser()));
     }
 
     #[Test]
@@ -26,11 +22,7 @@ class ParagraphTokenTest extends TestCase
     {
         $token = new ParagraphToken('Hello, ~~world~~!');
 
-        $expectedHtml = '<p>Hello, <s>world</s>!</p>';
-
-        $actualHtml = $token->parse(new Parser());
-
-        $this->assertEquals($expectedHtml, $actualHtml);
+        $this->assertEquals('<p>Hello, <s>world</s>!</p>', $token->parse(new Parser()));
     }
 
     #[Test]
@@ -38,11 +30,7 @@ class ParagraphTokenTest extends TestCase
     {
         $token = new ParagraphToken('Hello, __world__!');
 
-        $expectedHtml = '<p>Hello, <em>world</em>!</p>';
-
-        $actualHtml = $token->parse(new Parser());
-
-        $this->assertEquals($expectedHtml, $actualHtml);
+        $this->assertEquals('<p>Hello, <em>world</em>!</p>', $token->parse(new Parser()));
     }
 
     #[Test]
@@ -50,11 +38,7 @@ class ParagraphTokenTest extends TestCase
     {
         $token = new ParagraphToken('Hello, [world](#)!');
 
-        $expectedHtml = '<p>Hello, <a href="#">world</a>!</p>';
-
-        $actualHtml = $token->parse(new Parser());
-
-        $this->assertEquals($expectedHtml, $actualHtml);
+        $this->assertEquals('<p>Hello, <a href="#">world</a>!</p>', $token->parse(new Parser()));
     }
 
     #[Test]
@@ -62,11 +46,7 @@ class ParagraphTokenTest extends TestCase
     {
         $token = new ParagraphToken('Hello, ![world](#)!');
 
-        $expectedHtml = '<p>Hello, <img src="#" alt="world">!</p>';
-
-        $actualHtml = $token->parse(new Parser());
-
-        $this->assertEquals($expectedHtml, $actualHtml);
+        $this->assertEquals('<p>Hello, <img src="#" alt="world">!</p>', $token->parse(new Parser()));
     }
 
     #[Test]
@@ -74,10 +54,6 @@ class ParagraphTokenTest extends TestCase
     {
         $token = new ParagraphToken('Hello, `world`!');
 
-        $expectedHtml = '<p>Hello, <code class="language-txt">world</code>!</p>';
-
-        $actualHtml = $token->parse(new Parser());
-
-        $this->assertEquals($expectedHtml, $actualHtml);
+        $this->assertEquals('<p>Hello, <code class="language-txt">world</code>!</p>', $token->parse(new Parser()));
     }
 }

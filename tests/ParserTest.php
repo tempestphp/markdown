@@ -11,12 +11,6 @@ final class ParserTest extends TestCase
 {
     private Parser $parser;
 
-    #[Before]
-    public function setupParser(): void
-    {
-        $this->parser = new Parser();
-    }
-
     #[Test]
     public function test_token_with_nested_tokens(): void
     {
@@ -133,5 +127,66 @@ final class ParserTest extends TestCase
         MD);
 
         $this->assertSame('<ol><li>a</li><li>b</li></ol>', $parsed->html);
+    }
+
+    #[Before]
+    public function setupParser(): void
+    {
+        $this->parser = new Parser();
+    }
+
+    #[Test]
+    public function test_lex_snippet(): void
+    {
+        $result = $this->parser->parse(<<<'MD'
+        # Test
+        Hello **world**
+        MD);
+
+        $this->assertSame('<h1 id="test">Test</h1>' . "\n" . '<p>Hello <strong>world</strong></p>', $result->html);
+    }
+
+    #[Test]
+    public function test_lookahead(): void
+    {
+        $parser = new Parser()->setContent(<<<'MD'
+        | Test |
+        | ---- |
+        | Hello |
+        MD);
+
+        $result = $parser->lookaheadUntil(Parser::NEW_LINE, Parser::NEW_LINE);
+
+        $this->assertCount(2, $result);
+        $this->assertSame("| Test |\n", $result[0]);
+        $this->assertSame("| ---- |\n", $result[1]);
+        $this->assertSame(0, $parser->position);
+    }
+
+    #[Test]
+    public function test_lookahead_with_mismatches(): void
+    {
+        $parser = new Parser()->setContent(<<<'MD'
+        | Test |
+
+        MD);
+
+        $result = $parser->lookaheadUntil(Parser::NEW_LINE, Parser::NEW_LINE);
+
+        $this->assertCount(1, $result);
+        $this->assertSame("| Test |\n", $result[0]);
+        $this->assertSame(0, $parser->position);
+    }
+
+    #[Test]
+    public function test_lookahead_without_match(): void
+    {
+        $parser = new Parser()->setContent(<<<'MD'
+        ABC
+        MD);
+
+        $result = $parser->lookaheadUntil('D');
+
+        $this->assertEmpty($result);
     }
 }

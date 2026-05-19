@@ -2,13 +2,13 @@
 
 namespace Tempest\Markdown\Tokens;
 
-use Tempest\Markdown\LexerRules\BoldRule;
-use Tempest\Markdown\LexerRules\CodeRule;
-use Tempest\Markdown\LexerRules\ImageRule;
-use Tempest\Markdown\LexerRules\ItalicRule;
-use Tempest\Markdown\LexerRules\LinkRule;
-use Tempest\Markdown\LexerRules\TextRule;
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\ParserRules\BoldRule;
+use Tempest\Markdown\ParserRules\CodeRule;
+use Tempest\Markdown\ParserRules\ImageRule;
+use Tempest\Markdown\ParserRules\ItalicRule;
+use Tempest\Markdown\ParserRules\LinkRule;
+use Tempest\Markdown\ParserRules\TextRule;
 use Tempest\Markdown\Token;
 
 final class OrderedListToken implements Token
@@ -20,7 +20,7 @@ final class OrderedListToken implements Token
 
     public function parse(Parser $parser): string
     {
-        $parser = $parser->withRules(
+        $inlineParser = $parser->withRules(
             new BoldRule(),
             new ItalicRule(),
             new LinkRule(),
@@ -32,8 +32,8 @@ final class OrderedListToken implements Token
         $list = '<ol>';
 
         foreach ($this->items as $item) {
-            $content = $parser->parse($item->content);
-            $children = $item->children?->parse($parser) ?? '';
+            $content = $inlineParser->parse($item->content);
+            $children = $item->children ?? '';
             $list .= "<li>{$content}{$children}</li>";
         }
 

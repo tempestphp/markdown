@@ -5,8 +5,8 @@ namespace Tempest\Markdown\Tests;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tempest\Markdown\Exceptions\ImageSourceWasMissing;
-use Tempest\Markdown\Lexer;
-use Tempest\Markdown\LexerRules\ImageRule;
+use Tempest\Markdown\Parser;
+use Tempest\Markdown\ParserRules\ImageRule;
 
 class RendersSnippetTest extends TestCase
 {
@@ -14,7 +14,7 @@ class RendersSnippetTest extends TestCase
     public function test_full_snippet(): void
     {
         try {
-            new Lexer([new ImageRule()])->lex(<<<'MD'
+            new Parser([new ImageRule()])->parse(<<<'MD'
             Foo 1
             Foo 2
             Foo 3
@@ -36,7 +36,7 @@ class RendersSnippetTest extends TestCase
     public function test_top_snippet(): void
     {
         try {
-            new Lexer([new ImageRule()])->lex(<<<'MD'
+            new Parser([new ImageRule()])->parse(<<<'MD'
             Foo 1
             Foo 2
             Foo 3
@@ -60,7 +60,7 @@ class RendersSnippetTest extends TestCase
     public function test_bottom_snippet(): void
     {
         try {
-            new Lexer([new ImageRule()])->lex(<<<'MD'
+            new Parser([new ImageRule()])->parse(<<<'MD'
             Hello ![alt] world
             Foo 4
             Foo 5

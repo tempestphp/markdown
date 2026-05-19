@@ -62,9 +62,7 @@ class OrderedListTokenTest extends TestCase
     public function test_parse_nested(): void
     {
         $token = new OrderedListToken([
-            new ListItem('parent', new OrderedListToken([
-                new ListItem('child'),
-            ])),
+            new ListItem('parent', '<ol><li>child</li></ol>'),
         ]);
 
         $this->assertEquals('<ol><li>parent<ol><li>child</li></ol></li></ol>', $token->parse(new Parser()));
@@ -74,9 +72,7 @@ class OrderedListTokenTest extends TestCase
     public function test_parse_nested_sibling_after_sublist(): void
     {
         $token = new OrderedListToken([
-            new ListItem('one', new OrderedListToken([
-                new ListItem('child'),
-            ])),
+            new ListItem('one', '<ol><li>child</li></ol>'),
             new ListItem('two'),
         ]);
 

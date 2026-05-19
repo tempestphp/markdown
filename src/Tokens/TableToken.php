@@ -2,13 +2,13 @@
 
 namespace Tempest\Markdown\Tokens;
 
-use Tempest\Markdown\LexerRules\BoldRule;
-use Tempest\Markdown\LexerRules\CodeRule;
-use Tempest\Markdown\LexerRules\ImageRule;
-use Tempest\Markdown\LexerRules\ItalicRule;
-use Tempest\Markdown\LexerRules\LinkRule;
-use Tempest\Markdown\LexerRules\TextRule;
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\ParserRules\BoldRule;
+use Tempest\Markdown\ParserRules\CodeRule;
+use Tempest\Markdown\ParserRules\ImageRule;
+use Tempest\Markdown\ParserRules\ItalicRule;
+use Tempest\Markdown\ParserRules\LinkRule;
+use Tempest\Markdown\ParserRules\TextRule;
 use Tempest\Markdown\Token;
 
 final class TableToken implements Token
@@ -20,7 +20,7 @@ final class TableToken implements Token
 
     public function parse(Parser $parser): string
     {
-        $parser = $parser->withRules(
+        $inlineParser = $parser->withRules(
             new BoldRule(),
             new ItalicRule(),
             new LinkRule(),
@@ -41,7 +41,7 @@ final class TableToken implements Token
                 $table .= '<tr>';
 
                 foreach ($row->cells as $cell) {
-                    $table .= '<th>' . $parser->parse($cell)->html . '</th>';
+                    $table .= '<th>' . $inlineParser->parse($cell)->html . '</th>';
                 }
 
                 $table .= '</tr>';
@@ -57,7 +57,7 @@ final class TableToken implements Token
                 $table .= '<tr>';
 
                 foreach ($row->cells as $cell) {
-                    $table .= '<td>' . $parser->parse($cell)->html . '</td>';
+                    $table .= '<td>' . $inlineParser->parse($cell)->html . '</td>';
                 }
 
                 $table .= '</tr>';
