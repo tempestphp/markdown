@@ -4,12 +4,14 @@ namespace Tempest\Markdown;
 
 use Tempest\Highlight\Highlighter;
 use Tempest\Markdown\Tokens\FrontMatterToken;
+use Tempest\ResponsiveImage\ResponsiveImageFactory;
 
 final readonly class Parser
 {
     public function __construct(
         public Lexer $lexer = new Lexer(),
         public ?Highlighter $highlighter = new Highlighter(),
+        public ?ResponsiveImageFactory $imageFactory = null,
     ) {}
 
     public function withRules(Rule ...$rules): self

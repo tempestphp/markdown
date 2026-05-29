@@ -8,3 +8,4 @@ composer.lock
 build/
 .cache
 .claude
+tests/Fixtures/public/*.jpg

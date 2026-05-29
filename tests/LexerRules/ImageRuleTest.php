@@ -15,17 +15,17 @@ class ImageRuleTest extends TestCase
     #[Test]
     public function test_lex(): void
     {
-        $token = new Lexer([new ImageRule()])->lex('![alt](href)')[0];
+        $token = new Lexer([new ImageRule()])->lex('![alt](src)')[0];
 
-        $this->assertEquals(new ImageToken('href', 'alt'), $token);
+        $this->assertEquals(new ImageToken('src', 'alt'), $token);
     }
 
     #[Test]
     public function test_lex_without_alt(): void
     {
-        $token = new Lexer([new ImageRule()])->lex('![](href)')[0];
+        $token = new Lexer([new ImageRule()])->lex('![](src)')[0];
 
-        $this->assertEquals(new ImageToken('href', null), $token);
+        $this->assertEquals(new ImageToken('src', null), $token);
     }
 
     #[Test]
