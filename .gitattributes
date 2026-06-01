@@ -1,9 +1,12 @@
+# This file was partly modified by the lean package validator (http://git.io/lean-package-validator).
+
 # Exclude build/test files from the release
-/tests                  export-ignore
-/.git*                  export-ignore
-/.php-cs-fixer.dist.php export-ignore
-/phpstan.neon.dist      export-ignore
-/phpunit.xml            export-ignore
-/test-server.php        export-ignore
-/test-terminal.php      export-ignore
-/UPGRADING.md           export-ignore
+.gitattributes export-ignore
+.github/       export-ignore
+.gitignore     export-ignore
+LICENCE.md     export-ignore
+mago.toml      export-ignore
+phpunit.xml    export-ignore
+README.md      export-ignore
+tests/         export-ignore
+UPGRADING.md   export-ignore
