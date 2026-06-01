@@ -152,7 +152,7 @@ final class ParserTest extends TestCase
     }
 
     #[Test]
-    public function test_nested_lists(): void
+    public function test_nested_lists_with_bigger_indent(): void
     {
         $markdown = <<<'MD'
         - X
@@ -163,5 +163,19 @@ final class ParserTest extends TestCase
         $parsed = $this->parser->parse($markdown);
 
         $this->assertSame('<ul><li>X<ul><li>a</li><li>b</li></ul></li></ul>', $parsed->html);
+    }
+
+    #[Test]
+    public function test_nested_ordered_lists_with_bigger_indent(): void
+    {
+        $markdown = <<<'MD'
+        1. X
+            1. a
+            2. b
+        MD;
+
+        $parsed = $this->parser->parse($markdown);
+
+        $this->assertSame('<ol><li>X<ol><li>a</li><li>b</li></ol></li></ol>', $parsed->html);
     }
 }
