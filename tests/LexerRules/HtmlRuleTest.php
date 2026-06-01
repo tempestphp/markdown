@@ -35,11 +35,11 @@ class HtmlRuleTest extends TestCase
     {
         $html = <<<'HTML'
         Hello
-        
+
         <p>
         Hi
         </p>
-        
+
         World
         HTML;
 

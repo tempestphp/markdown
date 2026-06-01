@@ -56,6 +56,20 @@ final class Lexer
         ]);
     }
 
+    public function prependRules(Rule ...$rules): self
+    {
+        return clone($this, [
+            'rules' => [...$rules, ...$this->rules],
+        ]);
+    }
+
+    public function appendRules(Rule ...$rules): self
+    {
+        return clone($this, [
+            'rules' => [...$this->rules, ...$rules],
+        ]);
+    }
+
     public function setContent(string $content): self
     {
         $this->content = $content;

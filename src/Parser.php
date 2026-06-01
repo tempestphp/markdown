@@ -21,6 +21,20 @@ final readonly class Parser
         ]);
     }
 
+    public function prependRules(Rule ...$rules): self
+    {
+        return clone($this, [
+            'lexer' => $this->lexer->prependRules(...$rules),
+        ]);
+    }
+
+    public function appendRules(Rule ...$rules): self
+    {
+        return clone($this, [
+            'lexer' => $this->lexer->appendRules(...$rules),
+        ]);
+    }
+
     public function parse(string $input): ParsedMarkdown
     {
         $tokens = $this->lexer->lex($input);

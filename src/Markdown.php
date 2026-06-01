@@ -5,7 +5,7 @@ namespace Tempest\Markdown;
 use Tempest\Highlight\Highlighter;
 use Tempest\ResponsiveImage\ResponsiveImageFactory;
 
-final readonly class Markdown
+final class Markdown
 {
     private Parser $parser;
 
@@ -23,5 +23,26 @@ final readonly class Markdown
     public function parse(string $content): ParsedMarkdown
     {
         return $this->parser->parse($content);
+    }
+
+    public function withRules(Rule ...$rules): self
+    {
+        $this->parser = $this->parser->withRules(...$rules);
+
+        return $this;
+    }
+
+    public function prependRules(Rule ...$rules): self
+    {
+        $this->parser = $this->parser->prependRules(...$rules);
+
+        return $this;
+    }
+
+    public function appendRules(Rule ...$rules): self
+    {
+        $this->parser = $this->parser->appendRules(...$rules);
+
+        return $this;
     }
 }
