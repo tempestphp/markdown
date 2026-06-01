@@ -36,7 +36,7 @@ final readonly class OrderedListRule implements Rule
 
         while ($lexer->comesNext('  ', 2)) {
             $lexer->consume(2); // strip one indent level
-            $childContent .= $lexer->consumeUntil(Lexer::NEW_LINE) . "\n";
+            $childContent .= $lexer->consumeUntil(Lexer::NEW_LINE) . PHP_EOL;
             $lexer->consumeWhile(Lexer::NEW_LINE);
         }
 
