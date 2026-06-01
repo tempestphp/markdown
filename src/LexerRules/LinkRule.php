@@ -20,7 +20,7 @@ final class LinkRule implements Rule, ProvidesStopChar
     public function lex(Lexer $lexer): Token
     {
         $lexer->consumeIncluding('[');
-        $content = $lexer->consumeUntil(']');
+        $content = $this->consumeContent($lexer);
         $lexer->consumeIncluding(']');
 
         $href = null;
@@ -32,5 +32,27 @@ final class LinkRule implements Rule, ProvidesStopChar
         }
 
         return new LinkToken($content, $href);
+    }
+
+    private function consumeContent(Lexer $lexer): string
+    {
+        $content = '';
+        $bracketDepth = 0;
+
+        while ($lexer->current !== null) {
+            if ($lexer->comesNext(']') && $bracketDepth === 0) {
+                break;
+            }
+
+            if ($lexer->comesNext('[')) {
+                $bracketDepth += 1;
+            } elseif ($lexer->comesNext(']')) {
+                $bracketDepth -= 1;
+            }
+
+            $content .= $lexer->consume();
+        }
+
+        return $content;
     }
 }

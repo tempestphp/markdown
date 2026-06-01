@@ -3,6 +3,7 @@
 namespace Tempest\Markdown\Tokens;
 
 use Tempest\Markdown\LexerRules\BoldRule;
+use Tempest\Markdown\LexerRules\ImageRule;
 use Tempest\Markdown\LexerRules\ItalicRule;
 use Tempest\Markdown\LexerRules\StrikethroughRule;
 use Tempest\Markdown\LexerRules\TextRule;
@@ -23,6 +24,7 @@ final readonly class LinkToken implements Token
                 new BoldRule(),
                 new ItalicRule(),
                 new StrikethroughRule(),
+                new ImageRule(),
                 new TextRule(),
             )
             ->parse($this->content);

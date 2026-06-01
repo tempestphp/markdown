@@ -25,4 +25,12 @@ class LinkRuleTest extends TestCase
 
         $this->assertEquals(new LinkToken('click here', null), $token);
     }
+
+    #[Test]
+    public function test_lex_with_image_content(): void
+    {
+        $token = new Lexer([new LinkRule()])->lex('[![alt](/image.jpg)](/link)')[0];
+
+        $this->assertEquals(new LinkToken('![alt](/image.jpg)', '/link'), $token);
+    }
 }

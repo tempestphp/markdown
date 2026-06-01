@@ -134,4 +134,12 @@ final class ParserTest extends TestCase
 
         $this->assertSame('<ol><li>a</li><li>b</li></ol>', $parsed->html);
     }
+
+    #[Test]
+    public function test_link_with_image(): void
+    {
+        $parsed = $this->parser->parse('[![alt](/image.jpg)](/link)');
+
+        $this->assertSame('<p><a href="/link"><img src="/image.jpg" alt="alt"></a></p>', $parsed->html);
+    }
 }

@@ -42,6 +42,14 @@ class LinkTokenTest extends TestCase
     }
 
     #[Test]
+    public function test_parse_with_image(): void
+    {
+        $token = new LinkToken('![alt](/image.jpg)', '/link');
+
+        $this->assertEquals('<a href="/link"><img src="/image.jpg" alt="alt"></a>', $token->parse(new Parser()));
+    }
+
+    #[Test]
     public function test_parse_with_target_blank_text(): void
     {
         $token = new LinkToken('click here', '*https://tempestphp.com');
