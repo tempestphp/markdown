@@ -22,6 +22,11 @@ final readonly class OrderedListRule implements Rule
             return false;
         }
 
+        // Must be followed by a space.
+        if (($search[1][0] ?? null) !== ' ') {
+            return false;
+        }
+
         return true;
     }
 
