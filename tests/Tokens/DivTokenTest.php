@@ -56,4 +56,12 @@ class DivTokenTest extends TestCase
 
         $this->assertEquals('<div>Hello <a href="#">world</a></div>', $token->parse(new Parser()));
     }
+
+    #[Test]
+    public function test_parse_with_heading(): void
+    {
+        $token = new DivToken(class: null, content: '## hi');
+
+        $this->assertEquals('<div><h2 id="hi">hi</h2></div>', $token->parse(new Parser()));
+    }
 }
