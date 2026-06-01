@@ -34,17 +34,19 @@ class HtmlRuleTest extends TestCase
     public function test_lex_multiline(): void
     {
         $html = <<<'HTML'
-        Hello        
+        Hello
+        
         <p>
         Hi
         </p>
+        
         World
         HTML;
 
         $tokens = new Lexer([new NewLineRule(), new HtmlRule(), new ParagraphRule()])->lex($html);
 
-        $this->assertCount(3, $tokens);
-        $this->assertEquals(new HtmlToken("<p>\nHi\n</p>\n"), $tokens[1]);
+        $this->assertCount(4, $tokens);
+        $this->assertEquals(new HtmlToken("<p>\nHi\n</p>\n\n"), $tokens[2]);
     }
 
     #[Test]

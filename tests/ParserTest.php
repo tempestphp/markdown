@@ -45,9 +45,9 @@ final class ParserTest extends TestCase
         MD);
 
         $expected = <<<'HTML'
-        <p>Hello
-
-        </p><div>Hello</div>
+        <p>Hello</p>
+        
+        <div>Hello</div>
 
         <img src="#" />
 

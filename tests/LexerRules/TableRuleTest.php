@@ -102,9 +102,8 @@ class TableRuleTest extends TestCase
     {
         $tokens = new Lexer([new TableRule(), new ParagraphRule()])->lex("| Hello |\nHello");
 
-        $this->assertCount(2, $tokens);
+        $this->assertCount(1, $tokens);
         $this->assertInstanceOf(ParagraphToken::class, $tokens[0]);
-        $this->assertInstanceOf(ParagraphToken::class, $tokens[1]);
     }
 
     #[Test]
@@ -112,8 +111,7 @@ class TableRuleTest extends TestCase
     {
         $tokens = new Lexer([new TableRule(), new ParagraphRule()])->lex("| not | table |\n| : | : |");
 
-        $this->assertCount(2, $tokens);
+        $this->assertCount(1, $tokens);
         $this->assertInstanceOf(ParagraphToken::class, $tokens[0]);
-        $this->assertInstanceOf(ParagraphToken::class, $tokens[1]);
     }
 }
