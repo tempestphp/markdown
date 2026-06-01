@@ -45,7 +45,7 @@ final class TokenCollection implements IteratorAggregate, ArrayAccess
 
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        if (! $offset) {
+        if (! is_integer($offset)) {
             $offset = $this->i;
             $this->i++;
         }
