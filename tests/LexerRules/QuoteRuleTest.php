@@ -35,4 +35,12 @@ class QuoteRuleTest extends TestCase
         line 3
         TXT, $token->content);
     }
+
+    #[Test]
+    public function test_lex_only_at_start_of_line(): void
+    {
+        $tokens = new Lexer([new QuoteRule()])->lex('two > one');
+
+        $this->assertCount(0, $tokens);
+    }
 }

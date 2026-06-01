@@ -41,6 +41,18 @@ class QuoteTokenTest extends TestCase
     }
 
     #[Test]
+    public function test_parse_multiple_levels_only_at_start_of_line(): void
+    {
+        $token = new QuoteToken(<<<'TXT'
+        two > one
+        TXT);
+
+        $parsed = $token->parse(new Parser());
+
+        $this->assertSame('<blockquote>two > one</blockquote>', $parsed);
+    }
+
+    #[Test]
     public function test_bold_text(): void
     {
         $token = new QuoteToken('Hello **world**');

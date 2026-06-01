@@ -32,4 +32,44 @@ class HeadingTokenTest extends TestCase
 
         $this->assertEquals('<h6 id="hello-world">Hello World</h6>', $token->parse(new Parser()));
     }
+
+    #[Test]
+    public function test_parse_with_bold(): void
+    {
+        $token = new HeadingToken('Hello, **world**!', 1);
+
+        $this->assertEquals('<h1 id="hello,-**world**!">Hello, <strong>world</strong>!</h1>', $token->parse(new Parser()));
+    }
+
+    #[Test]
+    public function test_parse_with_italic(): void
+    {
+        $token = new HeadingToken('Hello, __world__!', 1);
+
+        $this->assertEquals('<h1 id="hello,-__world__!">Hello, <em>world</em>!</h1>', $token->parse(new Parser()));
+    }
+
+    #[Test]
+    public function test_parse_with_strikethrough(): void
+    {
+        $token = new HeadingToken('Hello, ~~world~~!', 1);
+
+        $this->assertEquals('<h1 id="hello,-~~world~~!">Hello, <s>world</s>!</h1>', $token->parse(new Parser()));
+    }
+
+    #[Test]
+    public function test_parse_with_link(): void
+    {
+        $token = new HeadingToken('Hello, [world](#)!', 1);
+
+        $this->assertEquals('<h1 id="hello,-[world](#)!">Hello, <a href="#">world</a>!</h1>', $token->parse(new Parser()));
+    }
+
+    #[Test]
+    public function test_parse_with_code(): void
+    {
+        $token = new HeadingToken('Hello, `world`!', 1);
+
+        $this->assertEquals('<h1 id="hello,-`world`!">Hello, <code class="language-txt">world</code>!</h1>', $token->parse(new Parser()));
+    }
 }

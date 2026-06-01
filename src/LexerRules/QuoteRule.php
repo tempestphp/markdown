@@ -14,7 +14,11 @@ final class QuoteRule implements Rule, ProvidesStopChar
 
     public function shouldLex(Lexer $lexer): bool
     {
-        return $lexer->comesNext('>', 1);
+        if (! $lexer->comesNext('>', 1)) {
+            return false;
+        }
+
+        return $lexer->position === 0 || ($lexer->content[$lexer->position - 1] ?? null) === PHP_EOL;
     }
 
     public function lex(Lexer $lexer): Token
