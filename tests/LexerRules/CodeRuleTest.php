@@ -25,4 +25,12 @@ class CodeRuleTest extends TestCase
 
         $this->assertEquals(new CodeToken('php', 'code'), $token);
     }
+
+    #[Test]
+    public function test_with_custom_hl_token(): void
+    {
+        $token = new Lexer([new CodeRule()])->lex('`{:hl-class:code:}`')[0];
+
+        $this->assertEquals(new CodeToken(language: null, content: '{:hl-class:code:}'), $token);
+    }
 }

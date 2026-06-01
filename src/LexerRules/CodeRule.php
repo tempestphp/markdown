@@ -29,7 +29,14 @@ final class CodeRule implements Rule, ProvidesStopChar
             $lexer->consume();
         }
 
-        $content = $lexer->consumeUntil('`');
+        $content = '';
+
+        if ($language && ! ctype_alpha($language)) {
+            $content .= '{' . $language . '}';
+            $language = null;
+        }
+
+        $content .= $lexer->consumeUntil('`');
 
         $lexer->consumeIncluding('`');
 
