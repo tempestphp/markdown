@@ -19,4 +19,17 @@ final class TokenCollectionTest extends TestCase
 
         $this->assertSame($token, $collection[0]);
     }
+
+    #[Test]
+    public function test_array_access_can_set_explicit_zero_offset_after_append(): void
+    {
+        $collection = new TokenCollection();
+        $original = new TextToken('x');
+        $replacement = new TextToken('y');
+
+        $collection[] = $original;
+        $collection[0] = $replacement;
+
+        $this->assertSame($replacement, $collection[0]);
+    }
 }
