@@ -142,4 +142,12 @@ final class ParserTest extends TestCase
 
         $this->assertSame('<p><a href="/link"><img src="/image.jpg" alt="alt"></a></p>', $parsed->html);
     }
+
+    #[Test]
+    public function test_markdown_in_html(): void
+    {
+        $parsed = $this->parser->parse('<p>Hello [world](/uri)</p>');
+
+        $this->assertSame('<p>Hello <a href="/uri">world</a></p>', $parsed->html);
+    }
 }
