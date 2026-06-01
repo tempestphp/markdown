@@ -22,9 +22,14 @@ final readonly class ListRule implements Rule
         $lexer->consumeWhile(Lexer::NEW_LINE);
 
         $childContent = '';
+        $indent = strspn($lexer->content, ' ', $lexer->position);
 
-        while ($lexer->comesNext('  ', 2)) {
-            $lexer->consume(2); // strip one indent level
+        while ($indent >= 2 && $lexer->current !== null) {
+            if (strspn($lexer->content, ' ', $lexer->position) < $indent) {
+                break;
+            }
+
+            $lexer->consume($indent);
             $childContent .= $lexer->consumeUntil(Lexer::NEW_LINE) . PHP_EOL;
             $lexer->consumeWhile(Lexer::NEW_LINE);
         }

@@ -150,4 +150,18 @@ final class ParserTest extends TestCase
 
         $this->assertSame('<p>Hello <a href="/uri">world</a></p>', $parsed->html);
     }
+
+    #[Test]
+    public function test_nested_lists(): void
+    {
+        $markdown = <<<'MD'
+        - X
+            - a
+            - b
+        MD;
+
+        $parsed = $this->parser->parse($markdown);
+
+        $this->assertSame('<ul><li>X<ul><li>a</li><li>b</li></ul></li></ul>', $parsed->html);
+    }
 }
