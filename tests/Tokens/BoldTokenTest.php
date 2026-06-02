@@ -20,7 +20,7 @@ class BoldTokenTest extends TestCase
     #[Test]
     public function test_parse_with_italic_text(): void
     {
-        $token = new BoldToken('hello __world__');
+        $token = new BoldToken('hello _world_');
 
         $this->assertEquals('<strong>hello <em>world</em></strong>', $token->parse(new Parser()));
     }

@@ -10,18 +10,26 @@ use Tempest\Markdown\Tokens\BoldToken;
 
 final class BoldRule implements Rule, ProvidesStopChar
 {
-    private(set) string $stopChar = '*';
+    private(set) string $stopChar = '_*';
 
     public function shouldLex(Lexer $lexer): bool
     {
-        return $lexer->comesNext('*', 1);
+        if ($lexer->comesNext('**', length: 2)) {
+            return ! $lexer->comesNext('*', length: 1, offset: 2);
+        }
+
+        if ($lexer->comesNext('__', length: 2)) {
+            return ! $lexer->comesNext('_', length: 1, offset: 2);
+        }
+
+        return false;
     }
 
     public function lex(Lexer $lexer): Token
     {
-        $lexer->consumeWhile('*');
-        $buffer = $lexer->consumeUntil('*');
-        $lexer->consumeWhile('*');
+        $startToken = $lexer->consume(length: 2);
+        $buffer = $lexer->consumeUntil($startToken[0]);
+        $lexer->consume(length: 2);
 
         return new BoldToken($buffer);
     }

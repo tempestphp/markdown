@@ -2,15 +2,13 @@
 
 namespace Tempest\Markdown\Tokens;
 
-use Tempest\Markdown\LexerRules\BoldAndItalicRule;
-use Tempest\Markdown\LexerRules\BoldRule;
-use Tempest\Markdown\LexerRules\ItalicRule;
 use Tempest\Markdown\LexerRules\LinkRule;
+use Tempest\Markdown\LexerRules\StrikethroughRule;
 use Tempest\Markdown\LexerRules\TextRule;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\Token;
 
-final readonly class StrikethroughToken implements Token
+final readonly class BoldAndItalicToken implements Token
 {
     public function __construct(
         public string $content,
@@ -20,14 +18,12 @@ final readonly class StrikethroughToken implements Token
     {
         $content = $parser
             ->withRules(
-                new BoldAndItalicRule(),
-                new BoldRule(),
-                new ItalicRule(),
+                new StrikethroughRule(),
                 new LinkRule(),
                 new TextRule(),
             )
             ->parse($this->content);
 
-        return "<s>{$content}</s>";
+        return "<strong><em>{$content}</em></strong>";
     }
 }

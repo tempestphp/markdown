@@ -2,6 +2,7 @@
 
 namespace Tempest\Markdown\Tokens;
 
+use Tempest\Markdown\LexerRules\BoldAndItalicRule;
 use Tempest\Markdown\LexerRules\BoldRule;
 use Tempest\Markdown\LexerRules\CodeRule;
 use Tempest\Markdown\LexerRules\ItalicRule;
@@ -28,6 +29,7 @@ final readonly class HeadingToken implements Token
 
         $content = $parser
             ->withRules(
+                new BoldAndItalicRule(),
                 new BoldRule(),
                 new ItalicRule(),
                 new StrikethroughRule(),

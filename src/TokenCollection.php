@@ -43,9 +43,10 @@ final class TokenCollection implements IteratorAggregate, ArrayAccess
         return $this->tokens[$offset] ?? null;
     }
 
+    /** @param int|null $offset */
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        if (! is_integer($offset)) {
+        if ($offset === null) {
             $offset = $this->i;
             $this->i++;
         }

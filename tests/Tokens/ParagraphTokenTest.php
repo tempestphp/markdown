@@ -36,7 +36,7 @@ class ParagraphTokenTest extends TestCase
     #[Test]
     public function test_parse_with_italic(): void
     {
-        $token = new ParagraphToken('Hello, __world__!');
+        $token = new ParagraphToken('Hello, _world_!');
 
         $expectedHtml = '<p>Hello, <em>world</em>!</p>';
 
@@ -79,5 +79,30 @@ class ParagraphTokenTest extends TestCase
         $actualHtml = $token->parse(new Parser());
 
         $this->assertEquals($expectedHtml, $actualHtml);
+    }
+
+    #[Test]
+    public function test_parse_with_bold_and_italic(): void
+    {
+        $token = new ParagraphToken('Hello, ***world***!');
+
+        $expectedHtml = '<p>Hello, <strong><em>world</em></strong>!</p>';
+
+        $actualHtml = $token->parse(new Parser());
+
+        $this->assertEquals($expectedHtml, $actualHtml);
+    }
+
+    #[Test]
+    public function test_inline_formatting_rule_priority(): void
+    {
+        $parser = new Parser();
+
+        $this->assertEquals('<p><strong><em>text</em></strong></p>', new ParagraphToken('***text***')->parse($parser));
+        $this->assertEquals('<p><strong>text</strong></p>', new ParagraphToken('**text**')->parse($parser));
+        $this->assertEquals('<p><em>text</em></p>', new ParagraphToken('*text*')->parse($parser));
+        $this->assertEquals('<p><strong><em>text</em></strong></p>', new ParagraphToken('___text___')->parse($parser));
+        $this->assertEquals('<p><strong>text</strong></p>', new ParagraphToken('__text__')->parse($parser));
+        $this->assertEquals('<p><em>text</em></p>', new ParagraphToken('_text_')->parse($parser));
     }
 }

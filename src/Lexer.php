@@ -128,15 +128,15 @@ final class Lexer
         return new TokenCollection($tokens);
     }
 
-    public function comesNext(string $search, ?int $length = null): bool
+    public function comesNext(string $search, ?int $length = null, int $offset = 0): bool
     {
         $length ??= strlen($search);
 
         if ($length === 1) {
-            return ($this->content[$this->position] ?? null) === $search;
+            return ($this->content[$this->position + $offset] ?? null) === $search;
         }
 
-        return substr_compare($this->content, $search, $this->position, $length) === 0;
+        return substr_compare($this->content, $search, $this->position + $offset, $length) === 0;
     }
 
     public function consume(int $length = 1): string

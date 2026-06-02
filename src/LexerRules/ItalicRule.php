@@ -14,15 +14,23 @@ final class ItalicRule implements Rule, ProvidesStopChar
 
     public function shouldLex(Lexer $lexer): bool
     {
-        return $lexer->comesNext('_', 1);
+        if ($lexer->comesNext('_', length: 1)) {
+            return ! $lexer->comesNext('_', length: 1, offset: 1);
+        }
+
+        if ($lexer->comesNext('*', length: 1)) {
+            return ! $lexer->comesNext('*', length: 1, offset: 1);
+        }
+
+        return false;
     }
 
     public function lex(Lexer $lexer): Token
     {
-        $lexer->consumeWhile('_');
-        $buffer = $lexer->consumeUntil('_');
-        $lexer->consumeWhile('_');
+        $startToken = $lexer->consume();
+        $buffer = $lexer->consumeUntil($startToken);
+        $lexer->consume();
 
-        return new ItalicToken(trim($buffer, '_'));
+        return new ItalicToken($buffer);
     }
 }

@@ -37,7 +37,7 @@ class OrderedListTokenTest extends TestCase
     #[Test]
     public function test_parse_with_italic(): void
     {
-        $token = new OrderedListToken([new ListItem('hello __world__')]);
+        $token = new OrderedListToken([new ListItem('hello _world_')]);
 
         $this->assertEquals('<ol><li>hello <em>world</em></li></ol>', $token->parse(new Parser()));
     }
@@ -81,5 +81,26 @@ class OrderedListTokenTest extends TestCase
         ]);
 
         $this->assertEquals('<ol><li>one<ol><li>child</li></ol></li><li>two</li></ol>', $token->parse(new Parser()));
+    }
+
+    #[Test]
+    public function test_parse_with_bold_and_italic(): void
+    {
+        $token = new OrderedListToken([new ListItem('hello ***world***')]);
+
+        $this->assertEquals('<ol><li>hello <strong><em>world</em></strong></li></ol>', $token->parse(new Parser()));
+    }
+
+    #[Test]
+    public function test_inline_formatting_rule_priority(): void
+    {
+        $parser = new Parser();
+
+        $this->assertEquals('<ol><li><strong><em>text</em></strong></li></ol>', new OrderedListToken([new ListItem('***text***')])->parse($parser));
+        $this->assertEquals('<ol><li><strong>text</strong></li></ol>', new OrderedListToken([new ListItem('**text**')])->parse($parser));
+        $this->assertEquals('<ol><li><em>text</em></li></ol>', new OrderedListToken([new ListItem('*text*')])->parse($parser));
+        $this->assertEquals('<ol><li><strong><em>text</em></strong></li></ol>', new OrderedListToken([new ListItem('___text___')])->parse($parser));
+        $this->assertEquals('<ol><li><strong>text</strong></li></ol>', new OrderedListToken([new ListItem('__text__')])->parse($parser));
+        $this->assertEquals('<ol><li><em>text</em></li></ol>', new OrderedListToken([new ListItem('_text_')])->parse($parser));
     }
 }

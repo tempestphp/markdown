@@ -2,6 +2,7 @@
 
 namespace Tempest\Markdown\Tokens;
 
+use Tempest\Markdown\LexerRules\BoldAndItalicRule;
 use Tempest\Markdown\LexerRules\BoldRule;
 use Tempest\Markdown\LexerRules\ImageRule;
 use Tempest\Markdown\LexerRules\ItalicRule;
@@ -21,9 +22,10 @@ final readonly class QuoteToken implements Token
     {
         $content = $parser
             ->withRules(
-                new QuoteRule(),
+                new BoldAndItalicRule(),
                 new BoldRule(),
                 new ItalicRule(),
+                new QuoteRule(),
                 new LinkRule(),
                 new ImageRule(),
                 new TextRule(),

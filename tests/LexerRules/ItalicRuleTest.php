@@ -11,17 +11,17 @@ use Tempest\Markdown\Tokens\ItalicToken;
 class ItalicRuleTest extends TestCase
 {
     #[Test]
-    public function test_lex(): void
+    public function test_lex_with_underscore(): void
     {
-        $token = new Lexer([new ItalicRule()])->lex('__italic__')[0];
+        $token = new Lexer([new ItalicRule()])->lex('_italic_')[0];
 
         $this->assertEquals(new ItalicToken('italic'), $token);
     }
 
     #[Test]
-    public function test_lex_single_underscore(): void
+    public function test_lex_with_asterisk(): void
     {
-        $token = new Lexer([new ItalicRule()])->lex('_italic_')[0];
+        $token = new Lexer([new ItalicRule()])->lex('*italic*')[0];
 
         $this->assertEquals(new ItalicToken('italic'), $token);
     }

@@ -2,6 +2,7 @@
 
 namespace Tempest\Markdown\Tokens;
 
+use Tempest\Markdown\LexerRules\BoldAndItalicRule;
 use Tempest\Markdown\LexerRules\BoldRule;
 use Tempest\Markdown\LexerRules\CodeRule;
 use Tempest\Markdown\LexerRules\ImageRule;
@@ -22,6 +23,7 @@ final readonly class HtmlToken implements Token
     {
         return $parser
             ->withRules(
+                new BoldAndItalicRule(),
                 new BoldRule(),
                 new ItalicRule(),
                 new StrikethroughRule(),

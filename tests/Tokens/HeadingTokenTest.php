@@ -44,9 +44,9 @@ class HeadingTokenTest extends TestCase
     #[Test]
     public function test_parse_with_italic(): void
     {
-        $token = new HeadingToken('Hello, __world__!', 1);
+        $token = new HeadingToken('Hello, _world_!', 1);
 
-        $this->assertEquals('<h1 id="hello,-__world__!">Hello, <em>world</em>!</h1>', $token->parse(new Parser()));
+        $this->assertEquals('<h1 id="hello,-_world_!">Hello, <em>world</em>!</h1>', $token->parse(new Parser()));
     }
 
     #[Test]
@@ -71,5 +71,26 @@ class HeadingTokenTest extends TestCase
         $token = new HeadingToken('Hello, `world`!', 1);
 
         $this->assertEquals('<h1 id="hello,-`world`!">Hello, <code class="language-txt">world</code>!</h1>', $token->parse(new Parser()));
+    }
+
+    #[Test]
+    public function test_parse_with_bold_and_italic(): void
+    {
+        $token = new HeadingToken('Hello, ***world***!', 1);
+
+        $this->assertEquals('<h1 id="hello,-***world***!">Hello, <strong><em>world</em></strong>!</h1>', $token->parse(new Parser()));
+    }
+
+    #[Test]
+    public function test_inline_formatting_rule_priority(): void
+    {
+        $parser = new Parser();
+
+        $this->assertEquals('<h1 id="***text***"><strong><em>text</em></strong></h1>', new HeadingToken('***text***', 1)->parse($parser));
+        $this->assertEquals('<h1 id="**text**"><strong>text</strong></h1>', new HeadingToken('**text**', 1)->parse($parser));
+        $this->assertEquals('<h1 id="*text*"><em>text</em></h1>', new HeadingToken('*text*', 1)->parse($parser));
+        $this->assertEquals('<h1 id="___text___"><strong><em>text</em></strong></h1>', new HeadingToken('___text___', 1)->parse($parser));
+        $this->assertEquals('<h1 id="__text__"><strong>text</strong></h1>', new HeadingToken('__text__', 1)->parse($parser));
+        $this->assertEquals('<h1 id="_text_"><em>text</em></h1>', new HeadingToken('_text_', 1)->parse($parser));
     }
 }

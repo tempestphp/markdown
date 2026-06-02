@@ -2,6 +2,7 @@
 
 namespace Tempest\Markdown\Tokens;
 
+use Tempest\Markdown\LexerRules\BoldAndItalicRule;
 use Tempest\Markdown\LexerRules\BoldRule;
 use Tempest\Markdown\LexerRules\HeadingRule;
 use Tempest\Markdown\LexerRules\ImageRule;
@@ -25,6 +26,7 @@ final readonly class DivToken implements Token
             ->withRules(
                 new HeadingRule(),
                 new QuoteRule(),
+                new BoldAndItalicRule(),
                 new BoldRule(),
                 new ItalicRule(),
                 new LinkRule(),

@@ -78,4 +78,37 @@ class TableTokenTest extends TestCase
             $token->parse(new Parser()),
         );
     }
+
+    #[Test]
+    public function test_parse_with_bold_and_italic(): void
+    {
+        $token = new TableToken([
+            new TableRow(['Name', 'Notes'], isHeader: true),
+            new TableRow(['***Alice***', 'text'], isHeader: false),
+        ]);
+
+        $this->assertEquals(
+            '<table><thead><tr><th>Name</th><th>Notes</th></tr></thead><tbody><tr><td><strong><em>Alice</em></strong></td><td>text</td></tr></tbody></table>',
+            $token->parse(new Parser()),
+        );
+    }
+
+    #[Test]
+    public function test_inline_formatting_rule_priority(): void
+    {
+        $parser = new Parser();
+
+        $this->assertEquals(
+            '<table><tbody><tr><td><strong><em>text</em></strong></td></tr></tbody></table>',
+            new TableToken([new TableRow(['***text***'], isHeader: false)])->parse($parser),
+        );
+        $this->assertEquals('<table><tbody><tr><td><strong>text</strong></td></tr></tbody></table>', new TableToken([new TableRow(['**text**'], isHeader: false)])->parse($parser));
+        $this->assertEquals('<table><tbody><tr><td><em>text</em></td></tr></tbody></table>', new TableToken([new TableRow(['*text*'], isHeader: false)])->parse($parser));
+        $this->assertEquals(
+            '<table><tbody><tr><td><strong><em>text</em></strong></td></tr></tbody></table>',
+            new TableToken([new TableRow(['___text___'], isHeader: false)])->parse($parser),
+        );
+        $this->assertEquals('<table><tbody><tr><td><strong>text</strong></td></tr></tbody></table>', new TableToken([new TableRow(['__text__'], isHeader: false)])->parse($parser));
+        $this->assertEquals('<table><tbody><tr><td><em>text</em></td></tr></tbody></table>', new TableToken([new TableRow(['_text_'], isHeader: false)])->parse($parser));
+    }
 }

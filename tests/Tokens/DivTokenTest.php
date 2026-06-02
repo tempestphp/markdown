@@ -44,7 +44,7 @@ class DivTokenTest extends TestCase
     #[Test]
     public function test_parse_with_italic(): void
     {
-        $token = new DivToken(class: null, content: 'Hello __world__');
+        $token = new DivToken(class: null, content: 'Hello _world_');
 
         $this->assertEquals('<div>Hello <em>world</em></div>', $token->parse(new Parser()));
     }
@@ -63,5 +63,26 @@ class DivTokenTest extends TestCase
         $token = new DivToken(class: null, content: '## hi');
 
         $this->assertEquals('<div><h2 id="hi">hi</h2></div>', $token->parse(new Parser()));
+    }
+
+    #[Test]
+    public function test_parse_with_bold_and_italic(): void
+    {
+        $token = new DivToken(class: null, content: 'Hello ***world***');
+
+        $this->assertEquals('<div>Hello <strong><em>world</em></strong></div>', $token->parse(new Parser()));
+    }
+
+    #[Test]
+    public function test_inline_formatting_rule_priority(): void
+    {
+        $parser = new Parser();
+
+        $this->assertEquals('<div><strong><em>text</em></strong></div>', new DivToken(class: null, content: '***text***')->parse($parser));
+        $this->assertEquals('<div><strong>text</strong></div>', new DivToken(class: null, content: '**text**')->parse($parser));
+        $this->assertEquals('<div><em>text</em></div>', new DivToken(class: null, content: '*text*')->parse($parser));
+        $this->assertEquals('<div><strong><em>text</em></strong></div>', new DivToken(class: null, content: '___text___')->parse($parser));
+        $this->assertEquals('<div><strong>text</strong></div>', new DivToken(class: null, content: '__text__')->parse($parser));
+        $this->assertEquals('<div><em>text</em></div>', new DivToken(class: null, content: '_text_')->parse($parser));
     }
 }

@@ -84,6 +84,18 @@ final class LexerTest extends TestCase
         $this->assertEmpty($result);
     }
 
+    #[Test]
+    public function test_comes_next_with_offset(): void
+    {
+        $lexer = new Lexer()->setContent('**__');
+
+        $this->assertTrue($lexer->comesNext('*'));
+        $this->assertTrue($lexer->comesNext('*', offset: 1));
+        $this->assertFalse($lexer->comesNext('*', offset: 2));
+        $this->assertTrue($lexer->comesNext('_', offset: 2));
+        $this->assertFalse($lexer->comesNext('_', offset: 10));
+    }
+
     private function assertTokens(array $expected, TokenCollection $actual): void
     {
         $this->assertCount(count($expected), $actual);

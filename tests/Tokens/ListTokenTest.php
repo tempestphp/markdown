@@ -37,7 +37,7 @@ class ListTokenTest extends TestCase
     #[Test]
     public function test_parse_with_italic(): void
     {
-        $token = new ListToken([new ListItem('hello __world__')]);
+        $token = new ListToken([new ListItem('hello _world_')]);
 
         $this->assertEquals('<ul><li>hello <em>world</em></li></ul>', $token->parse(new Parser()));
     }
@@ -94,5 +94,26 @@ class ListTokenTest extends TestCase
         ]);
 
         $this->assertEquals('<ul><li>one<ul><li>child</li></ul></li><li>two</li></ul>', $token->parse(new Parser()));
+    }
+
+    #[Test]
+    public function test_parse_with_bold_and_italic(): void
+    {
+        $token = new ListToken([new ListItem('hello ***world***')]);
+
+        $this->assertEquals('<ul><li>hello <strong><em>world</em></strong></li></ul>', $token->parse(new Parser()));
+    }
+
+    #[Test]
+    public function test_inline_formatting_rule_priority(): void
+    {
+        $parser = new Parser();
+
+        $this->assertEquals('<ul><li><strong><em>text</em></strong></li></ul>', new ListToken([new ListItem('***text***')])->parse($parser));
+        $this->assertEquals('<ul><li><strong>text</strong></li></ul>', new ListToken([new ListItem('**text**')])->parse($parser));
+        $this->assertEquals('<ul><li><em>text</em></li></ul>', new ListToken([new ListItem('*text*')])->parse($parser));
+        $this->assertEquals('<ul><li><strong><em>text</em></strong></li></ul>', new ListToken([new ListItem('___text___')])->parse($parser));
+        $this->assertEquals('<ul><li><strong>text</strong></li></ul>', new ListToken([new ListItem('__text__')])->parse($parser));
+        $this->assertEquals('<ul><li><em>text</em></li></ul>', new ListToken([new ListItem('_text_')])->parse($parser));
     }
 }

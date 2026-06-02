@@ -63,7 +63,7 @@ class QuoteTokenTest extends TestCase
     #[Test]
     public function test_italic_text(): void
     {
-        $token = new QuoteToken('Hello __world__');
+        $token = new QuoteToken('Hello _world_');
 
         $this->assertEquals('<blockquote>Hello <em>world</em></blockquote>', $token->parse(new Parser()));
     }
@@ -82,5 +82,26 @@ class QuoteTokenTest extends TestCase
         $token = new QuoteToken('Hello ![world](#)');
 
         $this->assertEquals('<blockquote>Hello <img src="#" alt="world"></blockquote>', $token->parse(new Parser()));
+    }
+
+    #[Test]
+    public function test_bold_and_italic_text(): void
+    {
+        $token = new QuoteToken('Hello ***world***');
+
+        $this->assertEquals('<blockquote>Hello <strong><em>world</em></strong></blockquote>', $token->parse(new Parser()));
+    }
+
+    #[Test]
+    public function test_inline_formatting_rule_priority(): void
+    {
+        $parser = new Parser();
+
+        $this->assertEquals('<blockquote><strong><em>text</em></strong></blockquote>', new QuoteToken('***text***')->parse($parser));
+        $this->assertEquals('<blockquote><strong>text</strong></blockquote>', new QuoteToken('**text**')->parse($parser));
+        $this->assertEquals('<blockquote><em>text</em></blockquote>', new QuoteToken('*text*')->parse($parser));
+        $this->assertEquals('<blockquote><strong><em>text</em></strong></blockquote>', new QuoteToken('___text___')->parse($parser));
+        $this->assertEquals('<blockquote><strong>text</strong></blockquote>', new QuoteToken('__text__')->parse($parser));
+        $this->assertEquals('<blockquote><em>text</em></blockquote>', new QuoteToken('_text_')->parse($parser));
     }
 }
