@@ -15,8 +15,10 @@ use Tempest\Markdown\ParserRules\QuoteRule;
 use Tempest\Markdown\ParserRules\TextRule;
 use Tempest\Markdown\Token;
 
-final readonly class DivToken implements Token
+final class DivToken implements Token
 {
+    private static Parser $parser;
+
     public function __construct(
         public ?string $class,
         public string $content,
@@ -24,8 +26,8 @@ final readonly class DivToken implements Token
 
     public function parse(Parser $parser): string
     {
-        $content = $parser
-            ->withRules(
+        if (! isset(self::$parser)) {
+            self::$parser = $parser->withRules(
                 new HeadingRule(),
                 new QuoteRule(),
                 new BoldAndItalicRule(),
@@ -36,8 +38,10 @@ final readonly class DivToken implements Token
                 new PreRule(),
                 new CodeRule(),
                 new TextRule(),
-            )
-            ->parse($this->content);
+            );
+        }
+
+        $content = self::$parser->parse($this->content);
 
         $class = $this->class ? " class=\"{$this->class}\"" : '';
 

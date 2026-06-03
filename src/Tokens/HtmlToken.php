@@ -13,16 +13,18 @@ use Tempest\Markdown\ParserRules\StrikethroughRule;
 use Tempest\Markdown\ParserRules\TextRule;
 use Tempest\Markdown\Token;
 
-final readonly class HtmlToken implements Token
+final class HtmlToken implements Token
 {
+    private static Parser $parser;
+
     public function __construct(
         public string $html,
     ) {}
 
     public function parse(Parser $parser): string
     {
-        return $parser
-            ->withRules(
+        if (! isset(self::$parser)) {
+            self::$parser = $parser->withRules(
                 new BoldAndItalicRule(),
                 new BoldRule(),
                 new ItalicRule(),
@@ -31,8 +33,9 @@ final readonly class HtmlToken implements Token
                 new ImageRule(),
                 new CodeRule(),
                 new TextRule(),
-            )
-            ->parse($this->html)
-            ->html;
+            );
+        }
+
+        return self::$parser->parse($this->html)->html;
     }
 }

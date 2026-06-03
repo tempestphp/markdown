@@ -12,8 +12,10 @@ use Tempest\Markdown\ParserRules\StrikethroughRule;
 use Tempest\Markdown\ParserRules\TextRule;
 use Tempest\Markdown\Token;
 
-final readonly class HeadingToken implements Token
+final class HeadingToken implements Token
 {
+    private static Parser $parser;
+
     public function __construct(
         public string $content,
         public int $level,
@@ -27,8 +29,8 @@ final readonly class HeadingToken implements Token
 
         $id = " id=\"{$slug}\"";
 
-        $content = $parser
-            ->withRules(
+        if (! isset(self::$parser)) {
+            self::$parser = $parser->withRules(
                 new BoldAndItalicRule(),
                 new BoldRule(),
                 new ItalicRule(),
@@ -36,8 +38,10 @@ final readonly class HeadingToken implements Token
                 new LinkRule(),
                 new CodeRule(),
                 new TextRule(),
-            )
-            ->parse($this->content);
+            );
+        }
+
+        $content = self::$parser->parse($this->content);
 
         return "<{$tag}{$id}>{$content}</{$tag}>";
     }

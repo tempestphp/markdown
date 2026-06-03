@@ -9,22 +9,26 @@ use Tempest\Markdown\ParserRules\StrikethroughRule;
 use Tempest\Markdown\ParserRules\TextRule;
 use Tempest\Markdown\Token;
 
-final readonly class BoldToken implements Token
+final class BoldToken implements Token
 {
+    private static Parser $parser;
+
     public function __construct(
         public string $content,
     ) {}
 
     public function parse(Parser $parser): string
     {
-        $content = $parser
-            ->withRules(
+        if (! isset(self::$parser)) {
+            self::$parser = $parser->withRules(
                 new ItalicRule(),
                 new StrikethroughRule(),
                 new LinkRule(),
                 new TextRule(),
-            )
-            ->parse($this->content);
+            );
+        }
+
+        $content = self::$parser->parse($this->content);
 
         return "<strong>{$content}</strong>";
     }

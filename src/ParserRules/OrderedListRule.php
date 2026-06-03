@@ -9,8 +9,10 @@ use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\ListItem;
 use Tempest\Markdown\Tokens\OrderedListToken;
 
-final readonly class OrderedListRule implements Rule, ProvidesFirstChar
+final class OrderedListRule implements Rule, ProvidesFirstChar
 {
+    private static Parser $childParser;
+
     public function __construct(
         public string $firstChar = '0123456789',
     ) {}
@@ -59,8 +61,12 @@ final readonly class OrderedListRule implements Rule, ProvidesFirstChar
             $parser->consumeWhile(Parser::NEW_LINE);
         }
 
+        if (! isset(self::$childParser)) {
+            self::$childParser = $parser->withRules(new OrderedListRule());
+        }
+
         $children = $childContent !== ''
-            ? $parser->withRules(new OrderedListRule())->lex($childContent)[0]
+            ? self::$childParser->lex($childContent)[0]
             : null;
 
         $item = new ListItem($content, $children);

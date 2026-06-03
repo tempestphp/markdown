@@ -12,16 +12,18 @@ use Tempest\Markdown\ParserRules\QuoteRule;
 use Tempest\Markdown\ParserRules\TextRule;
 use Tempest\Markdown\Token;
 
-final readonly class QuoteToken implements Token
+final class QuoteToken implements Token
 {
+    private static Parser $parser;
+
     public function __construct(
         public string $content,
     ) {}
 
     public function parse(Parser $parser): string
     {
-        $content = $parser
-            ->withRules(
+        if (! isset(self::$parser)) {
+            self::$parser = $parser->withRules(
                 new BoldAndItalicRule(),
                 new BoldRule(),
                 new ItalicRule(),
@@ -29,8 +31,10 @@ final readonly class QuoteToken implements Token
                 new LinkRule(),
                 new ImageRule(),
                 new TextRule(),
-            )
-            ->parse($this->content);
+            );
+        }
+
+        $content = self::$parser->parse($this->content);
 
         return "<blockquote>{$content}</blockquote>";
     }

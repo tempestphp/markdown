@@ -14,6 +14,8 @@ use Tempest\Markdown\Token;
 
 final class TableToken implements Token
 {
+    private static Parser $parser;
+
     public function __construct(
         /** @var \Tempest\Markdown\Tokens\TableRow[] */
         public array $rows = [],
@@ -21,15 +23,19 @@ final class TableToken implements Token
 
     public function parse(Parser $parser): string
     {
-        $parser = $parser->withRules(
-            new BoldAndItalicRule(),
-            new BoldRule(),
-            new ItalicRule(),
-            new LinkRule(),
-            new CodeRule(),
-            new ImageRule(),
-            new TextRule(),
-        );
+        if (! isset(self::$parser)) {
+            self::$parser = $parser->withRules(
+                new BoldAndItalicRule(),
+                new BoldRule(),
+                new ItalicRule(),
+                new LinkRule(),
+                new CodeRule(),
+                new ImageRule(),
+                new TextRule(),
+            );
+        }
+
+        $parser = self::$parser;
 
         $headerRows = array_values(array_filter($this->rows, fn (TableRow $row) => $row->isHeader));
         $dataRows = array_values(array_filter($this->rows, fn (TableRow $row) => ! $row->isHeader));

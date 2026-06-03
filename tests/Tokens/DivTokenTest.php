@@ -6,6 +6,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\Tokens\DivToken;
+use Tempest\Markdown\Tokens\ParagraphToken;
 
 class DivTokenTest extends TestCase
 {
