@@ -2,7 +2,7 @@
 
 namespace Tempest\Markdown\LexerRules;
 
-use Tempest\Markdown\Lexer;
+use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\TableRow;
@@ -10,17 +10,17 @@ use Tempest\Markdown\Tokens\TableToken;
 
 final readonly class TableRule implements Rule
 {
-    public function shouldLex(Lexer $lexer): bool
+    public function shouldParse(Parser $parser): bool
     {
-        if (! $lexer->comesNext('|', 1)) {
+        if (! $parser->comesNext('|', 1)) {
             return false;
         }
 
-        if ($lexer->lastToken instanceof TableToken) {
+        if ($parser->lastToken instanceof TableToken) {
             return true;
         }
 
-        $nextTwoLines = $lexer->lookaheadUntil(Lexer::NEW_LINE, Lexer::NEW_LINE);
+        $nextTwoLines = $parser->lookaheadUntil(Parser::NEW_LINE, Parser::NEW_LINE);
 
         if (count($nextTwoLines) !== 2) {
             return false;
@@ -39,10 +39,10 @@ final readonly class TableRule implements Rule
         return true;
     }
 
-    public function lex(Lexer $lexer): ?Token
+    public function parse(Parser $parser): ?Token
     {
-        $line = $lexer->consumeUntil(Lexer::NEW_LINE);
-        $lexer->consumeWhile(Lexer::NEW_LINE);
+        $line = $parser->consumeUntil(Parser::NEW_LINE);
+        $parser->consumeWhile(Parser::NEW_LINE);
 
         // Filter out separator rows
         $isSeparator = trim($line, ':| -') === '' && str_contains($line, '-');
@@ -64,7 +64,7 @@ final readonly class TableRule implements Rule
         $cells = $line |> (fn ($x) => explode('|', $x)) |> (fn ($x) => array_map(trim(...), $x)) |> array_values(...);
 
         // Determine if is header row
-        $token = $lexer->lastToken;
+        $token = $parser->lastToken;
         $isHeader = ! $token instanceof TableToken;
 
         $row = new TableRow($cells, $isHeader);

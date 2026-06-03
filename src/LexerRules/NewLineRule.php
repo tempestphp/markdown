@@ -2,21 +2,21 @@
 
 namespace Tempest\Markdown\LexerRules;
 
-use Tempest\Markdown\Lexer;
+use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\NewLineToken;
 
 final readonly class NewLineRule implements Rule
 {
-    public function shouldLex(Lexer $lexer): bool
+    public function shouldParse(Parser $parser): bool
     {
-        return $lexer->current === "\n" || $lexer->current === "\r";
+        return $parser->current === "\n" || $parser->current === "\r";
     }
 
-    public function lex(Lexer $lexer): Token
+    public function parse(Parser $parser): Token
     {
-        $buffer = $lexer->consumeWhile(Lexer::NEW_LINE);
+        $buffer = $parser->consumeWhile(Parser::NEW_LINE);
 
         return new NewLineToken($buffer);
     }

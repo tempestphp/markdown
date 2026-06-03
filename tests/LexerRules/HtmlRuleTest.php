@@ -4,36 +4,34 @@ namespace Tempest\Markdown\Tests\LexerRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\Lexer;
 use Tempest\Markdown\LexerRules\HtmlRule;
 use Tempest\Markdown\LexerRules\NewLineRule;
 use Tempest\Markdown\LexerRules\ParagraphRule;
 use Tempest\Markdown\LexerRules\TextRule;
-use Tempest\Markdown\Tokens\HtmlToken;
-use Tempest\Markdown\Tokens\ParagraphToken;
+use Tempest\Markdown\Parser;
 
 class HtmlRuleTest extends TestCase
 {
     #[Test]
     public function test_lex(): void
     {
-        $token = new Lexer([new HtmlRule()])->lex('<p>Hi</p>')[0];
+        $html = (string) new Parser(highlighter: null, rules: [new HtmlRule()])->parse('<p>Hi</p>');
 
-        $this->assertEquals(new HtmlToken('<p>Hi</p>'), $token);
+        $this->assertSame('<p>Hi</p>', $html);
     }
 
     #[Test]
     public function test_lex_nested(): void
     {
-        $token = new Lexer([new HtmlRule()])->lex('<div><div>Hi</div></div>')[0];
+        $html = (string) new Parser(highlighter: null, rules: [new HtmlRule()])->parse('<div><div>Hi</div></div>');
 
-        $this->assertEquals(new HtmlToken('<div><div>Hi</div></div>'), $token);
+        $this->assertSame('<div><div>Hi</div></div>', $html);
     }
 
     #[Test]
     public function test_lex_multiline(): void
     {
-        $html = <<<'HTML'
+        $input = <<<'HTML'
         Hello
 
         <p>
@@ -43,29 +41,28 @@ class HtmlRuleTest extends TestCase
         World
         HTML;
 
-        $tokens = new Lexer([new NewLineRule(), new HtmlRule(), new ParagraphRule()])->lex($html);
+        $html = (string) new Parser(highlighter: null, rules: [new NewLineRule(), new HtmlRule(), new ParagraphRule()])->parse($input);
 
-        $this->assertCount(4, $tokens);
-        $this->assertEquals(new HtmlToken("<p>\nHi\n</p>\n\n"), $tokens[2]);
+        $this->assertStringContainsString('<p>Hello</p>', $html);
+        $this->assertStringContainsString("<p>\nHi\n</p>", $html);
+        $this->assertStringContainsString('<p>World</p>', $html);
     }
 
     #[Test]
     public function test_void_tags(): void
     {
-        $html = '<area><base><br><col><embed><hr><img><input><link><meta><param><source><track><wbr>Hello';
+        $input = '<area><base><br><col><embed><hr><img><input><link><meta><param><source><track><wbr>Hello';
 
-        $tokens = new Lexer([new HtmlRule(), new TextRule()])->lex($html);
+        $html = (string) new Parser(highlighter: null, rules: [new HtmlRule(), new TextRule()])->parse($input);
 
-        $this->assertCount(15, $tokens);
+        $this->assertSame($input, $html);
     }
 
     #[Test]
     public function test_void_tags_are_case_insensitive(): void
     {
-        $tokens = new Lexer([new HtmlRule(), new NewLineRule(), new ParagraphRule()])->lex("<BR>\nHello");
+        $html = (string) new Parser(highlighter: null, rules: [new HtmlRule(), new NewLineRule(), new ParagraphRule()])->parse("<BR>\nHello");
 
-        $this->assertCount(3, $tokens);
-        $this->assertEquals(new HtmlToken('<BR>'), $tokens[0]);
-        $this->assertEquals(new ParagraphToken('Hello'), $tokens[2]);
+        $this->assertSame("<BR>\n<p>Hello</p>", $html);
     }
 }

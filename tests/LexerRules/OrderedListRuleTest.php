@@ -4,104 +4,81 @@ namespace Tempest\Markdown\Tests\LexerRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\Lexer;
 use Tempest\Markdown\LexerRules\OrderedListRule;
 use Tempest\Markdown\LexerRules\TextRule;
-use Tempest\Markdown\Tokens\ListItem;
-use Tempest\Markdown\Tokens\OrderedListToken;
-use Tempest\Markdown\Tokens\TextToken;
+use Tempest\Markdown\Parser;
 
 class OrderedListRuleTest extends TestCase
 {
     #[Test]
     public function test_lex(): void
     {
-        $token = new Lexer([new OrderedListRule()])->lex("1. item\n")[0];
+        $html = (string) new Parser(highlighter: null, rules: [new OrderedListRule()])->parse("1. item\n");
 
-        $this->assertEquals(new OrderedListToken([new ListItem('item')]), $token);
+        $this->assertSame('<ol><li>item</li></ol>', $html);
     }
 
     #[Test]
     public function test_lex_multiple_items(): void
     {
-        $token = new Lexer([new OrderedListRule()])->lex("1. one\n2. two\n")[0];
+        $html = (string) new Parser(highlighter: null, rules: [new OrderedListRule()])->parse("1. one\n2. two\n");
 
-        $this->assertEquals(new OrderedListToken([new ListItem('one'), new ListItem('two')]), $token);
+        $this->assertSame('<ol><li>one</li><li>two</li></ol>', $html);
     }
 
     #[Test]
     public function test_lex_multi_digit_numbers(): void
     {
-        $token = new Lexer([new OrderedListRule()])->lex("10. ten\n11. eleven\n")[0];
+        $html = (string) new Parser(highlighter: null, rules: [new OrderedListRule()])->parse("10. ten\n11. eleven\n");
 
-        $this->assertEquals(new OrderedListToken([new ListItem('ten'), new ListItem('eleven')]), $token);
+        $this->assertSame('<ol><li>ten</li><li>eleven</li></ol>', $html);
     }
 
     #[Test]
     public function test_numeric_text_without_marker_is_not_an_ordered_list(): void
     {
-        $tokens = new Lexer([new OrderedListRule(), new TextRule()])->lex('2026 is year');
+        $html = (string) new Parser(highlighter: null, rules: [new OrderedListRule(), new TextRule()])->parse('2026 is year');
 
-        $this->assertEquals(new TextToken('2026 is year'), $tokens[0]);
+        $this->assertSame('2026 is year', $html);
     }
 
     #[Test]
     public function test_ordered_list_marker_requires_whitespace_after_period(): void
     {
-        $tokens = new Lexer([new OrderedListRule(), new TextRule()])->lex('1.not list');
+        $html = (string) new Parser(highlighter: null, rules: [new OrderedListRule(), new TextRule()])->parse('1.not list');
 
-        $this->assertEquals(new TextToken('1.not list'), $tokens[0]);
+        $this->assertSame('1.not list', $html);
     }
 
     #[Test]
     public function test_lex_nested(): void
     {
-        $token = new Lexer([new OrderedListRule()])->lex("1. parent\n  1. child\n")[0];
+        $html = (string) new Parser(highlighter: null, rules: [new OrderedListRule()])->parse("1. parent\n  1. child\n");
 
-        $expected = new OrderedListToken([
-            new ListItem('parent', new OrderedListToken([
-                new ListItem('child'),
-            ])),
-        ]);
-
-        $this->assertEquals($expected, $token);
+        $this->assertSame('<ol><li>parent<ol><li>child</li></ol></li></ol>', $html);
     }
 
     #[Test]
     public function test_lex_nested_multiple_children(): void
     {
-        $token = new Lexer([new OrderedListRule()])->lex("1. parent\n  1. child one\n  2. child two\n")[0];
+        $html = (string) new Parser(highlighter: null, rules: [new OrderedListRule()])->parse("1. parent\n  1. child one\n  2. child two\n");
 
-        $expected = new OrderedListToken([
-            new ListItem('parent', new OrderedListToken([
-                new ListItem('child one'),
-                new ListItem('child two'),
-            ])),
-        ]);
-
-        $this->assertEquals($expected, $token);
+        $this->assertSame('<ol><li>parent<ol><li>child one</li><li>child two</li></ol></li></ol>', $html);
     }
 
     #[Test]
     public function test_lex_nested_sibling_after_sublist(): void
     {
-        $token = new Lexer([new OrderedListRule()])->lex("1. one\n  1. child\n2. two\n")[0];
+        $html = (string) new Parser(highlighter: null, rules: [new OrderedListRule()])->parse("1. one\n  1. child\n2. two\n");
 
-        $expected = new OrderedListToken([
-            new ListItem('one', new OrderedListToken([
-                new ListItem('child'),
-            ])),
-            new ListItem('two'),
-        ]);
-
-        $this->assertEquals($expected, $token);
+        $this->assertSame('<ol><li>one<ol><li>child</li></ol></li><li>two</li></ol>', $html);
     }
 
     #[Test]
     public function test_only_numbers_are_allowed(): void
     {
-        $tokens = new Lexer([new OrderedListRule()])->lex('1a. one');
+        $html = (string) new Parser(highlighter: null, rules: [new OrderedListRule()])->parse('1a. one');
 
-        $this->assertCount(0, $tokens);
+        $this->assertSame('', $html);
     }
 }

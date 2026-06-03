@@ -2,32 +2,32 @@
 
 namespace Tempest\Markdown\LexerRules;
 
-use Tempest\Markdown\Lexer;
+use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\PreToken;
 
 final readonly class PreRule implements Rule
 {
-    public function shouldLex(Lexer $lexer): bool
+    public function shouldParse(Parser $parser): bool
     {
-        return $lexer->comesNext('```', 3);
+        return $parser->comesNext('```', 3);
     }
 
-    public function lex(Lexer $lexer): Token
+    public function parse(Parser $parser): Token
     {
-        $lexer->consumeIncluding('```');
+        $parser->consumeIncluding('```');
 
-        $language = $lexer->consumeUntil(Lexer::WHITESPACE);
+        $language = $parser->consumeUntil(Parser::WHITESPACE);
 
-        $lexer->consumeUntil(Lexer::NEW_LINE);
+        $parser->consumeUntil(Parser::NEW_LINE);
 
-        $lexer->consumeWhile(Lexer::NEW_LINE);
+        $parser->consumeWhile(Parser::NEW_LINE);
 
-        $content = $lexer->consumeUntilString('```');
+        $content = $parser->consumeUntilString('```');
 
-        $lexer->consumeIncluding('```');
-        $lexer->consumeWhile(Lexer::NEW_LINE);
+        $parser->consumeIncluding('```');
+        $parser->consumeWhile(Parser::NEW_LINE);
 
         // Remove trailing newline.
         if (str_ends_with($content, PHP_EOL)) {

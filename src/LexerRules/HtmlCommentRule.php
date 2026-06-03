@@ -2,23 +2,23 @@
 
 namespace Tempest\Markdown\LexerRules;
 
-use Tempest\Markdown\Lexer;
+use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\HtmlCommentToken;
 
 final readonly class HtmlCommentRule implements Rule
 {
-    public function shouldLex(Lexer $lexer): bool
+    public function shouldParse(Parser $parser): bool
     {
-        return $lexer->comesNext('<!--', length: 4);
+        return $parser->comesNext('<!--', length: 4);
     }
 
-    public function lex(Lexer $lexer): Token
+    public function parse(Parser $parser): Token
     {
-        $buffer = $lexer->consumeWhile('<!--');
-        $buffer .= $lexer->consumeUntil('-->');
-        $buffer .= $lexer->consumeWhile('-->');
+        $buffer = $parser->consumeWhile('<!--');
+        $buffer .= $parser->consumeUntil('-->');
+        $buffer .= $parser->consumeWhile('-->');
 
         return new HtmlCommentToken($buffer);
     }

@@ -4,7 +4,7 @@ namespace Tempest\Markdown;
 
 interface Rule
 {
-    public function shouldLex(Lexer $lexer): bool;
+    public function shouldParse(Parser $parser): bool;
 
-    public function lex(Lexer $lexer): ?Token;
+    public function parse(Parser $parser): ?Token;
 }

@@ -4,7 +4,7 @@ namespace Tempest\Markdown\LexerRules;
 
 use Tempest\Markdown\Exceptions\ImageSourceWasMissing;
 use Tempest\Markdown\Exceptions\ImageSourceWasNotClosed;
-use Tempest\Markdown\Lexer;
+use Tempest\Markdown\Parser;
 use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
@@ -14,29 +14,29 @@ final class ImageRule implements Rule, ProvidesStopChar
 {
     private(set) string $stopChar = '!';
 
-    public function shouldLex(Lexer $lexer): bool
+    public function shouldParse(Parser $parser): bool
     {
-        return $lexer->comesNext('![', 2);
+        return $parser->comesNext('![', 2);
     }
 
-    public function lex(Lexer $lexer): Token
+    public function parse(Parser $parser): Token
     {
-        $lexer->consumeIncluding('![');
-        $alt = $lexer->consumeUntil(']') ?: null;
-        $lexer->consumeIncluding(']');
+        $parser->consumeIncluding('![');
+        $alt = $parser->consumeUntil(']') ?: null;
+        $parser->consumeIncluding(']');
 
-        if (! $lexer->comesNext('(', 1)) {
-            throw new ImageSourceWasMissing($lexer);
+        if (! $parser->comesNext('(', 1)) {
+            throw new ImageSourceWasMissing($parser);
         }
 
-        $lexer->consumeIncluding('(');
-        $href = $lexer->consumeUntil(')' . Lexer::NEW_LINE);
+        $parser->consumeIncluding('(');
+        $href = $parser->consumeUntil(')' . Parser::NEW_LINE);
 
-        if (! $lexer->comesNext(')')) {
-            throw new ImageSourceWasNotClosed($lexer);
+        if (! $parser->comesNext(')')) {
+            throw new ImageSourceWasNotClosed($parser);
         }
 
-        $lexer->consumeIncluding(')');
+        $parser->consumeIncluding(')');
 
         return new ImageToken($href, $alt);
     }

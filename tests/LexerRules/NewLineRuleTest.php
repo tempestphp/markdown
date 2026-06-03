@@ -4,25 +4,24 @@ namespace Tempest\Markdown\Tests\LexerRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\Lexer;
 use Tempest\Markdown\LexerRules\NewLineRule;
-use Tempest\Markdown\Tokens\NewLineToken;
+use Tempest\Markdown\Parser;
 
 class NewLineRuleTest extends TestCase
 {
     #[Test]
     public function test_lex(): void
     {
-        $token = new Lexer([new NewLineRule()])->lex("\n")[0];
+        $html = (string) new Parser(highlighter: null, rules: [new NewLineRule()])->parse("\n");
 
-        $this->assertEquals(new NewLineToken("\n"), $token);
+        $this->assertSame("\n", $html);
     }
 
     #[Test]
     public function test_lex_multiple_newlines(): void
     {
-        $token = new Lexer([new NewLineRule()])->lex("\n\n\n")[0];
+        $html = (string) new Parser(highlighter: null, rules: [new NewLineRule()])->parse("\n\n\n");
 
-        $this->assertEquals(new NewLineToken("\n\n\n"), $token);
+        $this->assertSame("\n\n\n", $html);
     }
 }

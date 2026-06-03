@@ -4,25 +4,24 @@ namespace Tempest\Markdown\Tests\LexerRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\Lexer;
 use Tempest\Markdown\LexerRules\ItalicRule;
-use Tempest\Markdown\Tokens\ItalicToken;
+use Tempest\Markdown\Parser;
 
 class ItalicRuleTest extends TestCase
 {
     #[Test]
     public function test_lex_with_underscore(): void
     {
-        $token = new Lexer([new ItalicRule()])->lex('_italic_')[0];
+        $html = (string) new Parser(highlighter: null, rules: [new ItalicRule()])->parse('_italic_');
 
-        $this->assertEquals(new ItalicToken('italic'), $token);
+        $this->assertSame('<em>italic</em>', $html);
     }
 
     #[Test]
     public function test_lex_with_asterisk(): void
     {
-        $token = new Lexer([new ItalicRule()])->lex('*italic*')[0];
+        $html = (string) new Parser(highlighter: null, rules: [new ItalicRule()])->parse('*italic*');
 
-        $this->assertEquals(new ItalicToken('italic'), $token);
+        $this->assertSame('<em>italic</em>', $html);
     }
 }

@@ -2,8 +2,8 @@
 
 namespace Tempest\Markdown\LexerRules;
 
-use Tempest\Markdown\Lexer;
 use Tempest\Markdown\NeedsStopChars;
+use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\TextToken;
@@ -14,23 +14,23 @@ final class TextRule implements Rule, NeedsStopChars
         public string $stopChars = '',
     ) {}
 
-    public function shouldLex(Lexer $lexer): bool
+    public function shouldParse(Parser $parser): bool
     {
         return true;
     }
 
-    public function lex(Lexer $lexer): ?Token
+    public function parse(Parser $parser): ?Token
     {
         $text = $this->stopChars !== ''
-            ? $lexer->consumeUntil($this->stopChars)
+            ? $parser->consumeUntil($this->stopChars)
             : '';
 
         if ($text === '') {
-            $text = $lexer->consume();
+            $text = $parser->consume();
         }
 
-        if ($lexer->lastToken instanceof TextToken) {
-            $lexer->lastToken->append($text);
+        if ($parser->lastToken instanceof TextToken) {
+            $parser->lastToken->append($text);
             return null;
         }
 

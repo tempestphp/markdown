@@ -4,29 +4,25 @@ namespace Tempest\Markdown\Tests\LexerRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\Lexer;
 use Tempest\Markdown\LexerRules\BoldRule;
 use Tempest\Markdown\LexerRules\TextRule;
-use Tempest\Markdown\Tokens\BoldToken;
-use Tempest\Markdown\Tokens\TextToken;
+use Tempest\Markdown\Parser;
 
 class TextRuleTest extends TestCase
 {
     #[Test]
     public function test_lex(): void
     {
-        $token = new Lexer([new TextRule()])->lex('hello')[0];
+        $html = (string) new Parser(highlighter: null, rules: [new TextRule()])->parse('hello');
 
-        $this->assertEquals(new TextToken('hello'), $token);
+        $this->assertSame('hello', $html);
     }
 
     #[Test]
     public function test_lex_appends_to_previous_text_token(): void
     {
-        $tokens = new Lexer([new BoldRule(), new TextRule()])->lex('Hello **world**!');
+        $html = (string) new Parser(highlighter: null, rules: [new BoldRule(), new TextRule()])->parse('Hello **world**!');
 
-        $this->assertEquals(new TextToken('Hello '), $tokens[0]);
-        $this->assertEquals(new BoldToken('world'), $tokens[1]);
-        $this->assertEquals(new TextToken('!'), $tokens[2]);
+        $this->assertSame('Hello <strong>world</strong>!', $html);
     }
 }

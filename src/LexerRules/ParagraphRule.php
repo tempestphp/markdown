@@ -2,36 +2,36 @@
 
 namespace Tempest\Markdown\LexerRules;
 
-use Tempest\Markdown\Lexer;
+use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\ParagraphToken;
 
 final readonly class ParagraphRule implements Rule
 {
-    public function shouldLex(Lexer $lexer): bool
+    public function shouldParse(Parser $parser): bool
     {
         return true;
     }
 
-    public function lex(Lexer $lexer): Token
+    public function parse(Parser $parser): Token
     {
         $content = '';
 
-        while ($lexer->current !== null) {
-            $content .= $lexer->consumeUntil(Lexer::NEW_LINE);
+        while ($parser->current !== null) {
+            $content .= $parser->consumeUntil(Parser::NEW_LINE);
 
-            if ($lexer->current === null) {
+            if ($parser->current === null) {
                 break;
             }
 
             // A blank line (two consecutive newlines) ends the paragraph
-            if ($lexer->comesNext("\n\n", 2) || $lexer->comesNext("\r\n\r\n", 4) || $lexer->comesNext("\n\r\n", 3) || $lexer->comesNext("\r\n\n", 3)) {
+            if ($parser->comesNext("\n\n", 2) || $parser->comesNext("\r\n\r\n", 4) || $parser->comesNext("\n\r\n", 3) || $parser->comesNext("\r\n\n", 3)) {
                 break;
             }
 
             // Single newline — consume it and continue to the next line
-            $content .= $lexer->consumeWhile(Lexer::NEW_LINE);
+            $content .= $parser->consumeWhile(Parser::NEW_LINE);
         }
 
         return new ParagraphToken($content);

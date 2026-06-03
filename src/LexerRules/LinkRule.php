@@ -2,7 +2,7 @@
 
 namespace Tempest\Markdown\LexerRules;
 
-use Tempest\Markdown\Lexer;
+use Tempest\Markdown\Parser;
 use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
@@ -12,45 +12,45 @@ final class LinkRule implements Rule, ProvidesStopChar
 {
     private(set) string $stopChar = '[';
 
-    public function shouldLex(Lexer $lexer): bool
+    public function shouldParse(Parser $parser): bool
     {
-        return $lexer->comesNext('[', 1);
+        return $parser->comesNext('[', 1);
     }
 
-    public function lex(Lexer $lexer): Token
+    public function parse(Parser $parser): Token
     {
-        $lexer->consumeIncluding('[');
-        $content = $this->consumeContent($lexer);
-        $lexer->consumeIncluding(']');
+        $parser->consumeIncluding('[');
+        $content = $this->consumeContent($parser);
+        $parser->consumeIncluding(']');
 
         $href = null;
 
-        if ($lexer->comesNext('(', 1)) {
-            $lexer->consumeIncluding('(');
-            $href = $lexer->consumeUntil(')');
-            $lexer->consumeIncluding(')');
+        if ($parser->comesNext('(', 1)) {
+            $parser->consumeIncluding('(');
+            $href = $parser->consumeUntil(')');
+            $parser->consumeIncluding(')');
         }
 
         return new LinkToken($content, $href);
     }
 
-    private function consumeContent(Lexer $lexer): string
+    private function consumeContent(Parser $parser): string
     {
         $content = '';
         $bracketDepth = 0;
 
-        while ($lexer->current !== null) {
-            if ($lexer->comesNext(']') && $bracketDepth === 0) {
+        while ($parser->current !== null) {
+            if ($parser->comesNext(']') && $bracketDepth === 0) {
                 break;
             }
 
-            if ($lexer->comesNext('[')) {
+            if ($parser->comesNext('[')) {
                 $bracketDepth += 1;
-            } elseif ($lexer->comesNext(']')) {
+            } elseif ($parser->comesNext(']')) {
                 $bracketDepth -= 1;
             }
 
-            $content .= $lexer->consume();
+            $content .= $parser->consume();
         }
 
         return $content;

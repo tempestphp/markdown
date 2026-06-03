@@ -2,7 +2,7 @@
 
 namespace Tempest\Markdown\LexerRules;
 
-use Tempest\Markdown\Lexer;
+use Tempest\Markdown\Parser;
 use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
@@ -12,24 +12,24 @@ final class BoldRule implements Rule, ProvidesStopChar
 {
     private(set) string $stopChar = '_*';
 
-    public function shouldLex(Lexer $lexer): bool
+    public function shouldParse(Parser $parser): bool
     {
-        if ($lexer->comesNext('**', length: 2)) {
-            return ! $lexer->comesNext('*', length: 1, offset: 2);
+        if ($parser->comesNext('**', length: 2)) {
+            return ! $parser->comesNext('*', length: 1, offset: 2);
         }
 
-        if ($lexer->comesNext('__', length: 2)) {
-            return ! $lexer->comesNext('_', length: 1, offset: 2);
+        if ($parser->comesNext('__', length: 2)) {
+            return ! $parser->comesNext('_', length: 1, offset: 2);
         }
 
         return false;
     }
 
-    public function lex(Lexer $lexer): Token
+    public function parse(Parser $parser): Token
     {
-        $startToken = $lexer->consume(length: 2);
-        $buffer = $lexer->consumeUntil($startToken[0]);
-        $lexer->consume(length: 2);
+        $startToken = $parser->consume(length: 2);
+        $buffer = $parser->consumeUntil($startToken[0]);
+        $parser->consume(length: 2);
 
         return new BoldToken($buffer);
     }

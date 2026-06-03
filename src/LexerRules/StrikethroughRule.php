@@ -2,7 +2,7 @@
 
 namespace Tempest\Markdown\LexerRules;
 
-use Tempest\Markdown\Lexer;
+use Tempest\Markdown\Parser;
 use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
@@ -12,16 +12,16 @@ final class StrikethroughRule implements Rule, ProvidesStopChar
 {
     private(set) string $stopChar = '~';
 
-    public function shouldLex(Lexer $lexer): bool
+    public function shouldParse(Parser $parser): bool
     {
-        return $lexer->comesNext('~', 1);
+        return $parser->comesNext('~', 1);
     }
 
-    public function lex(Lexer $lexer): Token
+    public function parse(Parser $parser): Token
     {
-        $lexer->consumeWhile('~');
-        $buffer = $lexer->consumeUntil('~');
-        $lexer->consumeWhile('~');
+        $parser->consumeWhile('~');
+        $buffer = $parser->consumeUntil('~');
+        $parser->consumeWhile('~');
 
         return new StrikethroughToken($buffer);
     }

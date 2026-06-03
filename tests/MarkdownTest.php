@@ -5,7 +5,6 @@ namespace Tempest\Markdown\Tests;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\Lexer;
 use Tempest\Markdown\Markdown;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rule;
@@ -33,14 +32,14 @@ final class MarkdownTest extends TestCase
     public function test_prepend_rules_takes_priority_over_default_rules(): void
     {
         $customRule = new class implements Rule {
-            public function shouldLex(Lexer $lexer): bool
+            public function shouldParse(Parser $parser): bool
             {
-                return $lexer->comesNext('#');
+                return $parser->comesNext('#');
             }
 
-            public function lex(Lexer $lexer): Token
+            public function parse(Parser $parser): Token
             {
-                $content = $lexer->consumeUntil(Lexer::NEW_LINE);
+                $content = $parser->consumeUntil(Parser::NEW_LINE);
 
                 return new class($content) implements Token {
                     public function __construct(
@@ -64,14 +63,14 @@ final class MarkdownTest extends TestCase
     public function test_prepend_rules_can_be_chained(): void
     {
         $customRule = new class implements Rule {
-            public function shouldLex(Lexer $lexer): bool
+            public function shouldParse(Parser $parser): bool
             {
-                return $lexer->comesNext('#');
+                return $parser->comesNext('#');
             }
 
-            public function lex(Lexer $lexer): Token
+            public function parse(Parser $parser): Token
             {
-                $content = $lexer->consumeUntil(Lexer::NEW_LINE);
+                $content = $parser->consumeUntil(Parser::NEW_LINE);
 
                 return new class($content) implements Token {
                     public function __construct(
@@ -87,12 +86,12 @@ final class MarkdownTest extends TestCase
         };
 
         $neverMatchRule = new class implements Rule {
-            public function shouldLex(Lexer $lexer): bool
+            public function shouldParse(Parser $parser): bool
             {
                 return false;
             }
 
-            public function lex(Lexer $lexer): ?Token
+            public function parse(Parser $parser): ?Token
             {
                 return null;
             }
@@ -110,14 +109,14 @@ final class MarkdownTest extends TestCase
     public function test_with_rules_replaces_all_default_rules(): void
     {
         $customRule = new class implements Rule {
-            public function shouldLex(Lexer $lexer): bool
+            public function shouldParse(Parser $parser): bool
             {
-                return $lexer->comesNext('#');
+                return $parser->comesNext('#');
             }
 
-            public function lex(Lexer $lexer): Token
+            public function parse(Parser $parser): Token
             {
-                $content = $lexer->consumeUntil(Lexer::NEW_LINE);
+                $content = $parser->consumeUntil(Parser::NEW_LINE);
 
                 return new class($content) implements Token {
                     public function __construct(
@@ -141,12 +140,12 @@ final class MarkdownTest extends TestCase
     public function test_with_rules_returns_same_instance(): void
     {
         $customRule = new class implements Rule {
-            public function shouldLex(Lexer $lexer): bool
+            public function shouldParse(Parser $parser): bool
             {
                 return false;
             }
 
-            public function lex(Lexer $lexer): ?Token
+            public function parse(Parser $parser): ?Token
             {
                 return null;
             }
@@ -161,14 +160,14 @@ final class MarkdownTest extends TestCase
     public function test_append_rules_matches_after_with_rules_removes_catch_all(): void
     {
         $headingRule = new class implements Rule {
-            public function shouldLex(Lexer $lexer): bool
+            public function shouldParse(Parser $parser): bool
             {
-                return $lexer->comesNext('#');
+                return $parser->comesNext('#');
             }
 
-            public function lex(Lexer $lexer): Token
+            public function parse(Parser $parser): Token
             {
-                $content = $lexer->consumeUntil(Lexer::NEW_LINE);
+                $content = $parser->consumeUntil(Parser::NEW_LINE);
 
                 return new class($content) implements Token {
                     public function __construct(
@@ -195,14 +194,14 @@ final class MarkdownTest extends TestCase
     public function test_append_rules_loses_to_default_rules_when_both_match(): void
     {
         $customRule = new class implements Rule {
-            public function shouldLex(Lexer $lexer): bool
+            public function shouldParse(Parser $parser): bool
             {
-                return $lexer->comesNext('#');
+                return $parser->comesNext('#');
             }
 
-            public function lex(Lexer $lexer): Token
+            public function parse(Parser $parser): Token
             {
-                $content = $lexer->consumeUntil(Lexer::NEW_LINE);
+                $content = $parser->consumeUntil(Parser::NEW_LINE);
 
                 return new class($content) implements Token {
                     public function __construct(
@@ -227,12 +226,12 @@ final class MarkdownTest extends TestCase
     public function test_prepend_rules_returns_same_instance(): void
     {
         $customRule = new class implements Rule {
-            public function shouldLex(Lexer $lexer): bool
+            public function shouldParse(Parser $parser): bool
             {
                 return false;
             }
 
-            public function lex(Lexer $lexer): ?Token
+            public function parse(Parser $parser): ?Token
             {
                 return null;
             }
@@ -247,12 +246,12 @@ final class MarkdownTest extends TestCase
     public function test_append_rules_returns_same_instance(): void
     {
         $customRule = new class implements Rule {
-            public function shouldLex(Lexer $lexer): bool
+            public function shouldParse(Parser $parser): bool
             {
                 return false;
             }
 
-            public function lex(Lexer $lexer): ?Token
+            public function parse(Parser $parser): ?Token
             {
                 return null;
             }

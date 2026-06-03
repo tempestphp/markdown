@@ -2,7 +2,7 @@
 
 namespace Tempest\Markdown\LexerRules;
 
-use Tempest\Markdown\Lexer;
+use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\ListItem;
@@ -10,38 +10,38 @@ use Tempest\Markdown\Tokens\ListToken;
 
 final readonly class ListRule implements Rule
 {
-    public function shouldLex(Lexer $lexer): bool
+    public function shouldParse(Parser $parser): bool
     {
-        return $lexer->comesNext('- ', 2);
+        return $parser->comesNext('- ', 2);
     }
 
-    public function lex(Lexer $lexer): ?Token
+    public function parse(Parser $parser): ?Token
     {
-        $lexer->consumeIncluding('- ');
-        $content = trim($lexer->consumeUntil(Lexer::NEW_LINE));
-        $lexer->consumeWhile(Lexer::NEW_LINE);
+        $parser->consumeIncluding('- ');
+        $content = trim($parser->consumeUntil(Parser::NEW_LINE));
+        $parser->consumeWhile(Parser::NEW_LINE);
 
         $childContent = '';
-        $indent = strspn($lexer->content, ' ', $lexer->position);
+        $indent = strspn($parser->content, ' ', $parser->position);
 
-        while ($indent >= 2 && $lexer->current !== null) {
-            if (strspn($lexer->content, ' ', $lexer->position) < $indent) {
+        while ($indent >= 2 && $parser->current !== null) {
+            if (strspn($parser->content, ' ', $parser->position) < $indent) {
                 break;
             }
 
-            $lexer->consume($indent);
-            $childContent .= $lexer->consumeUntil(Lexer::NEW_LINE) . PHP_EOL;
-            $lexer->consumeWhile(Lexer::NEW_LINE);
+            $parser->consume($indent);
+            $childContent .= $parser->consumeUntil(Parser::NEW_LINE) . PHP_EOL;
+            $parser->consumeWhile(Parser::NEW_LINE);
         }
 
         $children = $childContent !== ''
-            ? new Lexer([new ListRule()])->lex($childContent)[0]
+            ? $parser->withRules(new ListRule())->lex($childContent)[0]
             : null;
 
         $item = new ListItem($content, $children);
 
-        if ($lexer->lastToken instanceof ListToken) {
-            $lexer->lastToken->items[] = $item;
+        if ($parser->lastToken instanceof ListToken) {
+            $parser->lastToken->items[] = $item;
             return null;
         }
 

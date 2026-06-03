@@ -7,48 +7,48 @@ use Symfony\Component\Yaml\Yaml;
 use Tempest\Markdown\Exceptions\FrontMatterCouldNotBeParsed;
 use Tempest\Markdown\Exceptions\FrontMatterShouldBeAnArray;
 use Tempest\Markdown\Exceptions\FrontMatterWasNotProperlyClosed;
-use Tempest\Markdown\Lexer;
+use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\FrontMatterToken;
 
 final readonly class FrontMatterRule implements Rule
 {
-    public function shouldLex(Lexer $lexer): bool
+    public function shouldParse(Parser $parser): bool
     {
-        if ($lexer->position !== 0) {
+        if ($parser->position !== 0) {
             return false;
         }
 
-        if (! $lexer->comesNext('---', 3)) {
+        if (! $parser->comesNext('---', 3)) {
             return false;
         }
 
         return true;
     }
 
-    public function lex(Lexer $lexer): ?Token
+    public function parse(Parser $parser): ?Token
     {
-        $originalPosition = $lexer->position;
-        $lexer->consumeWhile('-');
-        $lexer->consumeWhile(Lexer::NEW_LINE);
-        $content = $lexer->consumeUntilString('---');
+        $originalPosition = $parser->position;
+        $parser->consumeWhile('-');
+        $parser->consumeWhile(Parser::NEW_LINE);
+        $content = $parser->consumeUntilString('---');
 
-        if (! $lexer->comesNext('---', 3)) {
-            throw new FrontMatterWasNotProperlyClosed($lexer->withPosition($originalPosition));
+        if (! $parser->comesNext('---', 3)) {
+            throw new FrontMatterWasNotProperlyClosed($parser->withPosition($originalPosition));
         }
 
-        $lexer->consumeWhile('-');
-        $lexer->consumeWhile(Lexer::NEW_LINE);
+        $parser->consumeWhile('-');
+        $parser->consumeWhile(Parser::NEW_LINE);
 
         try {
             $data = Yaml::parse($content);
         } catch (ParseException $cause) {
-            throw new FrontMatterCouldNotBeParsed($lexer->withPosition($originalPosition), $cause);
+            throw new FrontMatterCouldNotBeParsed($parser->withPosition($originalPosition), $cause);
         }
 
         if (! is_array($data)) {
-            throw new FrontMatterShouldBeAnArray($lexer->withPosition($originalPosition));
+            throw new FrontMatterShouldBeAnArray($parser->withPosition($originalPosition));
         }
 
         return new FrontMatterToken($data);

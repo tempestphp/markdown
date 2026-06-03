@@ -2,21 +2,21 @@
 
 namespace Tempest\Markdown\LexerRules;
 
-use Tempest\Markdown\Lexer;
+use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\HeadingToken;
 
 final readonly class HeadingRule implements Rule
 {
-    public function shouldLex(Lexer $lexer): bool
+    public function shouldParse(Parser $parser): bool
     {
-        return $lexer->comesNext('#', 1);
+        return $parser->comesNext('#', 1);
     }
 
-    public function lex(Lexer $lexer): Token
+    public function parse(Parser $parser): Token
     {
-        $buffer = $lexer->consumeUntil(Lexer::NEW_LINE);
+        $buffer = $parser->consumeUntil(Parser::NEW_LINE);
 
         $level = strspn($buffer, '#');
 

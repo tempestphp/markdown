@@ -2,7 +2,7 @@
 
 namespace Tempest\Markdown\LexerRules;
 
-use Tempest\Markdown\Lexer;
+use Tempest\Markdown\Parser;
 use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
@@ -12,24 +12,24 @@ final class ItalicRule implements Rule, ProvidesStopChar
 {
     private(set) string $stopChar = '_';
 
-    public function shouldLex(Lexer $lexer): bool
+    public function shouldParse(Parser $parser): bool
     {
-        if ($lexer->comesNext('_', length: 1)) {
-            return ! $lexer->comesNext('_', length: 1, offset: 1);
+        if ($parser->comesNext('_', length: 1)) {
+            return ! $parser->comesNext('_', length: 1, offset: 1);
         }
 
-        if ($lexer->comesNext('*', length: 1)) {
-            return ! $lexer->comesNext('*', length: 1, offset: 1);
+        if ($parser->comesNext('*', length: 1)) {
+            return ! $parser->comesNext('*', length: 1, offset: 1);
         }
 
         return false;
     }
 
-    public function lex(Lexer $lexer): Token
+    public function parse(Parser $parser): Token
     {
-        $startToken = $lexer->consume();
-        $buffer = $lexer->consumeUntil($startToken);
-        $lexer->consume();
+        $startToken = $parser->consume();
+        $buffer = $parser->consumeUntil($startToken);
+        $parser->consume();
 
         return new ItalicToken($buffer);
     }

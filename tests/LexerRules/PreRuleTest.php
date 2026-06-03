@@ -4,65 +4,64 @@ namespace Tempest\Markdown\Tests\LexerRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\Lexer;
 use Tempest\Markdown\LexerRules\PreRule;
-use Tempest\Markdown\Tokens\PreToken;
+use Tempest\Markdown\Parser;
 
 class PreRuleTest extends TestCase
 {
     #[Test]
     public function test_lex_with_language(): void
     {
-        $token = new Lexer([new PreRule()])->lex(<<<'MD'
+        $html = (string) new Parser(highlighter: null, rules: [new PreRule()])->parse(<<<'MD'
         ```php
         echo "hi";
         ```
-        MD)[0];
+        MD);
 
-        $this->assertEquals(new PreToken(language: 'php', content: 'echo "hi";'), $token);
+        $this->assertSame('<pre class="language-php">echo "hi";</pre>', $html);
     }
 
     #[Test]
     public function test_lex_with_language_and_path(): void
     {
-        $token = new Lexer([new PreRule()])->lex(<<<'MD'
+        $html = (string) new Parser(highlighter: null, rules: [new PreRule()])->parse(<<<'MD'
         ```php file.php
         echo "hi";
         ```
-        MD)[0];
+        MD);
 
-        $this->assertEquals(new PreToken(language: 'php', content: 'echo "hi";'), $token);
+        $this->assertSame('<pre class="language-php">echo "hi";</pre>', $html);
     }
 
     #[Test]
     public function test_lex_without_language(): void
     {
-        $token = new Lexer([new PreRule()])->lex(<<<'MD'
+        $html = (string) new Parser(highlighter: null, rules: [new PreRule()])->parse(<<<'MD'
         ```
         echo "hi";
         ```
-        MD)[0];
+        MD);
 
-        $this->assertEquals(new PreToken(language: null, content: 'echo "hi";'), $token);
+        $this->assertSame('<pre>echo "hi";</pre>', $html);
     }
 
     #[Test]
     public function test_lex_preserves_significant_whitespace(): void
     {
-        $token = new Lexer([new PreRule()])->lex("```\n  keep  \n```")[0];
+        $html = (string) new Parser(highlighter: null, rules: [new PreRule()])->parse("```\n  keep  \n```");
 
-        $this->assertEquals(new PreToken(language: null, content: '  keep  '), $token);
+        $this->assertSame('<pre>  keep  </pre>', $html);
     }
 
     #[Test]
     public function test_lex_with_backtick_in_content(): void
     {
-        $token = new Lexer([new PreRule()])->lex(<<<'MD'
+        $html = (string) new Parser(highlighter: null, rules: [new PreRule()])->parse(<<<'MD'
         ```php
         echo `uname`;
         ```
-        MD)[0];
+        MD);
 
-        $this->assertEquals(new PreToken(language: 'php', content: 'echo `uname`;'), $token);
+        $this->assertSame('<pre class="language-php">echo `uname`;</pre>', $html);
     }
 }

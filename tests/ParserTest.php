@@ -2,193 +2,77 @@
 
 namespace Tempest\Markdown\Tests;
 
-use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tempest\Markdown\Parser;
 
 final class ParserTest extends TestCase
 {
-    private Parser $parser;
-
-    #[Before]
-    public function setupParser(): void
-    {
-        $this->parser = new Parser();
-    }
-
     #[Test]
-    public function test_token_with_nested_tokens(): void
+    public function test_lex_snippet(): void
     {
-        $parsed = $this->parser->parse('paragraph with [**bold and _italic_** link](#)');
-
-        $this->assertSame('<p>paragraph with <a href="#"><strong>bold and <em>italic</em></strong> link</a></p>', $parsed->html);
-    }
-
-    #[Test]
-    public function test_with_html_snippets(): void
-    {
-        $parsed = $this->parser->parse('paragraph with<br> break');
-
-        $this->assertSame('<p>paragraph with<br> break</p>', $parsed->html);
-
-        $parsed = $this->parser->parse(<<<'MD'
-        Hello
-
-        <div>Hello</div>
-
-        <img src="#" />
-
-        <p>
-        world
-        </p>
+        $html = (string) new Parser()->parse(<<<'MD'
+        # Test
+        Hello **world**
         MD);
 
-        $expected = <<<'HTML'
-        <p>Hello</p>
-
-        <div>Hello</div>
-
-        <img src="#" />
-
-        <p>
-        world
-        </p>
-        HTML;
-
-        $this->assertSame($expected, $parsed->html);
+        $this->assertStringContainsString('<h1 id="test">Test</h1>', $html);
+        $this->assertStringContainsString('<p>Hello <strong>world</strong></p>', $html);
     }
 
     #[Test]
-    public function test_with_frontmatter(): void
+    public function test_lookahead(): void
     {
-        $parsed = $this->parser->parse(<<<'MD'
-        ---
-        title: Hello
-        foo: bar
-        ---
-
-        Hello
+        $parser = new Parser()->setContent(<<<'MD'
+        | Test |
+        | ---- |
+        | Hello |
         MD);
 
-        $this->assertSame('<p>Hello</p>', (string) $parsed);
-        $this->assertSame(
-            [
-                'title' => 'Hello',
-                'foo' => 'bar',
-            ],
-            $parsed->frontmatter,
-        );
+        $result = $parser->lookaheadUntil(Parser::NEW_LINE, Parser::NEW_LINE);
+
+        $this->assertCount(2, $result);
+        $this->assertSame("| Test |\n", $result[0]);
+        $this->assertSame("| ---- |\n", $result[1]);
+        $this->assertSame(0, $parser->position);
     }
 
     #[Test]
-    public function test_div_without_class(): void
+    public function test_lookahead_with_mismatches(): void
     {
-        $parsed = $this->parser->parse(":::\nHello\n:::");
+        $parser = new Parser()->setContent(<<<'MD'
+        | Test |
 
-        $this->assertSame("<div>Hello\n</div>", $parsed->html);
-    }
-
-    #[Test]
-    public function test_div_with_class(): void
-    {
-        $parsed = $this->parser->parse(":::warning\nHello\n:::");
-
-        $this->assertSame("<div class=\"warning\">Hello\n</div>", $parsed->html);
-    }
-
-    #[Test]
-    public function test_table(): void
-    {
-        $parsed = $this->parser->parse(<<<MD
-        | Name | Age |
-        | --- | --- |
-        | Alice | 30 |
-        | Bob | 25 |
         MD);
 
-        $this->assertSame(
-            '<table><thead><tr><th>Name</th><th>Age</th></tr></thead><tbody><tr><td>Alice</td><td>30</td></tr><tr><td>Bob</td><td>25</td></tr></tbody></table>',
-            $parsed->html,
-        );
+        $result = $parser->lookaheadUntil(Parser::NEW_LINE, Parser::NEW_LINE);
+
+        $this->assertCount(1, $result);
+        $this->assertSame("| Test |\n", $result[0]);
+        $this->assertSame(0, $parser->position);
     }
 
     #[Test]
-    public function test_list(): void
+    public function test_lookahead_without_match(): void
     {
-        $parsed = $this->parser->parse(<<<'MD'
-        - a
-        - b
+        $parser = new Parser()->setContent(<<<'MD'
+        ABC
         MD);
 
-        $this->assertSame('<ul><li>a</li><li>b</li></ul>', $parsed->html);
+        $result = $parser->lookaheadUntil('D');
+
+        $this->assertEmpty($result);
     }
 
     #[Test]
-    public function test_ordered_list(): void
+    public function test_comes_next_with_offset(): void
     {
-        $parsed = $this->parser->parse(<<<'MD'
-        1. a
-        2. b
-        MD);
+        $parser = new Parser()->setContent('**__');
 
-        $this->assertSame('<ol><li>a</li><li>b</li></ol>', $parsed->html);
-    }
-
-    #[Test]
-    public function test_link_with_image(): void
-    {
-        $parsed = $this->parser->parse('[![alt](/image.jpg)](/link)');
-
-        $this->assertSame('<p><a href="/link"><img src="/image.jpg" alt="alt"></a></p>', $parsed->html);
-    }
-
-    #[Test]
-    public function test_markdown_in_html(): void
-    {
-        $parsed = $this->parser->parse('<p>Hello [world](/uri)</p>');
-
-        $this->assertSame('<p>Hello <a href="/uri">world</a></p>', $parsed->html);
-    }
-
-    #[Test]
-    public function test_nested_lists_with_bigger_indent(): void
-    {
-        $markdown = <<<'MD'
-        - X
-            - a
-            - b
-        MD;
-
-        $parsed = $this->parser->parse($markdown);
-
-        $this->assertSame('<ul><li>X<ul><li>a</li><li>b</li></ul></li></ul>', $parsed->html);
-    }
-
-    #[Test]
-    public function test_nested_ordered_lists_with_bigger_indent(): void
-    {
-        $markdown = <<<'MD'
-        1. X
-            1. a
-            2. b
-        MD;
-
-        $parsed = $this->parser->parse($markdown);
-
-        $this->assertSame('<ol><li>X<ol><li>a</li><li>b</li></ol></li></ol>', $parsed->html);
-    }
-
-    #[Test]
-    public function test_html_comments(): void
-    {
-        $markdown = <<<'MD'
-        <!-- comment -->
-        hi
-        MD;
-
-        $parsed = $this->parser->parse($markdown);
-
-        $this->assertSame("<!-- comment -->\n<p>hi</p>", $parsed->html);
+        $this->assertTrue($parser->comesNext('*'));
+        $this->assertTrue($parser->comesNext('*', offset: 1));
+        $this->assertFalse($parser->comesNext('*', offset: 2));
+        $this->assertTrue($parser->comesNext('_', offset: 2));
+        $this->assertFalse($parser->comesNext('_', offset: 10));
     }
 }

@@ -4,33 +4,32 @@ namespace Tempest\Markdown\Tests\LexerRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\Lexer;
 use Tempest\Markdown\LexerRules\LinkRule;
-use Tempest\Markdown\Tokens\LinkToken;
+use Tempest\Markdown\Parser;
 
 class LinkRuleTest extends TestCase
 {
     #[Test]
     public function test_lex(): void
     {
-        $token = new Lexer([new LinkRule()])->lex('[click here](#)')[0];
+        $html = (string) new Parser(highlighter: null, rules: [new LinkRule()])->parse('[click here](#)');
 
-        $this->assertEquals(new LinkToken('click here', '#'), $token);
+        $this->assertSame('<a href="#">click here</a>', $html);
     }
 
     #[Test]
     public function test_lex_without_href(): void
     {
-        $token = new Lexer([new LinkRule()])->lex('[click here]')[0];
+        $html = (string) new Parser(highlighter: null, rules: [new LinkRule()])->parse('[click here]');
 
-        $this->assertEquals(new LinkToken('click here', null), $token);
+        $this->assertSame('<a href="">click here</a>', $html);
     }
 
     #[Test]
     public function test_lex_with_image_content(): void
     {
-        $token = new Lexer([new LinkRule()])->lex('[![alt](/image.jpg)](/link)')[0];
+        $html = (string) new Parser(highlighter: null, rules: [new LinkRule()])->parse('[![alt](/image.jpg)](/link)');
 
-        $this->assertEquals(new LinkToken('![alt](/image.jpg)', '/link'), $token);
+        $this->assertSame('<a href="/link"><img src="/image.jpg" alt="alt"></a>', $html);
     }
 }

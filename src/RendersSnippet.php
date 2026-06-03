@@ -4,14 +4,14 @@ namespace Tempest\Markdown;
 
 trait RendersSnippet
 {
-    public function renderSnippet(Lexer $lexer): string
+    public function renderSnippet(Parser $parser): string
     {
         $margin = 1;
 
-        $lines = explode(PHP_EOL, $lexer->content);
+        $lines = explode(PHP_EOL, $parser->content);
 
         $currentLine = substr_count(
-            substr($lexer->content, 0, $lexer->position),
+            substr($parser->content, 0, $parser->position),
             PHP_EOL,
         );
 

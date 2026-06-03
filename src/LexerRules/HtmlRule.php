@@ -2,25 +2,25 @@
 
 namespace Tempest\Markdown\LexerRules;
 
-use Tempest\Markdown\Lexer;
+use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\HtmlToken;
 
 final readonly class HtmlRule implements Rule
 {
-    public function shouldLex(Lexer $lexer): bool
+    public function shouldParse(Parser $parser): bool
     {
-        return $lexer->comesNext('<');
+        return $parser->comesNext('<');
     }
 
-    public function lex(Lexer $lexer): Token
+    public function parse(Parser $parser): Token
     {
         $voidTags = ['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
 
-        $tagOpen = $lexer->consume() . $lexer->consumeWhile(Lexer::WHITESPACE);
-        $tagName = $lexer->consumeUntil(' >');
-        $tagClose = $lexer->consumeIncluding('>');
+        $tagOpen = $parser->consume() . $parser->consumeWhile(Parser::WHITESPACE);
+        $tagName = $parser->consumeUntil(' >');
+        $tagClose = $parser->consumeIncluding('>');
         $openingTag = $tagOpen . $tagName . $tagClose;
 
         if (in_array(strtolower($tagName), $voidTags, strict: true)) {
@@ -29,7 +29,7 @@ final readonly class HtmlRule implements Rule
 
         // Self-closing tags (<img />, <br />) need no closing tag.
         if (str_ends_with($openingTag, '/>')) {
-            return new HtmlToken($openingTag . $lexer->consumeWhile(Lexer::NEW_LINE));
+            return new HtmlToken($openingTag . $parser->consumeWhile(Parser::NEW_LINE));
         }
 
         // Extract tag name from opening tag: "<div class..." → "div".
@@ -40,28 +40,28 @@ final readonly class HtmlRule implements Rule
 
         // Track nesting depth for the same tag name so that e.g.
         // <div><div>…</div></div> is consumed as a single token.
-        while ($depth > 0 && $lexer->current !== null) {
+        while ($depth > 0 && $parser->current !== null) {
             // Bulk-skip to '<' on each iteration so comesNext is only called
             // at actual tag boundaries, not character-by-character.
-            $content .= $lexer->consumeUntil('<');
+            $content .= $parser->consumeUntil('<');
 
-            if ($lexer->current === null) {
+            if ($parser->current === null) {
                 break;
             }
 
-            if ($lexer->comesNext("</{$tagName}")) {
+            if ($parser->comesNext("</{$tagName}")) {
                 $depth--;
-                $content .= $lexer->consumeIncluding('>');
-            } elseif ($lexer->comesNext("<{$tagName}")) {
+                $content .= $parser->consumeIncluding('>');
+            } elseif ($parser->comesNext("<{$tagName}")) {
                 $depth++;
-                $content .= $lexer->consumeIncluding('>');
+                $content .= $parser->consumeIncluding('>');
             } else {
                 // Some other tag — consume the '<' and continue.
-                $content .= $lexer->consume();
+                $content .= $parser->consume();
             }
         }
 
-        $content .= $lexer->consumeWhile(Lexer::NEW_LINE);
+        $content .= $parser->consumeWhile(Parser::NEW_LINE);
 
         return new HtmlToken($content);
     }

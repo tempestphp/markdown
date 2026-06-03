@@ -4,41 +4,40 @@ namespace Tempest\Markdown\Tests\LexerRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\Lexer;
 use Tempest\Markdown\LexerRules\DivRule;
-use Tempest\Markdown\Tokens\DivToken;
+use Tempest\Markdown\Parser;
 
 class DivRuleTest extends TestCase
 {
     #[Test]
     public function test_lex_without_class(): void
     {
-        $token = new Lexer([new DivRule()])->lex(":::\nHello\n:::\n")[0];
+        $html = (string) new Parser(highlighter: null, rules: [new DivRule()])->parse(":::\nHello\n:::\n");
 
-        $this->assertEquals(new DivToken(class: null, content: "Hello\n"), $token);
+        $this->assertSame("<div>Hello\n</div>", $html);
     }
 
     #[Test]
     public function test_lex_with_class(): void
     {
-        $token = new Lexer([new DivRule()])->lex(":::warning\nHello\n:::\n")[0];
+        $html = (string) new Parser(highlighter: null, rules: [new DivRule()])->parse(":::warning\nHello\n:::\n");
 
-        $this->assertEquals(new DivToken(class: 'warning', content: "Hello\n"), $token);
+        $this->assertSame("<div class=\"warning\">Hello\n</div>", $html);
     }
 
     #[Test]
     public function test_lex_with_multiple_classes(): void
     {
-        $token = new Lexer([new DivRule()])->lex(":::foo bar\nHello\n:::\n")[0];
+        $html = (string) new Parser(highlighter: null, rules: [new DivRule()])->parse(":::foo bar\nHello\n:::\n");
 
-        $this->assertEquals(new DivToken(class: 'foo bar', content: "Hello\n"), $token);
+        $this->assertSame("<div class=\"foo bar\">Hello\n</div>", $html);
     }
 
     #[Test]
     public function test_lex_multiline_content(): void
     {
-        $token = new Lexer([new DivRule()])->lex(":::warning\nline one\nline two\n:::\n")[0];
+        $html = (string) new Parser(highlighter: null, rules: [new DivRule()])->parse(":::warning\nline one\nline two\n:::\n");
 
-        $this->assertEquals(new DivToken(class: 'warning', content: "line one\nline two\n"), $token);
+        $this->assertSame("<div class=\"warning\">line one\nline two\n</div>", $html);
     }
 }

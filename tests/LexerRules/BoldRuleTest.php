@@ -4,57 +4,56 @@ namespace Tempest\Markdown\Tests\LexerRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\Lexer;
 use Tempest\Markdown\LexerRules\BoldRule;
-use Tempest\Markdown\Tokens\BoldToken;
+use Tempest\Markdown\Parser;
 
 class BoldRuleTest extends TestCase
 {
     #[Test]
     public function test_lex_double_asterisk(): void
     {
-        $token = new Lexer([new BoldRule()])->lex('**bold**')[0];
+        $html = (string) new Parser(highlighter: null, rules: [new BoldRule()])->parse('**bold**');
 
-        $this->assertEquals(new BoldToken('bold'), $token);
+        $this->assertSame('<strong>bold</strong>', $html);
     }
 
     #[Test]
     public function test_lex_asterisk_with_underscore(): void
     {
-        $token = new Lexer([new BoldRule()])->lex('**_bold_**')[0];
+        $html = (string) new Parser(highlighter: null, rules: [new BoldRule()])->parse('**_bold_**');
 
-        $this->assertEquals(new BoldToken('_bold_'), $token);
+        $this->assertSame('<strong><em>bold</em></strong>', $html);
     }
 
     #[Test]
     public function test_does_not_lex_single_asterisk(): void
     {
-        $tokens = new Lexer([new BoldRule()])->lex('*bold*');
+        $html = (string) new Parser(highlighter: null, rules: [new BoldRule()])->parse('*bold*');
 
-        $this->assertCount(0, $tokens);
+        $this->assertSame('', $html);
     }
 
     #[Test]
     public function test_lex_double_underscore(): void
     {
-        $token = new Lexer([new BoldRule()])->lex('__bold__')[0];
+        $html = (string) new Parser(highlighter: null, rules: [new BoldRule()])->parse('__bold__');
 
-        $this->assertEquals(new BoldToken('bold'), $token);
+        $this->assertSame('<strong>bold</strong>', $html);
     }
 
     #[Test]
     public function test_does_not_lex_single_underscore(): void
     {
-        $tokens = new Lexer([new BoldRule()])->lex('_bold_');
+        $html = (string) new Parser(highlighter: null, rules: [new BoldRule()])->parse('_bold_');
 
-        $this->assertCount(0, $tokens);
+        $this->assertSame('', $html);
     }
 
     #[Test]
     public function test_underscore_with_asterisk(): void
     {
-        $token = new Lexer([new BoldRule()])->lex('__*bold*__')[0];
+        $html = (string) new Parser(highlighter: null, rules: [new BoldRule()])->parse('__*bold*__');
 
-        $this->assertEquals(new BoldToken('*bold*'), $token);
+        $this->assertSame('<strong><em>bold</em></strong>', $html);
     }
 }

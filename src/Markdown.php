@@ -14,7 +14,6 @@ final class Markdown
         private ?ResponsiveImageFactory $imageFactory = null,
     ) {
         $this->parser = new Parser(
-            new Lexer(),
             $this->highlighter,
             $this->imageFactory,
         );

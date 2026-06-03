@@ -2,7 +2,7 @@
 
 namespace Tempest\Markdown\LexerRules;
 
-use Tempest\Markdown\Lexer;
+use Tempest\Markdown\Parser;
 use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
@@ -12,21 +12,21 @@ final class CodeRule implements Rule, ProvidesStopChar
 {
     private(set) string $stopChar = '`';
 
-    public function shouldLex(Lexer $lexer): bool
+    public function shouldParse(Parser $parser): bool
     {
-        return $lexer->comesNext('`', 1);
+        return $parser->comesNext('`', 1);
     }
 
-    public function lex(Lexer $lexer): Token
+    public function parse(Parser $parser): Token
     {
-        $lexer->consumeIncluding('`');
+        $parser->consumeIncluding('`');
 
         $language = null;
 
-        if ($lexer->comesNext('{', 1)) {
-            $lexer->consume();
-            $language = $lexer->consumeUntil('}');
-            $lexer->consume();
+        if ($parser->comesNext('{', 1)) {
+            $parser->consume();
+            $language = $parser->consumeUntil('}');
+            $parser->consume();
         }
 
         $content = '';
@@ -36,9 +36,9 @@ final class CodeRule implements Rule, ProvidesStopChar
             $language = null;
         }
 
-        $content .= $lexer->consumeUntil('`');
+        $content .= $parser->consumeUntil('`');
 
-        $lexer->consumeIncluding('`');
+        $parser->consumeIncluding('`');
 
         return new CodeToken($language, $content);
     }

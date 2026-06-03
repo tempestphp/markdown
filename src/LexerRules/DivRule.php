@@ -2,30 +2,30 @@
 
 namespace Tempest\Markdown\LexerRules;
 
-use Tempest\Markdown\Lexer;
+use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\DivToken;
 
 final readonly class DivRule implements Rule
 {
-    public function shouldLex(Lexer $lexer): bool
+    public function shouldParse(Parser $parser): bool
     {
-        return $lexer->comesNext(':::', 3);
+        return $parser->comesNext(':::', 3);
     }
 
-    public function lex(Lexer $lexer): Token
+    public function parse(Parser $parser): Token
     {
-        $lexer->consumeWhile(':');
+        $parser->consumeWhile(':');
 
-        $class = $lexer->consumeUntil(Lexer::NEW_LINE) ?: null;
+        $class = $parser->consumeUntil(Parser::NEW_LINE) ?: null;
 
-        $lexer->consumeWhile(Lexer::NEW_LINE);
+        $parser->consumeWhile(Parser::NEW_LINE);
 
-        $content = $lexer->consumeUntilString(':::');
+        $content = $parser->consumeUntilString(':::');
 
-        $lexer->consumeWhile(':');
-        $lexer->consumeWhile(Lexer::NEW_LINE);
+        $parser->consumeWhile(':');
+        $parser->consumeWhile(Parser::NEW_LINE);
 
         return new DivToken(
             class: $class,

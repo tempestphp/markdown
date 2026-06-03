@@ -4,33 +4,32 @@ namespace Tempest\Markdown\Tests\LexerRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\Lexer;
 use Tempest\Markdown\LexerRules\CodeRule;
-use Tempest\Markdown\Tokens\CodeToken;
+use Tempest\Markdown\Parser;
 
 class CodeRuleTest extends TestCase
 {
     #[Test]
     public function test_lex(): void
     {
-        $token = new Lexer([new CodeRule()])->lex('`code`')[0];
+        $html = (string) new Parser(highlighter: null, rules: [new CodeRule()])->parse('`code`');
 
-        $this->assertEquals(new CodeToken(null, 'code'), $token);
+        $this->assertSame('<code>code</code>', $html);
     }
 
     #[Test]
     public function test_lex_with_language(): void
     {
-        $token = new Lexer([new CodeRule()])->lex('`{php}code`')[0];
+        $html = (string) new Parser(highlighter: null, rules: [new CodeRule()])->parse('`{php}code`');
 
-        $this->assertEquals(new CodeToken('php', 'code'), $token);
+        $this->assertSame('<code class="language-php">code</code>', $html);
     }
 
     #[Test]
     public function test_with_custom_hl_token(): void
     {
-        $token = new Lexer([new CodeRule()])->lex('`{:hl-class:code:}`')[0];
+        $html = (string) new Parser(highlighter: null, rules: [new CodeRule()])->parse('`{:hl-class:code:}`');
 
-        $this->assertEquals(new CodeToken(language: null, content: '{:hl-class:code:}'), $token);
+        $this->assertSame('<code>{:hl-class:code:}</code>', $html);
     }
 }

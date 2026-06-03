@@ -6,33 +6,32 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tempest\Markdown\Exceptions\ImageSourceWasMissing;
 use Tempest\Markdown\Exceptions\ImageSourceWasNotClosed;
-use Tempest\Markdown\Lexer;
 use Tempest\Markdown\LexerRules\ImageRule;
-use Tempest\Markdown\Tokens\ImageToken;
+use Tempest\Markdown\Parser;
 
 class ImageRuleTest extends TestCase
 {
     #[Test]
     public function test_lex(): void
     {
-        $token = new Lexer([new ImageRule()])->lex('![alt](src)')[0];
+        $html = (string) new Parser(highlighter: null, rules: [new ImageRule()])->parse('![alt](src)');
 
-        $this->assertEquals(new ImageToken('src', 'alt'), $token);
+        $this->assertSame('<img src="src" alt="alt">', $html);
     }
 
     #[Test]
     public function test_lex_without_alt(): void
     {
-        $token = new Lexer([new ImageRule()])->lex('![](src)')[0];
+        $html = (string) new Parser(highlighter: null, rules: [new ImageRule()])->parse('![](src)');
 
-        $this->assertEquals(new ImageToken('src', null), $token);
+        $this->assertSame('<img src="src">', $html);
     }
 
     #[Test]
     public function test_invalid_image_throws_exception(): void
     {
         try {
-            new Lexer([new ImageRule()])->lex('Hello ![alt] world');
+            new Parser(highlighter: null, rules: [new ImageRule()])->parse('Hello ![alt] world');
         } catch (ImageSourceWasMissing $e) {
             $this->assertStringContainsString(<<<'TXT'
             01 > Hello ![alt] world
@@ -44,7 +43,7 @@ class ImageRuleTest extends TestCase
     public function test_invalid_image_source_throws_exception(): void
     {
         try {
-            new Lexer([new ImageRule()])->lex('Hello ![alt](foo world');
+            new Parser(highlighter: null, rules: [new ImageRule()])->parse('Hello ![alt](foo world');
         } catch (ImageSourceWasNotClosed $e) {
             $this->assertStringContainsString(<<<'TXT'
             01 > Hello ![alt](foo world

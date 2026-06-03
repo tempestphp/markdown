@@ -11,14 +11,14 @@ excludes = [
 ignore = [
     "mixed-argument",
     "mixed-assignment",
-    { code = "redundant-isset-check", in = ["src/Lexer.php"] },
-    { code = "redundant-null-coalesce", in = ["src/Lexer.php"] },
-    { code = "no-value", in = ["tests/LexerTest.php"] },
-    { code = "invalid-class-string-expression", in = ["tests/LexerTest.php"] },
-    { code = "impossible-assignment", in = ["tests/LexerTest.php"] },
-    { code = "invalid-type-cast", in = ["tests/LexerTest.php"] },
-    { code = "mixed-array-index", in = ["tests/LexerTest.php"] },
-    { code = "invalid-array-access", in = ["tests/LexerTest.php"] },
+    { code = "redundant-isset-check", in = ["src/Parser.php"] },
+    { code = "redundant-null-coalesce", in = ["src/Parser.php"] },
+    { code = "no-value", in = ["tests/ParserTest.php"] },
+    { code = "invalid-class-string-expression", in = ["tests/ParserTest.php"] },
+    { code = "impossible-assignment", in = ["tests/ParserTest.php"] },
+    { code = "invalid-type-cast", in = ["tests/ParserTest.php"] },
+    { code = "mixed-array-index", in = ["tests/ParserTest.php"] },
+    { code = "invalid-array-access", in = ["tests/ParserTest.php"] },
 ]
 
 [formatter]

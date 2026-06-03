@@ -4,25 +4,24 @@ namespace Tempest\Markdown\Tests\LexerRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\Lexer;
 use Tempest\Markdown\LexerRules\StrikethroughRule;
-use Tempest\Markdown\Tokens\StrikethroughToken;
+use Tempest\Markdown\Parser;
 
 class StrikethroughRuleTest extends TestCase
 {
     #[Test]
     public function test_lex(): void
     {
-        $token = new Lexer([new StrikethroughRule()])->lex('~~strikethrough~~')[0];
+        $html = (string) new Parser(highlighter: null, rules: [new StrikethroughRule()])->parse('~~strikethrough~~');
 
-        $this->assertEquals(new StrikethroughToken('strikethrough'), $token);
+        $this->assertSame('<s>strikethrough</s>', $html);
     }
 
     #[Test]
     public function test_lex_single_tilde(): void
     {
-        $token = new Lexer([new StrikethroughRule()])->lex('~strikethrough~')[0];
+        $html = (string) new Parser(highlighter: null, rules: [new StrikethroughRule()])->parse('~strikethrough~');
 
-        $this->assertEquals(new StrikethroughToken('strikethrough'), $token);
+        $this->assertSame('<s>strikethrough</s>', $html);
     }
 }
