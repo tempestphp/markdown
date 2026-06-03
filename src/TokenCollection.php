@@ -15,9 +15,14 @@ final class TokenCollection implements IteratorAggregate, ArrayAccess
 {
     private int $i = 0;
 
-    public function __construct(
-        private array $tokens = [],
-    ) {}
+    private array $tokens = [];
+
+    public function __construct(array $tokens = [])
+    {
+        foreach ($tokens as $token) {
+            $this->add($token);
+        }
+    }
 
     public function add(Token $token): self
     {
@@ -48,8 +53,9 @@ final class TokenCollection implements IteratorAggregate, ArrayAccess
     {
         if ($offset === null) {
             $offset = $this->i;
-            $this->i++;
         }
+
+        $this->i = $offset + 1;
 
         $this->tokens[$offset] = $value;
     }

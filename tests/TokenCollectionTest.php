@@ -32,4 +32,25 @@ final class TokenCollectionTest extends TestCase
 
         $this->assertSame($replacement, $collection[0]);
     }
+
+    #[Test]
+    public function test_index_is_correctly_updated(): void
+    {
+        $collection = new TokenCollection();
+
+        $collection[] = new TextToken('x');
+        $collection[1] = new TextToken('y');
+        $collection[] = new TextToken('z');
+
+        $this->assertCount(3, $collection);
+    }
+
+    #[Test]
+    public function test_offset_set_with_initial(): void
+    {
+        $collection = new TokenCollection([new TextToken('initial')]);
+        $collection[] = new TextToken('append');
+
+        $this->assertCount(2, $collection);
+    }
 }
