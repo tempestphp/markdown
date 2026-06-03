@@ -4,7 +4,7 @@ namespace Tempest\Markdown\Tests\LexerRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\LexerRules\ThinRulerRule;
+use Tempest\Markdown\ParserRules\ThinRulerRule;
 use Tempest\Markdown\Parser;
 
 class ThinRulerRuleTest extends TestCase

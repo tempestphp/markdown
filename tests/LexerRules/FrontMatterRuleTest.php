@@ -7,9 +7,9 @@ use PHPUnit\Framework\TestCase;
 use Tempest\Markdown\Exceptions\FrontMatterCouldNotBeParsed;
 use Tempest\Markdown\Exceptions\FrontMatterShouldBeAnArray;
 use Tempest\Markdown\Exceptions\FrontMatterWasNotProperlyClosed;
-use Tempest\Markdown\LexerRules\FrontMatterRule;
-use Tempest\Markdown\LexerRules\NewLineRule;
-use Tempest\Markdown\LexerRules\ParagraphRule;
+use Tempest\Markdown\ParserRules\FrontMatterRule;
+use Tempest\Markdown\ParserRules\NewLineRule;
+use Tempest\Markdown\ParserRules\ParagraphRule;
 use Tempest\Markdown\Parser;
 
 final class FrontMatterRuleTest extends TestCase

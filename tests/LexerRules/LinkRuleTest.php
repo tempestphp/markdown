@@ -4,7 +4,7 @@ namespace Tempest\Markdown\Tests\LexerRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\LexerRules\LinkRule;
+use Tempest\Markdown\ParserRules\LinkRule;
 use Tempest\Markdown\Parser;
 
 class LinkRuleTest extends TestCase

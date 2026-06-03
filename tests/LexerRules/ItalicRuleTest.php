@@ -4,7 +4,7 @@ namespace Tempest\Markdown\Tests\LexerRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\LexerRules\ItalicRule;
+use Tempest\Markdown\ParserRules\ItalicRule;
 use Tempest\Markdown\Parser;
 
 class ItalicRuleTest extends TestCase

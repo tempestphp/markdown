@@ -4,10 +4,10 @@ namespace Tempest\Markdown\Tests\LexerRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\LexerRules\HtmlRule;
-use Tempest\Markdown\LexerRules\NewLineRule;
-use Tempest\Markdown\LexerRules\ParagraphRule;
-use Tempest\Markdown\LexerRules\TextRule;
+use Tempest\Markdown\ParserRules\HtmlRule;
+use Tempest\Markdown\ParserRules\NewLineRule;
+use Tempest\Markdown\ParserRules\ParagraphRule;
+use Tempest\Markdown\ParserRules\TextRule;
 use Tempest\Markdown\Parser;
 
 class HtmlRuleTest extends TestCase

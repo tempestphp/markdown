@@ -4,7 +4,7 @@ namespace Tempest\Markdown\Tests\LexerRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\LexerRules\DivRule;
+use Tempest\Markdown\ParserRules\DivRule;
 use Tempest\Markdown\Parser;
 
 class DivRuleTest extends TestCase

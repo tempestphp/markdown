@@ -1,6 +1,6 @@
 <?php
 
-namespace Tempest\Markdown\LexerRules;
+namespace Tempest\Markdown\ParserRules;
 
 use Tempest\Markdown\Exceptions\ImageSourceWasMissing;
 use Tempest\Markdown\Exceptions\ImageSourceWasNotClosed;

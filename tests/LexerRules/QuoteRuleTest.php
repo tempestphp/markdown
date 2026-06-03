@@ -4,7 +4,7 @@ namespace Tempest\Markdown\Tests\LexerRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\LexerRules\QuoteRule;
+use Tempest\Markdown\ParserRules\QuoteRule;
 use Tempest\Markdown\Parser;
 
 class QuoteRuleTest extends TestCase

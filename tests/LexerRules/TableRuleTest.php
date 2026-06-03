@@ -4,8 +4,8 @@ namespace Tempest\Markdown\Tests\LexerRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\LexerRules\ParagraphRule;
-use Tempest\Markdown\LexerRules\TableRule;
+use Tempest\Markdown\ParserRules\ParagraphRule;
+use Tempest\Markdown\ParserRules\TableRule;
 use Tempest\Markdown\Parser;
 
 class TableRuleTest extends TestCase

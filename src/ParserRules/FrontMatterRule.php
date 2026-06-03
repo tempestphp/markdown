@@ -1,6 +1,6 @@
 <?php
 
-namespace Tempest\Markdown\LexerRules;
+namespace Tempest\Markdown\ParserRules;
 
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;

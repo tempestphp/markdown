@@ -4,9 +4,9 @@ namespace Tempest\Markdown\Tests\LexerRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\LexerRules\BoldAndItalicRule;
-use Tempest\Markdown\LexerRules\BoldRule;
-use Tempest\Markdown\LexerRules\ItalicRule;
+use Tempest\Markdown\ParserRules\BoldAndItalicRule;
+use Tempest\Markdown\ParserRules\BoldRule;
+use Tempest\Markdown\ParserRules\ItalicRule;
 use Tempest\Markdown\Parser;
 
 class BoldAndItalicRuleTest extends TestCase

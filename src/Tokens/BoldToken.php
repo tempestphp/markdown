@@ -2,10 +2,10 @@
 
 namespace Tempest\Markdown\Tokens;
 
-use Tempest\Markdown\LexerRules\ItalicRule;
-use Tempest\Markdown\LexerRules\LinkRule;
-use Tempest\Markdown\LexerRules\StrikethroughRule;
-use Tempest\Markdown\LexerRules\TextRule;
+use Tempest\Markdown\ParserRules\ItalicRule;
+use Tempest\Markdown\ParserRules\LinkRule;
+use Tempest\Markdown\ParserRules\StrikethroughRule;
+use Tempest\Markdown\ParserRules\TextRule;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\Token;
 

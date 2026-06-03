@@ -4,7 +4,7 @@ namespace Tempest\Markdown\Tests\LexerRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\LexerRules\ThickRulerRule;
+use Tempest\Markdown\ParserRules\ThickRulerRule;
 use Tempest\Markdown\Parser;
 
 class ThickRulerRuleTest extends TestCase

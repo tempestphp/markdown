@@ -4,7 +4,7 @@ namespace Tempest\Markdown\Tests\LexerRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\LexerRules\CodeRule;
+use Tempest\Markdown\ParserRules\CodeRule;
 use Tempest\Markdown\Parser;
 
 class CodeRuleTest extends TestCase

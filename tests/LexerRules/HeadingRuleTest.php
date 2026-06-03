@@ -4,7 +4,7 @@ namespace Tempest\Markdown\Tests\LexerRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\LexerRules\HeadingRule;
+use Tempest\Markdown\ParserRules\HeadingRule;
 use Tempest\Markdown\Parser;
 
 class HeadingRuleTest extends TestCase

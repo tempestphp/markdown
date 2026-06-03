@@ -4,8 +4,8 @@ namespace Tempest\Markdown\Tests\LexerRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\LexerRules\ListRule;
-use Tempest\Markdown\LexerRules\TextRule;
+use Tempest\Markdown\ParserRules\ListRule;
+use Tempest\Markdown\ParserRules\TextRule;
 use Tempest\Markdown\Parser;
 
 class ListRuleTest extends TestCase
