@@ -23,6 +23,18 @@ class PreRuleTest extends TestCase
     }
 
     #[Test]
+    public function test_lex_with_language_and_path(): void
+    {
+        $token = new Lexer([new PreRule()])->lex(<<<'MD'
+        ```php file.php
+        echo "hi";
+        ```
+        MD)[0];
+
+        $this->assertEquals(new PreToken(language: 'php', content: 'echo "hi";'), $token);
+    }
+
+    #[Test]
     public function test_lex_without_language(): void
     {
         $token = new Lexer([new PreRule()])->lex(<<<'MD'

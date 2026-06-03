@@ -18,7 +18,9 @@ final readonly class PreRule implements Rule
     {
         $lexer->consumeIncluding('```');
 
-        $language = $lexer->consumeUntil(Lexer::NEW_LINE);
+        $language = $lexer->consumeUntil(Lexer::WHITESPACE);
+
+        $lexer->consumeUntil(Lexer::NEW_LINE);
 
         $lexer->consumeWhile(Lexer::NEW_LINE);
 
