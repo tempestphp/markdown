@@ -1,6 +1,6 @@
 # Fast and extensible Markdown in PHP
 
-`tempest/markdown` is a Markdown parser written in PHP. It's designed to be fast and extensible, and has a bunch of additional features built-in like code highlighting, table and div support, extended markup, and frontmatter support.
+`tempest/markdown` is a Markdown parser for server-side Markdown parsing with PHP. It's designed to be fast and extensible, and has a bunch of extended Markdown features built-in like code highlighting, table and div support, responsive images, and frontmatter support.
 
 > [!IMPORTANT]
 > This package is still a work in progress! Feel free to open issues.
