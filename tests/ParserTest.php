@@ -60,7 +60,7 @@ final class ParserTest extends TestCase
     }
 
     #[Test]
-    public function test_with_front_matter(): void
+    public function test_with_frontmatter(): void
     {
         $parsed = $this->parser->parse(<<<'MD'
         ---
@@ -77,7 +77,7 @@ final class ParserTest extends TestCase
                 'title' => 'Hello',
                 'foo' => 'bar',
             ],
-            $parsed->frontMatter,
+            $parsed->frontmatter,
         );
     }
 

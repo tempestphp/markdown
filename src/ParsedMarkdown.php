@@ -8,7 +8,7 @@ final readonly class ParsedMarkdown implements Stringable
 {
     public function __construct(
         public string $html,
-        public array $frontMatter,
+        public array $frontmatter,
     ) {}
 
     public function __toString(): string
