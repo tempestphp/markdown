@@ -35,8 +35,7 @@ Benchmarks are included in this repo and can be run with
 
 | Package                | Memory   | Time to parse |
 |------------------------|----------|---------------|
-| tempest/markdown       | 5.944mb  | 6.281ms       |
+| tempest/markdown       | 6.826mb  | 13.273ms      |
 | league/commonmark      | 21.114mb | 56.993ms      |
 | michelf/php-markdown   | 7.343mb  | 23.215ms      |
 | erusev/parsedown-extra | 8.485mb  | 15.163ms      |
-
