@@ -178,4 +178,17 @@ final class ParserTest extends TestCase
 
         $this->assertSame('<ol><li>X<ol><li>a</li><li>b</li></ol></li></ol>', $parsed->html);
     }
+
+    #[Test]
+    public function test_html_comments(): void
+    {
+        $markdown = <<<'MD'
+        <!-- comment -->
+        hi
+        MD;
+
+        $parsed = $this->parser->parse($markdown);
+
+        $this->assertSame("<!-- comment -->\n<p>hi</p>", $parsed->html);
+    }
 }

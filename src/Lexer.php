@@ -5,6 +5,7 @@ namespace Tempest\Markdown;
 use Tempest\Markdown\LexerRules\DivRule;
 use Tempest\Markdown\LexerRules\FrontMatterRule;
 use Tempest\Markdown\LexerRules\HeadingRule;
+use Tempest\Markdown\LexerRules\HtmlCommentRule;
 use Tempest\Markdown\LexerRules\HtmlRule;
 use Tempest\Markdown\LexerRules\ListRule;
 use Tempest\Markdown\LexerRules\NewLineRule;
@@ -44,6 +45,7 @@ final class Lexer
             new ListRule(),
             new OrderedListRule(),
             new TableRule(),
+            new HtmlCommentRule(),
             new HtmlRule(),
             new ParagraphRule(),
         ];
