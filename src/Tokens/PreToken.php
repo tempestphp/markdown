@@ -28,6 +28,6 @@ final readonly class PreToken implements Token
 
         $class = $language ? " class=\"language-{$language}\"" : '';
 
-        return "<pre><code{$class}>{$content}</code></pre>";
+        return "<pre{$class}>{$content}</pre>";
     }
 }

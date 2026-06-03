@@ -86,7 +86,7 @@ class DivTokenTest extends TestCase
     {
         $token = new DivToken(class: null, content: "```php\ncode\n```");
 
-        $this->assertEquals('<div><pre><code class="language-php">code</code></pre></div>', $token->parse(new Parser()));
+        $this->assertEquals('<div><pre class="language-php">code</pre></div>', $token->parse(new Parser()));
     }
 
     #[Test]

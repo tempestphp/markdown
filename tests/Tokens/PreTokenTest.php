@@ -15,7 +15,7 @@ class PreTokenTest extends TestCase
         $token = new PreToken(language: 'php', content: 'echo "hi";');
 
         $this->assertEquals(
-            '<pre><code class="language-php"><span class="hl-keyword">echo</span> <span class="hl-value">&quot;hi&quot;</span>;</code></pre>',
+            '<pre class="language-php"><span class="hl-keyword">echo</span> <span class="hl-value">&quot;hi&quot;</span>;</pre>',
             $token->parse(new Parser()),
         );
     }
@@ -26,7 +26,7 @@ class PreTokenTest extends TestCase
         $token = new PreToken(language: null, content: 'echo "hi";');
 
         $this->assertEquals(
-            '<pre><code class="language-txt">echo &quot;hi&quot;;</code></pre>',
+            '<pre class="language-txt">echo &quot;hi&quot;;</pre>',
             $token->parse(new Parser()),
         );
     }
@@ -37,7 +37,7 @@ class PreTokenTest extends TestCase
         $token = new PreToken(language: null, content: 'echo "hi";');
 
         $this->assertEquals(
-            '<pre><code>echo "hi";</code></pre>',
+            '<pre>echo "hi";</pre>',
             $token->parse(new Parser(highlighter: null)),
         );
     }
