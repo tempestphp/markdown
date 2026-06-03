@@ -22,6 +22,10 @@ final readonly class OrderedListRule implements Rule
             return false;
         }
 
+        if (! ctype_digit(rtrim($search[0], '.'))) {
+            return false;
+        }
+
         // Must be followed by a space.
         if (($search[1][0] ?? null) !== ' ') {
             return false;

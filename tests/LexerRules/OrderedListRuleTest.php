@@ -96,4 +96,12 @@ class OrderedListRuleTest extends TestCase
 
         $this->assertEquals($expected, $token);
     }
+
+    #[Test]
+    public function test_only_numbers_are_allowed(): void
+    {
+        $tokens = new Lexer([new OrderedListRule()])->lex('1a. one');
+
+        $this->assertCount(0, $tokens);
+    }
 }
