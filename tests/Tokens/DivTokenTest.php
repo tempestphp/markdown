@@ -74,6 +74,22 @@ class DivTokenTest extends TestCase
     }
 
     #[Test]
+    public function test_parse_with_code(): void
+    {
+        $token = new DivToken(class: null, content: '`code`');
+
+        $this->assertEquals('<div><code class="language-txt">code</code></div>', $token->parse(new Parser()));
+    }
+
+    #[Test]
+    public function test_parse_with_pre(): void
+    {
+        $token = new DivToken(class: null, content: "```php\ncode\n```");
+
+        $this->assertEquals('<div><pre><code class="language-php">code</code></pre></div>', $token->parse(new Parser()));
+    }
+
+    #[Test]
     public function test_inline_formatting_rule_priority(): void
     {
         $parser = new Parser();
