@@ -24,7 +24,7 @@ echo $parsed->frontmatter['title'];
 echo $parsed->html;
 ```
 
-You can read more in [the docs](#TODO).
+You can read more in [the docs](https://tempestphp.com/3.x/packages/markdown).
 
 ## Performance
 
