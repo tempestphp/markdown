@@ -1,12 +1,12 @@
 <?php
 
-namespace Tempest\Markdown\Tests\LexerRules;
+namespace Tempest\Markdown\Tests\ParserRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Tempest\Markdown\Parser;
 use Tempest\Markdown\ParserRules\OrderedListRule;
 use Tempest\Markdown\ParserRules\TextRule;
-use Tempest\Markdown\Parser;
 
 class OrderedListRuleTest extends TestCase
 {

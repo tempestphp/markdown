@@ -2,6 +2,7 @@
 
 namespace Tempest\Markdown\Tokens;
 
+use Tempest\Markdown\Parser;
 use Tempest\Markdown\ParserRules\BoldAndItalicRule;
 use Tempest\Markdown\ParserRules\BoldRule;
 use Tempest\Markdown\ParserRules\CodeRule;
@@ -12,7 +13,6 @@ use Tempest\Markdown\ParserRules\LinkRule;
 use Tempest\Markdown\ParserRules\PreRule;
 use Tempest\Markdown\ParserRules\QuoteRule;
 use Tempest\Markdown\ParserRules\TextRule;
-use Tempest\Markdown\Parser;
 use Tempest\Markdown\Token;
 
 final readonly class DivToken implements Token

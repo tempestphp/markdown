@@ -2,10 +2,10 @@
 
 namespace Tempest\Markdown\Tokens;
 
+use Tempest\Markdown\Parser;
 use Tempest\Markdown\ParserRules\LinkRule;
 use Tempest\Markdown\ParserRules\StrikethroughRule;
 use Tempest\Markdown\ParserRules\TextRule;
-use Tempest\Markdown\Parser;
 use Tempest\Markdown\Token;
 
 final readonly class BoldAndItalicToken implements Token

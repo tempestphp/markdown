@@ -1,11 +1,11 @@
 <?php
 
-namespace Tempest\Markdown\Tests\LexerRules;
+namespace Tempest\Markdown\Tests\ParserRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tempest\Markdown\ParserRules\QuoteRule;
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\ParserRules\QuoteRule;
 
 class QuoteRuleTest extends TestCase
 {

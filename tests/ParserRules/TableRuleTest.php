@@ -1,12 +1,12 @@
 <?php
 
-namespace Tempest\Markdown\Tests\LexerRules;
+namespace Tempest\Markdown\Tests\ParserRules;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Tempest\Markdown\Parser;
 use Tempest\Markdown\ParserRules\ParagraphRule;
 use Tempest\Markdown\ParserRules\TableRule;
-use Tempest\Markdown\Parser;
 
 class TableRuleTest extends TestCase
 {

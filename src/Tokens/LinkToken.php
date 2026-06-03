@@ -2,13 +2,13 @@
 
 namespace Tempest\Markdown\Tokens;
 
+use Tempest\Markdown\Parser;
 use Tempest\Markdown\ParserRules\BoldAndItalicRule;
 use Tempest\Markdown\ParserRules\BoldRule;
 use Tempest\Markdown\ParserRules\ImageRule;
 use Tempest\Markdown\ParserRules\ItalicRule;
 use Tempest\Markdown\ParserRules\StrikethroughRule;
 use Tempest\Markdown\ParserRules\TextRule;
-use Tempest\Markdown\Parser;
 use Tempest\Markdown\Token;
 
 final readonly class LinkToken implements Token
