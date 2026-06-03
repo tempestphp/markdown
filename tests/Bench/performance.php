@@ -12,14 +12,17 @@ $markdown = new Tempest\Markdown\Markdown();
 $start = microtime(true);
 
 // ## RUN
-$html = $markdown->parse($contents);
+$html = $markdown->parse($contents)->html;
 //$html = $markdown->convert($contents)->getContent();
-// ##
 
-if (! str_contains($html, '<h2>')) {
-    throw new Exception('Failed to parse markdown');
-}
+echo $html;
+
+echo PHP_EOL . PHP_EOL . '###################' . PHP_EOL;
 
 $end = microtime(true);
 
-echo ($end - $start) . PHP_EOL;
+echo ' ' . ($end - $start);
+
+echo PHP_EOL . '###################' . PHP_EOL;
+
+file_put_contents(__DIR__ . '/Fixtures/02-large.html', $html);

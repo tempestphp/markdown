@@ -9,3 +9,4 @@ build/
 .cache
 .claude
 tests/Fixtures/public/*.jpg
+tests/Bench/Fixtures/02-large.html
