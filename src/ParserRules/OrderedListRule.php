@@ -3,13 +3,18 @@
 namespace Tempest\Markdown\ParserRules;
 
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\ProvidesFirstChar;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\ListItem;
 use Tempest\Markdown\Tokens\OrderedListToken;
 
-final readonly class OrderedListRule implements Rule
+final readonly class OrderedListRule implements Rule, ProvidesFirstChar
 {
+    public function __construct(
+        public string $firstChar = '0123456789',
+    ) {}
+
     public function shouldParse(Parser $parser): bool
     {
         if (! ctype_digit($parser->current ?? '')) {

@@ -3,13 +3,15 @@
 namespace Tempest\Markdown\ParserRules;
 
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\ProvidesFirstChar;
 use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\BoldToken;
 
-final class BoldRule implements Rule, ProvidesStopChar
+final class BoldRule implements Rule, ProvidesFirstChar, ProvidesStopChar
 {
+    private(set) string $firstChar = '*_';
     private(set) string $stopChar = '_*';
 
     public function shouldParse(Parser $parser): bool

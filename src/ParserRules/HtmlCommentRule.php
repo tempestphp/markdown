@@ -3,12 +3,17 @@
 namespace Tempest\Markdown\ParserRules;
 
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\ProvidesFirstChar;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\HtmlCommentToken;
 
-final readonly class HtmlCommentRule implements Rule
+final readonly class HtmlCommentRule implements Rule, ProvidesFirstChar
 {
+    public function __construct(
+        public string $firstChar = '<',
+    ) {}
+
     public function shouldParse(Parser $parser): bool
     {
         return $parser->comesNext('<!--', length: 4);

@@ -3,13 +3,18 @@
 namespace Tempest\Markdown\ParserRules;
 
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\ProvidesFirstChar;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\RulerToken;
 use Tempest\Markdown\Tokens\RulerType;
 
-final readonly class ThickRulerRule implements Rule
+final readonly class ThickRulerRule implements Rule, ProvidesFirstChar
 {
+    public function __construct(
+        public string $firstChar = '=',
+    ) {}
+
     public function shouldParse(Parser $parser): bool
     {
         return $parser->comesNext('===', 3);

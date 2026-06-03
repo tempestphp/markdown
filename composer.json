@@ -33,7 +33,7 @@
         "erusev/parsedown-extra": "^0.9.0"
     },
     "scripts": {
-        "bench": "vendor/bin/phpbench run --report=aggregate",
+        "bench": "vendor/bin/phpbench run --report=aggregate --php-config='{\"opcache.enable_cli\": 1}'",
         "bench:tempest": "vendor/bin/phpbench run tests/Bench/MarkdownBench.php --filter=benchTempest --report=aggregate",
         "fmt": "vendor/bin/mago fmt",
         "lint": "vendor/bin/mago lint --reporting-format=rich && vendor/bin/mago lint --fix --format-after-fix",

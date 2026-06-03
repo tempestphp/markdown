@@ -3,14 +3,16 @@
 namespace Tempest\Markdown\ParserRules;
 
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\ProvidesFirstChar;
 use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\ItalicToken;
 
-final class ItalicRule implements Rule, ProvidesStopChar
+final class ItalicRule implements Rule, ProvidesFirstChar, ProvidesStopChar
 {
-    private(set) string $stopChar = '_';
+    private(set) string $firstChar = '*_';
+    private(set) string $stopChar = '*_';
 
     public function shouldParse(Parser $parser): bool
     {

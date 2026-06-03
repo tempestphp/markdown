@@ -3,12 +3,17 @@
 namespace Tempest\Markdown\ParserRules;
 
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\ProvidesFirstChar;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\NewLineToken;
 
-final readonly class NewLineRule implements Rule
+final readonly class NewLineRule implements Rule, ProvidesFirstChar
 {
+    public function __construct(
+        public string $firstChar = "\n\r",
+    ) {}
+
     public function shouldParse(Parser $parser): bool
     {
         return $parser->current === "\n" || $parser->current === "\r";

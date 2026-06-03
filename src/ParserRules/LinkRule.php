@@ -3,13 +3,15 @@
 namespace Tempest\Markdown\ParserRules;
 
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\ProvidesFirstChar;
 use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\LinkToken;
 
-final class LinkRule implements Rule, ProvidesStopChar
+final class LinkRule implements Rule, ProvidesFirstChar, ProvidesStopChar
 {
+    private(set) string $firstChar = '[';
     private(set) string $stopChar = '[';
 
     public function shouldParse(Parser $parser): bool

@@ -30,12 +30,17 @@ final class Parser
     private(set) ?string $current;
     private(set) string $content;
     private(set) ?Token $lastToken = null;
+    /** @var \Tempest\Markdown\Rule[] */
+    private(set) array $rules = [];
+    /** @var \Tempest\Markdown\Rule[] */
+    private(set) array $defaultRules = [];
+    /** @var \Tempest\Markdown\Rule[][] */
+    private(set) array $perCharRules = [];
 
     public function __construct(
         public ?Highlighter $highlighter = new Highlighter(),
         public ?ResponsiveImageFactory $imageFactory = null,
-        /** @var \Tempest\Markdown\Rule[] */
-        public array $rules = [
+        array $rules = [
             new NewLineRule(),
             new FrontMatterRule(),
             new HeadingRule(),
@@ -51,27 +56,81 @@ final class Parser
             new TableRule(),
             new ParagraphRule(),
         ],
-    ) {}
+    ) {
+        $this->setRules($rules);
+    }
 
     public function withRules(Rule ...$rules): self
     {
-        return clone($this, [
-            'rules' => $rules,
-        ]);
+        $clone = clone $this;
+
+        return $clone->setRules($rules);
     }
 
     public function prependRules(Rule ...$rules): self
     {
-        return clone($this, [
-            'rules' => [...$rules, ...$this->rules],
-        ]);
+        $clone = clone $this;
+
+        return $clone->setRules([...$rules, ...$this->rules]);
     }
 
     public function appendRules(Rule ...$rules): self
     {
-        return clone($this, [
-            'rules' => [...$this->rules, ...$rules],
-        ]);
+        $clone = clone $this;
+
+        return $clone->setRules([...$this->rules, ...$rules]);
+    }
+
+    private function setRules(array $rules): self
+    {
+        /** @var \Tempest\Markdown\NeedsStopChars[] $needsStopChars */
+        $needsStopChars = [];
+        $providedStopChars = '';
+
+        foreach ($rules as $rule) {
+            if ($rule instanceof ProvidesStopChar) {
+                $providedStopChars .= $rule->stopChar;
+            }
+
+            if ($rule instanceof NeedsStopChars) {
+                $needsStopChars[] = $rule;
+            }
+        }
+
+        foreach ($needsStopChars as $rule) {
+            $rule->stopChars .= $providedStopChars;
+        }
+
+        $perCharRules = [];
+        $defaultRules = [];
+
+        foreach ($rules as $rule) {
+            if ($rule instanceof ProvidesFirstChar) {
+                foreach (str_split($rule->firstChar) as $char) {
+                    $perCharRules[$char] ??= $defaultRules;
+                    $perCharRules[$char][] = $rule;
+                }
+            } else {
+                $charRules = [];
+
+                foreach ($perCharRules as &$charRules) {
+                    $charRules[] = $rule;
+                }
+
+                unset($charRules);
+
+                $defaultRules[] = $rule;
+            }
+        }
+
+        /** @var \Tempest\Markdown\Rule[] $rules */
+        /** @var \Tempest\Markdown\Rule[] $defaultRules */
+        /** @var \Tempest\Markdown\Rule[][] $perCharRules */
+        $this->rules = $rules;
+        $this->defaultRules = $defaultRules;
+        $this->perCharRules = $perCharRules;
+
+        return $this;
     }
 
     public function setContent(string $content): self
@@ -92,26 +151,8 @@ final class Parser
 
         $tokens = [];
 
-        /** @var \Tempest\Markdown\NeedsStopChars[] $needsStopChars */
-        $needsStopChars = [];
-        $providedStopChars = '';
-
-        foreach ($this->rules as $rule) {
-            if ($rule instanceof ProvidesStopChar) {
-                $providedStopChars .= $rule->stopChar;
-            }
-
-            if ($rule instanceof NeedsStopChars) {
-                $needsStopChars[] = $rule;
-            }
-        }
-
-        foreach ($needsStopChars as $rule) {
-            $rule->stopChars .= $providedStopChars;
-        }
-
         while ($parser->current !== null) {
-            foreach ($this->rules as $rule) {
+            foreach ($parser->perCharRules[$parser->current] ?? $parser->defaultRules as $rule) {
                 if (! $rule->shouldParse($parser)) {
                     continue;
                 }

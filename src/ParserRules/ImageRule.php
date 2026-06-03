@@ -5,13 +5,15 @@ namespace Tempest\Markdown\ParserRules;
 use Tempest\Markdown\Exceptions\ImageSourceWasMissing;
 use Tempest\Markdown\Exceptions\ImageSourceWasNotClosed;
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\ProvidesFirstChar;
 use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\ImageToken;
 
-final class ImageRule implements Rule, ProvidesStopChar
+final class ImageRule implements Rule, ProvidesFirstChar, ProvidesStopChar
 {
+    private(set) string $firstChar = '!';
     private(set) string $stopChar = '!';
 
     public function shouldParse(Parser $parser): bool

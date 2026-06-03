@@ -8,12 +8,17 @@ use Tempest\Markdown\Exceptions\FrontMatterCouldNotBeParsed;
 use Tempest\Markdown\Exceptions\FrontMatterShouldBeAnArray;
 use Tempest\Markdown\Exceptions\FrontMatterWasNotProperlyClosed;
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\ProvidesFirstChar;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\FrontMatterToken;
 
-final readonly class FrontMatterRule implements Rule
+final readonly class FrontMatterRule implements Rule, ProvidesFirstChar
 {
+    public function __construct(
+        public string $firstChar = '-',
+    ) {}
+
     public function shouldParse(Parser $parser): bool
     {
         if ($parser->position !== 0) {
