@@ -44,9 +44,9 @@ final class Lexer
             new ThickRulerRule(),
             new ListRule(),
             new OrderedListRule(),
-            new TableRule(),
             new HtmlCommentRule(),
             new HtmlRule(),
+            new TableRule(),
             new ParagraphRule(),
         ];
     }
