@@ -11,24 +11,20 @@ use Tempest\Markdown\Token;
 
 final class ItalicToken implements Token
 {
-    private static Parser $parser;
-
     public function __construct(
         public string $content,
     ) {}
 
     public function parse(Parser $parser): string
     {
-        if (! isset(self::$parser)) {
-            self::$parser = $parser->withRules(
+        $content = $parser
+            ->forToken($this, [
                 new BoldRule(),
                 new StrikethroughRule(),
                 new LinkRule(),
                 new TextRule(),
-            );
-        }
-
-        $content = self::$parser->parse($this->content);
+            ])
+            ->parse($this->content);
 
         return "<em>{$content}</em>";
     }

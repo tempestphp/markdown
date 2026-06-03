@@ -3,14 +3,14 @@
 namespace Tempest\Markdown\Tests\ParserRules;
 
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\ParserRules\HtmlRule;
 use Tempest\Markdown\ParserRules\NewLineRule;
 use Tempest\Markdown\ParserRules\ParagraphRule;
 use Tempest\Markdown\ParserRules\TextRule;
+use Tempest\Markdown\Tests\ParserTestCase;
 
-class HtmlRuleTest extends TestCase
+class HtmlRuleTest extends ParserTestCase
 {
     #[Test]
     public function test_lex(): void

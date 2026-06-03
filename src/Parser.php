@@ -37,6 +37,9 @@ final class Parser
     /** @var \Tempest\Markdown\Rule[][] */
     private(set) array $perCharRules = [];
 
+    /** @var \Tempest\Markdown\Parser[] */
+    private static array $cache = [];
+
     public function __construct(
         public ?Highlighter $highlighter = new Highlighter(),
         public ?ResponsiveImageFactory $imageFactory = null,
@@ -58,6 +61,26 @@ final class Parser
         ],
     ) {
         $this->setRules($rules);
+    }
+
+    public static function reset(): void
+    {
+        self::$cache = [];
+    }
+
+    public function forToken(Token $token, array $rules): self
+    {
+        if (isset(self::$cache[$token::class])) {
+            return self::$cache[$token::class];
+        }
+
+        $clone = clone $this;
+
+        $clone->setRules($rules);
+
+        self::$cache[$token::class] = $clone;
+
+        return $clone;
     }
 
     public function withRules(Rule ...$rules): self

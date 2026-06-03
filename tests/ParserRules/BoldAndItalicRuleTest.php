@@ -3,13 +3,13 @@
 namespace Tempest\Markdown\Tests\ParserRules;
 
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\ParserRules\BoldAndItalicRule;
 use Tempest\Markdown\ParserRules\BoldRule;
 use Tempest\Markdown\ParserRules\ItalicRule;
+use Tempest\Markdown\Tests\ParserTestCase;
 
-class BoldAndItalicRuleTest extends TestCase
+class BoldAndItalicRuleTest extends ParserTestCase
 {
     #[Test]
     public function test_triple_asterisk_bold_and_italic(): void

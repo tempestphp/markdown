@@ -3,12 +3,11 @@
 namespace Tempest\Markdown\Tests\Tokens;
 
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\Tests\ParserTestCase;
 use Tempest\Markdown\Tokens\DivToken;
-use Tempest\Markdown\Tokens\ParagraphToken;
 
-class DivTokenTest extends TestCase
+class DivTokenTest extends ParserTestCase
 {
     #[Test]
     public function test_parse_without_class(): void

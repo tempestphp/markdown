@@ -12,25 +12,21 @@ use Tempest\Markdown\Token;
 
 final class StrikethroughToken implements Token
 {
-    private static Parser $parser;
-
     public function __construct(
         public string $content,
     ) {}
 
     public function parse(Parser $parser): string
     {
-        if (! isset(self::$parser)) {
-            self::$parser = $parser->withRules(
+        $content = $parser
+            ->forToken($this, [
                 new BoldAndItalicRule(),
                 new BoldRule(),
                 new ItalicRule(),
                 new LinkRule(),
                 new TextRule(),
-            );
-        }
-
-        $content = self::$parser->parse($this->content);
+            ])
+            ->parse($this->content);
 
         return "<s>{$content}</s>";
     }

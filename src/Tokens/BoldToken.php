@@ -11,24 +11,20 @@ use Tempest\Markdown\Token;
 
 final class BoldToken implements Token
 {
-    private static Parser $parser;
-
     public function __construct(
         public string $content,
     ) {}
 
     public function parse(Parser $parser): string
     {
-        if (! isset(self::$parser)) {
-            self::$parser = $parser->withRules(
+        $content = $parser
+            ->forToken($this, [
                 new ItalicRule(),
                 new StrikethroughRule(),
                 new LinkRule(),
                 new TextRule(),
-            );
-        }
-
-        $content = self::$parser->parse($this->content);
+            ])
+            ->parse($this->content);
 
         return "<strong>{$content}</strong>";
     }

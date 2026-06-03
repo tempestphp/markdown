@@ -3,10 +3,9 @@
 namespace Tempest\Markdown\Tests;
 
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use Tempest\Markdown\Parser;
 
-final class ParserTest extends TestCase
+final class ParserTest extends ParserTestCase
 {
     #[Test]
     public function test_lex_snippet(): void

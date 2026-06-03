@@ -3,13 +3,13 @@
 namespace Tempest\Markdown\Tests\ParserRules;
 
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use Tempest\Markdown\Exceptions\ImageSourceWasMissing;
 use Tempest\Markdown\Exceptions\ImageSourceWasNotClosed;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\ParserRules\ImageRule;
+use Tempest\Markdown\Tests\ParserTestCase;
 
-class ImageRuleTest extends TestCase
+class ImageRuleTest extends ParserTestCase
 {
     #[Test]
     public function test_lex(): void

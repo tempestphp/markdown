@@ -3,11 +3,11 @@
 namespace Tempest\Markdown\Tests\ParserRules;
 
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\ParserRules\ItalicRule;
+use Tempest\Markdown\Tests\ParserTestCase;
 
-class ItalicRuleTest extends TestCase
+class ItalicRuleTest extends ParserTestCase
 {
     #[Test]
     public function test_lex_with_underscore(): void

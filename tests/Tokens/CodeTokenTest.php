@@ -3,11 +3,11 @@
 namespace Tempest\Markdown\Tests\Tokens;
 
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\Tests\ParserTestCase;
 use Tempest\Markdown\Tokens\CodeToken;
 
-class CodeTokenTest extends TestCase
+class CodeTokenTest extends ParserTestCase
 {
     #[Test]
     public function test_parse(): void

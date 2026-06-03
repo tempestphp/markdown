@@ -13,8 +13,6 @@ use Tempest\Markdown\Token;
 
 final class LinkToken implements Token
 {
-    private static Parser $parser;
-
     public function __construct(
         public string $content,
         public ?string $href,
@@ -22,18 +20,16 @@ final class LinkToken implements Token
 
     public function parse(Parser $parser): string
     {
-        if (! isset(self::$parser)) {
-            self::$parser = $parser->withRules(
+        $content = $parser
+            ->forToken($this, [
                 new BoldAndItalicRule(),
                 new BoldRule(),
                 new ItalicRule(),
                 new StrikethroughRule(),
                 new ImageRule(),
                 new TextRule(),
-            );
-        }
-
-        $content = self::$parser->parse($this->content);
+            ])
+            ->parse($this->content);
 
         $href = $this->href ?? '';
         $blank = '';

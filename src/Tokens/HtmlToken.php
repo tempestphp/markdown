@@ -15,16 +15,14 @@ use Tempest\Markdown\Token;
 
 final class HtmlToken implements Token
 {
-    private static Parser $parser;
-
     public function __construct(
         public string $html,
     ) {}
 
     public function parse(Parser $parser): string
     {
-        if (! isset(self::$parser)) {
-            self::$parser = $parser->withRules(
+        return $parser
+            ->forToken($this, [
                 new BoldAndItalicRule(),
                 new BoldRule(),
                 new ItalicRule(),
@@ -33,9 +31,7 @@ final class HtmlToken implements Token
                 new ImageRule(),
                 new CodeRule(),
                 new TextRule(),
-            );
-        }
-
-        return self::$parser->parse($this->html)->html;
+            ])
+            ->parse($this->html)->html;
     }
 }

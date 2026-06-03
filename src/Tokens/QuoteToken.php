@@ -14,16 +14,14 @@ use Tempest\Markdown\Token;
 
 final class QuoteToken implements Token
 {
-    private static Parser $parser;
-
     public function __construct(
         public string $content,
     ) {}
 
     public function parse(Parser $parser): string
     {
-        if (! isset(self::$parser)) {
-            self::$parser = $parser->withRules(
+        $content = $parser
+            ->forToken($this, [
                 new BoldAndItalicRule(),
                 new BoldRule(),
                 new ItalicRule(),
@@ -31,10 +29,8 @@ final class QuoteToken implements Token
                 new LinkRule(),
                 new ImageRule(),
                 new TextRule(),
-            );
-        }
-
-        $content = self::$parser->parse($this->content);
+            ])
+            ->parse($this->content);
 
         return "<blockquote>{$content}</blockquote>";
     }

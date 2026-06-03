@@ -3,11 +3,11 @@
 namespace Tempest\Markdown\Tests\ParserRules;
 
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\ParserRules\CodeRule;
+use Tempest\Markdown\Tests\ParserTestCase;
 
-class CodeRuleTest extends TestCase
+class CodeRuleTest extends ParserTestCase
 {
     #[Test]
     public function test_lex(): void

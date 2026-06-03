@@ -4,13 +4,12 @@ namespace Tempest\Markdown\Tests;
 
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use Tempest\Markdown\Markdown;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 
-final class MarkdownTest extends TestCase
+final class MarkdownTest extends ParserTestCase
 {
     private Markdown $markdown;
 

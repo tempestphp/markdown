@@ -3,11 +3,11 @@
 namespace Tempest\Markdown\Tests\ParserRules;
 
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\ParserRules\StrikethroughRule;
+use Tempest\Markdown\Tests\ParserTestCase;
 
-class StrikethroughRuleTest extends TestCase
+class StrikethroughRuleTest extends ParserTestCase
 {
     #[Test]
     public function test_lex(): void

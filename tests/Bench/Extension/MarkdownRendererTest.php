@@ -10,10 +10,10 @@ use PhpBench\Report\Model\Reports;
 use PhpBench\Report\Model\Table;
 use PhpBench\Report\Model\TableRow;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Tempest\Markdown\Tests\ParserTestCase;
 
-class MarkdownRendererTest extends TestCase
+class MarkdownRendererTest extends ParserTestCase
 {
     #[Test]
     public function test_it_renders_a_compact_aggregate_report_table(): void

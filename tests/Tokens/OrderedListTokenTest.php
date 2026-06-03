@@ -3,12 +3,12 @@
 namespace Tempest\Markdown\Tests\Tokens;
 
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\Tests\ParserTestCase;
 use Tempest\Markdown\Tokens\ListItem;
 use Tempest\Markdown\Tokens\OrderedListToken;
 
-class OrderedListTokenTest extends TestCase
+class OrderedListTokenTest extends ParserTestCase
 {
     #[Test]
     public function test_parse(): void

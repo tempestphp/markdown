@@ -14,8 +14,6 @@ use Tempest\Markdown\Token;
 
 final class HeadingToken implements Token
 {
-    private static Parser $parser;
-
     public function __construct(
         public string $content,
         public int $level,
@@ -29,8 +27,8 @@ final class HeadingToken implements Token
 
         $id = " id=\"{$slug}\"";
 
-        if (! isset(self::$parser)) {
-            self::$parser = $parser->withRules(
+        $content = $parser
+            ->forToken($this, [
                 new BoldAndItalicRule(),
                 new BoldRule(),
                 new ItalicRule(),
@@ -38,10 +36,8 @@ final class HeadingToken implements Token
                 new LinkRule(),
                 new CodeRule(),
                 new TextRule(),
-            );
-        }
-
-        $content = self::$parser->parse($this->content);
+            ])
+            ->parse($this->content);
 
         return "<{$tag}{$id}>{$content}</{$tag}>";
     }

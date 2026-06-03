@@ -3,11 +3,11 @@
 namespace Tempest\Markdown\Tests\ParserRules;
 
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\ParserRules\HeadingRule;
+use Tempest\Markdown\Tests\ParserTestCase;
 
-class HeadingRuleTest extends TestCase
+class HeadingRuleTest extends ParserTestCase
 {
     #[Test]
     public function test_lex_h1(): void

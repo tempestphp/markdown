@@ -3,11 +3,11 @@
 namespace Tempest\Markdown\Tests\Tokens;
 
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\Tests\ParserTestCase;
 use Tempest\Markdown\Tokens\BoldToken;
 
-class BoldTokenTest extends TestCase
+class BoldTokenTest extends ParserTestCase
 {
     #[Test]
     public function test_parse(): void

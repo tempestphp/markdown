@@ -11,8 +11,6 @@ use Tempest\Markdown\Tokens\ListToken;
 
 final class ListRule implements Rule, ProvidesFirstChar
 {
-    private static Parser $childParser;
-
     public function __construct(
         public string $firstChar = '-',
     ) {}
@@ -41,12 +39,8 @@ final class ListRule implements Rule, ProvidesFirstChar
             $parser->consumeWhile(Parser::NEW_LINE);
         }
 
-        if (! isset(self::$childParser)) {
-            self::$childParser = $parser->withRules(new ListRule());
-        }
-
         $children = $childContent !== ''
-            ? self::$childParser->lex($childContent)[0]
+            ? $parser->withRules(new ListRule())->lex($childContent)[0]
             : null;
 
         $item = new ListItem($content, $children);

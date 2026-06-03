@@ -5,13 +5,13 @@ namespace Tempest\Markdown\Tests\Tokens;
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\Tests\ParserTestCase;
 use Tempest\Markdown\Tokens\ImageToken;
 use Tempest\ResponsiveImage\ResponsiveImageConfig;
 use Tempest\ResponsiveImage\ResponsiveImageFactory;
 
-class ImageTokenTest extends TestCase
+class ImageTokenTest extends ParserTestCase
 {
     #[Before, After]
     public function cleanPublicDir(): void

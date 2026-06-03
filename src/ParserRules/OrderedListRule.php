@@ -11,8 +11,6 @@ use Tempest\Markdown\Tokens\OrderedListToken;
 
 final class OrderedListRule implements Rule, ProvidesFirstChar
 {
-    private static Parser $childParser;
-
     public function __construct(
         public string $firstChar = '0123456789',
     ) {}
@@ -61,12 +59,8 @@ final class OrderedListRule implements Rule, ProvidesFirstChar
             $parser->consumeWhile(Parser::NEW_LINE);
         }
 
-        if (! isset(self::$childParser)) {
-            self::$childParser = $parser->withRules(new OrderedListRule());
-        }
-
         $children = $childContent !== ''
-            ? self::$childParser->lex($childContent)[0]
+            ? $parser->withRules(new OrderedListRule())->lex($childContent)[0]
             : null;
 
         $item = new ListItem($content, $children);

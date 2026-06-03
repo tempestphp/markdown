@@ -15,28 +15,24 @@ use Tempest\Markdown\Token;
 
 final class ParagraphToken implements Token
 {
-    private static Parser $parser;
-
     public function __construct(
         public string $content,
     ) {}
 
     public function parse(Parser $parser): string
     {
-        if (! isset(self::$parser)) {
-            self::$parser = $parser->withRules(
-                new BoldAndItalicRule(),
-                new BoldRule(),
-                new ItalicRule(),
-                new StrikethroughRule(),
-                new LinkRule(),
-                new ImageRule(),
-                new CodeRule(),
-                new TextRule(),
-            );
-        }
+        $parser = $parser->forToken($this, [
+            new BoldAndItalicRule(),
+            new BoldRule(),
+            new ItalicRule(),
+            new StrikethroughRule(),
+            new LinkRule(),
+            new ImageRule(),
+            new CodeRule(),
+            new TextRule(),
+        ]);
 
-        $content = self::$parser->parse($this->content);
+        $content = $parser->parse($this->content);
 
         return "<p>{$content}</p>";
     }
