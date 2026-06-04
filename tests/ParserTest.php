@@ -4,6 +4,8 @@ namespace Tempest\Markdown\Tests;
 
 use PHPUnit\Framework\Attributes\Test;
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\ParserRules\HeadingRule;
+use Tempest\Markdown\ParserRules\ParagraphRule;
 
 final class ParserTest extends ParserTestCase
 {
@@ -61,6 +63,49 @@ final class ParserTest extends ParserTestCase
         $result = $parser->lookaheadUntil('D');
 
         $this->assertEmpty($result);
+    }
+
+    #[Test]
+    public function test_remove_rules_removes_rule(): void
+    {
+        $html = (string) new Parser()
+            ->removeRules(new HeadingRule())
+            ->parse('# Not a heading');
+
+        $this->assertStringNotContainsString('<h1', $html);
+    }
+
+    #[Test]
+    public function test_remove_rules_does_not_affect_other_rules(): void
+    {
+        $html = (string) new Parser()
+            ->removeRules(new HeadingRule())
+            ->parse("# Not a heading\n\nStill a paragraph");
+
+        $this->assertStringNotContainsString('<h1', $html);
+        $this->assertStringContainsString('<p>Still a paragraph</p>', $html);
+    }
+
+    #[Test]
+    public function test_remove_multiple_rules(): void
+    {
+        $html = (string) new Parser()
+            ->removeRules(new HeadingRule(), new ParagraphRule())
+            ->parse("# Heading\n\nParagraph");
+
+        $this->assertStringNotContainsString('<h1', $html);
+        $this->assertStringNotContainsString('<p>', $html);
+    }
+
+    #[Test]
+    public function test_remove_rules_returns_clone(): void
+    {
+        $parser = new Parser();
+        $modified = $parser->removeRules(new HeadingRule());
+
+        $this->assertNotSame($parser, $modified);
+        $this->assertContains(HeadingRule::class, array_map(fn ($r) => $r::class, $parser->rules));
+        $this->assertNotContains(HeadingRule::class, array_map(fn ($r) => $r::class, $modified->rules));
     }
 
     #[Test]
