@@ -104,17 +104,12 @@ final class Parser
         return $clone->setRules([...$this->rules, ...$rules]);
     }
 
-    public function removeRules(Rule ...$rules): self
+    public function removeRules(string ...$rules): self
     {
-        $rulesToRemove = array_map(
-            fn (Rule $rule) => $rule::class,
-            $rules,
-        );
-
         $currentRules = $this->rules;
 
         foreach ($currentRules as $key => $rule) {
-            if (! in_array($rule::class, $rulesToRemove, strict: true)) {
+            if (! in_array($rule::class, $rules, strict: true)) {
                 continue;
             }
 

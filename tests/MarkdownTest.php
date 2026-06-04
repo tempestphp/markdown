@@ -266,7 +266,7 @@ final class MarkdownTest extends ParserTestCase
     public function test_remove_rules_removes_rule(): void
     {
         $parsed = $this->markdown
-            ->removeRules(new HeadingRule())
+            ->removeRules(HeadingRule::class)
             ->parse('# Not a heading');
 
         $this->assertStringNotContainsString('<h1', $parsed->html);

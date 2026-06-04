@@ -69,7 +69,7 @@ final class ParserTest extends ParserTestCase
     public function test_remove_rules_removes_rule(): void
     {
         $html = (string) new Parser()
-            ->removeRules(new HeadingRule())
+            ->removeRules(HeadingRule::class)
             ->parse('# Not a heading');
 
         $this->assertStringNotContainsString('<h1', $html);
@@ -79,7 +79,7 @@ final class ParserTest extends ParserTestCase
     public function test_remove_rules_does_not_affect_other_rules(): void
     {
         $html = (string) new Parser()
-            ->removeRules(new HeadingRule())
+            ->removeRules(HeadingRule::class)
             ->parse("# Not a heading\n\nStill a paragraph");
 
         $this->assertStringNotContainsString('<h1', $html);
@@ -90,7 +90,7 @@ final class ParserTest extends ParserTestCase
     public function test_remove_multiple_rules(): void
     {
         $html = (string) new Parser()
-            ->removeRules(new HeadingRule(), new ParagraphRule())
+            ->removeRules(HeadingRule::class, ParagraphRule::class)
             ->parse("# Heading\n\nParagraph");
 
         $this->assertStringNotContainsString('<h1', $html);
@@ -101,7 +101,7 @@ final class ParserTest extends ParserTestCase
     public function test_remove_rules_returns_clone(): void
     {
         $parser = new Parser();
-        $modified = $parser->removeRules(new HeadingRule());
+        $modified = $parser->removeRules(HeadingRule::class);
 
         $this->assertNotSame($parser, $modified);
         $this->assertContains(HeadingRule::class, array_map(fn ($r) => $r::class, $parser->rules));
