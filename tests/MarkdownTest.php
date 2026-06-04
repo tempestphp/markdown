@@ -6,6 +6,7 @@ use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use Tempest\Markdown\Markdown;
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\ParserRules\HeadingRule;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 
@@ -259,5 +260,15 @@ final class MarkdownTest extends ParserTestCase
         $result = $this->markdown->appendRules($customRule);
 
         $this->assertSame($this->markdown, $result);
+    }
+
+    #[Test]
+    public function test_remove_rules_removes_rule(): void
+    {
+        $parsed = $this->markdown
+            ->removeRules(new HeadingRule())
+            ->parse('# Not a heading');
+
+        $this->assertStringNotContainsString('<h1', $parsed->html);
     }
 }

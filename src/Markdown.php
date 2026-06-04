@@ -44,4 +44,11 @@ final class Markdown
 
         return $this;
     }
+
+    public function removeRules(Rule ...$rules): self
+    {
+        $this->parser = $this->parser->removeRules(...$rules);
+
+        return $this;
+    }
 }
