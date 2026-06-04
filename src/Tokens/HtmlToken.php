@@ -32,6 +32,7 @@ final class HtmlToken implements Token
                 new CodeRule(),
                 new TextRule(),
             ])
-            ->parse($this->html)->html;
+            ->parse($this->html)
+            ->html;
     }
 }
