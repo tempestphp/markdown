@@ -20,7 +20,7 @@
     "require": {
         "php": "^8.5",
         "tempest/highlight": "^2.23.1",
-        "tempest/responsive-image": "dev-main",
+        "tempest/responsive-image": "^1.0",
         "symfony/yaml": "^8.0"
     },
     "require-dev": {
