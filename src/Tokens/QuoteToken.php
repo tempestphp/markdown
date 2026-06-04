@@ -3,13 +3,13 @@
 namespace Tempest\Markdown\Tokens;
 
 use Tempest\Markdown\Parser;
-use Tempest\Markdown\ParserRules\BoldAndItalicRule;
-use Tempest\Markdown\ParserRules\BoldRule;
-use Tempest\Markdown\ParserRules\ImageRule;
-use Tempest\Markdown\ParserRules\ItalicRule;
-use Tempest\Markdown\ParserRules\LinkRule;
-use Tempest\Markdown\ParserRules\QuoteRule;
-use Tempest\Markdown\ParserRules\TextRule;
+use Tempest\Markdown\Rules\BoldAndItalicRule;
+use Tempest\Markdown\Rules\BoldRule;
+use Tempest\Markdown\Rules\ImageRule;
+use Tempest\Markdown\Rules\ItalicRule;
+use Tempest\Markdown\Rules\LinkRule;
+use Tempest\Markdown\Rules\QuoteRule;
+use Tempest\Markdown\Rules\TextRule;
 use Tempest\Markdown\Token;
 
 final class QuoteToken implements Token

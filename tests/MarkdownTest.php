@@ -6,8 +6,8 @@ use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use Tempest\Markdown\Markdown;
 use Tempest\Markdown\Parser;
-use Tempest\Markdown\ParserRules\HeadingRule;
 use Tempest\Markdown\Rule;
+use Tempest\Markdown\Rules\HeadingRule;
 use Tempest\Markdown\Token;
 
 final class MarkdownTest extends ParserTestCase

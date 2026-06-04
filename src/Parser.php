@@ -3,20 +3,20 @@
 namespace Tempest\Markdown;
 
 use Tempest\Highlight\Highlighter;
-use Tempest\Markdown\ParserRules\DivRule;
-use Tempest\Markdown\ParserRules\FrontMatterRule;
-use Tempest\Markdown\ParserRules\HeadingRule;
-use Tempest\Markdown\ParserRules\HtmlCommentRule;
-use Tempest\Markdown\ParserRules\HtmlRule;
-use Tempest\Markdown\ParserRules\ListRule;
-use Tempest\Markdown\ParserRules\NewLineRule;
-use Tempest\Markdown\ParserRules\OrderedListRule;
-use Tempest\Markdown\ParserRules\ParagraphRule;
-use Tempest\Markdown\ParserRules\PreRule;
-use Tempest\Markdown\ParserRules\QuoteRule;
-use Tempest\Markdown\ParserRules\TableRule;
-use Tempest\Markdown\ParserRules\ThickRulerRule;
-use Tempest\Markdown\ParserRules\ThinRulerRule;
+use Tempest\Markdown\Rules\DivRule;
+use Tempest\Markdown\Rules\FrontMatterRule;
+use Tempest\Markdown\Rules\HeadingRule;
+use Tempest\Markdown\Rules\HtmlCommentRule;
+use Tempest\Markdown\Rules\HtmlRule;
+use Tempest\Markdown\Rules\ListRule;
+use Tempest\Markdown\Rules\NewLineRule;
+use Tempest\Markdown\Rules\OrderedListRule;
+use Tempest\Markdown\Rules\ParagraphRule;
+use Tempest\Markdown\Rules\PreRule;
+use Tempest\Markdown\Rules\QuoteRule;
+use Tempest\Markdown\Rules\TableRule;
+use Tempest\Markdown\Rules\ThickRulerRule;
+use Tempest\Markdown\Rules\ThinRulerRule;
 use Tempest\Markdown\Tokens\FrontMatterToken;
 use Tempest\ResponsiveImage\ResponsiveImageFactory;
 

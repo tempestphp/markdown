@@ -4,8 +4,8 @@ namespace Tempest\Markdown\Tests;
 
 use PHPUnit\Framework\Attributes\Test;
 use Tempest\Markdown\Parser;
-use Tempest\Markdown\ParserRules\HeadingRule;
-use Tempest\Markdown\ParserRules\ParagraphRule;
+use Tempest\Markdown\Rules\HeadingRule;
+use Tempest\Markdown\Rules\ParagraphRule;
 
 final class ParserTest extends ParserTestCase
 {

@@ -5,7 +5,7 @@ namespace Tempest\Markdown\Tests;
 use PHPUnit\Framework\Attributes\Test;
 use Tempest\Markdown\Exceptions\ImageSourceWasMissing;
 use Tempest\Markdown\Parser;
-use Tempest\Markdown\ParserRules\ImageRule;
+use Tempest\Markdown\Rules\ImageRule;
 
 class RendersSnippetTest extends ParserTestCase
 {
