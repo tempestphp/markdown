@@ -8,11 +8,9 @@ use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\HeadingToken;
 
-final readonly class HeadingRule implements Rule, ProvidesFirstChar
+final class HeadingRule implements Rule, ProvidesFirstChar
 {
-    public function __construct(
-        public string $firstChar = '#',
-    ) {}
+    public string $firstChar = '#';
 
     public function shouldParse(Parser $parser): bool
     {

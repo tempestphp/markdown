@@ -11,9 +11,7 @@ use Tempest\Markdown\Tokens\OrderedListToken;
 
 final class OrderedListRule implements Rule, ProvidesFirstChar
 {
-    public function __construct(
-        public string $firstChar = '0123456789',
-    ) {}
+    public string $firstChar = '0123456789';
 
     public function shouldParse(Parser $parser): bool
     {

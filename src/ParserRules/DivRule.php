@@ -4,15 +4,15 @@ namespace Tempest\Markdown\ParserRules;
 
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\ProvidesFirstChar;
+use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\DivToken;
 
-final readonly class DivRule implements Rule, ProvidesFirstChar
+final class DivRule implements Rule, ProvidesFirstChar, ProvidesStopChar
 {
-    public function __construct(
-        public string $firstChar = ':',
-    ) {}
+    public string $stopChar = ':';
+    public string $firstChar = ':';
 
     public function shouldParse(Parser $parser): bool
     {

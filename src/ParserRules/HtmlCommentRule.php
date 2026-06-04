@@ -8,11 +8,9 @@ use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\HtmlCommentToken;
 
-final readonly class HtmlCommentRule implements Rule, ProvidesFirstChar
+final class HtmlCommentRule implements Rule, ProvidesFirstChar
 {
-    public function __construct(
-        public string $firstChar = '<',
-    ) {}
+    public string $firstChar = '<';
 
     public function shouldParse(Parser $parser): bool
     {

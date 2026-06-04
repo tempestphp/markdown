@@ -8,11 +8,9 @@ use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\NewLineToken;
 
-final readonly class NewLineRule implements Rule, ProvidesFirstChar
+final class NewLineRule implements Rule, ProvidesFirstChar
 {
-    public function __construct(
-        public string $firstChar = "\n\r",
-    ) {}
+    public string $firstChar = "\n\r";
 
     public function shouldParse(Parser $parser): bool
     {

@@ -9,11 +9,9 @@ use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\RulerToken;
 use Tempest\Markdown\Tokens\RulerType;
 
-final readonly class ThinRulerRule implements Rule, ProvidesFirstChar
+final class ThinRulerRule implements Rule, ProvidesFirstChar
 {
-    public function __construct(
-        public string $firstChar = '-',
-    ) {}
+    public string $firstChar = '-';
 
     public function shouldParse(Parser $parser): bool
     {

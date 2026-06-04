@@ -9,11 +9,9 @@ use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\TableRow;
 use Tempest\Markdown\Tokens\TableToken;
 
-final readonly class TableRule implements Rule, ProvidesFirstChar
+final class TableRule implements Rule, ProvidesFirstChar
 {
-    public function __construct(
-        public string $firstChar = '|',
-    ) {}
+    public string $firstChar = '|';
 
     public function shouldParse(Parser $parser): bool
     {

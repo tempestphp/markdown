@@ -82,6 +82,26 @@ class ParagraphTokenTest extends ParserTestCase
     }
 
     #[Test]
+    public function test_parse_with_pre(): void
+    {
+        $token = new ParagraphToken("Hello, \n```\nworld\n```");
+
+        $html = $token->parse(new Parser());
+
+        $this->assertEquals("<p>Hello, \n<pre class=\"language-txt\">world</pre></p>", $html);
+    }
+
+    #[Test]
+    public function test_parse_with_div(): void
+    {
+        $token = new ParagraphToken("Hello, \n:::alert\nworld\n:::\n");
+
+        $html = $token->parse(new Parser());
+
+        $this->assertEquals("<p>Hello, \n<div class=\"alert\">world\n</div></p>", $html);
+    }
+
+    #[Test]
     public function test_parse_with_bold_and_italic(): void
     {
         $token = new ParagraphToken('Hello, ***world***!');

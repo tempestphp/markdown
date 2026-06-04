@@ -13,11 +13,9 @@ use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\FrontMatterToken;
 
-final readonly class FrontMatterRule implements Rule, ProvidesFirstChar
+final class FrontMatterRule implements Rule, ProvidesFirstChar
 {
-    public function __construct(
-        public string $firstChar = '-',
-    ) {}
+    public string $firstChar = '-';
 
     public function shouldParse(Parser $parser): bool
     {

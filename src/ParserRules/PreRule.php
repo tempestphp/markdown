@@ -8,11 +8,9 @@ use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\PreToken;
 
-final readonly class PreRule implements Rule, ProvidesFirstChar
+final class PreRule implements Rule, ProvidesFirstChar
 {
-    public function __construct(
-        public string $firstChar = '`',
-    ) {}
+    public string $firstChar = '`';
 
     public function shouldParse(Parser $parser): bool
     {

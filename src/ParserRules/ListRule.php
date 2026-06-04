@@ -11,9 +11,7 @@ use Tempest\Markdown\Tokens\ListToken;
 
 final class ListRule implements Rule, ProvidesFirstChar
 {
-    public function __construct(
-        public string $firstChar = '-',
-    ) {}
+    public string $firstChar = '-';
 
     public function shouldParse(Parser $parser): bool
     {
