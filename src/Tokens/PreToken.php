@@ -10,6 +10,7 @@ final readonly class PreToken implements Token
     public function __construct(
         public ?string $language,
         public string $content,
+        public ?string $title = null,
     ) {}
 
     public function parse(Parser $parser): string
@@ -28,6 +29,12 @@ final readonly class PreToken implements Token
 
         $class = $language ? " class=\"language-{$language}\"" : '';
 
-        return "<pre{$class}>{$content}</pre>";
+        $html = "<pre{$class}>{$content}</pre>";
+
+        if ($this->title) {
+            $html = "<div class=\"code-title\">{$this->title}</div>{$html}";
+        }
+
+        return $html;
     }
 }

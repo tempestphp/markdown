@@ -22,7 +22,7 @@ class PreRuleTest extends ParserTestCase
     }
 
     #[Test]
-    public function test_lex_with_language_and_path(): void
+    public function test_lex_with_language_and_title(): void
     {
         $html = (string) new Parser(highlighter: null, rules: [new PreRule()])->parse(<<<'MD'
         ```php file.php
@@ -30,7 +30,7 @@ class PreRuleTest extends ParserTestCase
         ```
         MD);
 
-        $this->assertSame('<pre class="language-php">echo "hi";</pre>', $html);
+        $this->assertSame('<div class="code-title">file.php</div><pre class="language-php">echo "hi";</pre>', $html);
     }
 
     #[Test]

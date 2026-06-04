@@ -25,7 +25,7 @@ final readonly class PreRule implements Rule, ProvidesFirstChar
 
         $language = $parser->consumeUntil(Parser::WHITESPACE);
 
-        $parser->consumeUntil(Parser::NEW_LINE);
+        $title = trim($parser->consumeUntil(Parser::NEW_LINE));
 
         $parser->consumeWhile(Parser::NEW_LINE);
 
@@ -42,6 +42,7 @@ final readonly class PreRule implements Rule, ProvidesFirstChar
         return new PreToken(
             language: $language ?: null,
             content: $content,
+            title: $title ?: null,
         );
     }
 }

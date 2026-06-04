@@ -41,4 +41,15 @@ class PreTokenTest extends ParserTestCase
             $token->parse(new Parser(highlighter: null)),
         );
     }
+
+    #[Test]
+    public function test_parse_with_title(): void
+    {
+        $token = new PreToken(language: null, content: 'echo "hi";', title: 'Hello');
+
+        $this->assertEquals(
+            '<div class="code-title">Hello</div><pre class="language-txt">echo &quot;hi&quot;;</pre>',
+            $token->parse(new Parser()),
+        );
+    }
 }
