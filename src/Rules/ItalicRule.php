@@ -16,15 +16,32 @@ final class ItalicRule implements Rule, ProvidesFirstChar, ProvidesStopChar
 
     public function shouldParse(Parser $parser): bool
     {
-        if ($parser->comesNext('_', length: 1)) {
-            return ! $parser->comesNext('_', length: 1, offset: 1);
+        $stopToken = $parser->lookaheadUntil('*_')[0] ?? null;
+
+        if (! $stopToken) {
+            return false;
         }
 
-        if ($parser->comesNext('*', length: 1)) {
-            return ! $parser->comesNext('*', length: 1, offset: 1);
+        $lookahead = $parser->lookaheadUntil($stopToken, $stopToken);
+
+        if (count($lookahead) !== 2) {
+            return false;
         }
 
-        return false;
+        $end = $lookahead[1];
+
+        $firstChar = substr($end, 0, 1);
+        $lastChar = substr($end, strlen($end) - 1, 1);
+
+        if ($firstChar === $stopToken) {
+            return false;
+        }
+
+        if ($lastChar !== $stopToken) {
+            return false;
+        }
+
+        return true;
     }
 
     public function parse(Parser $parser): Token
