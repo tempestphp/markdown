@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  mago:
+  fmt:
     name: "github:fmt & github:lint"
     runs-on: ubuntu-latest
     steps:
@@ -29,7 +29,7 @@ jobs:
       - name: github:lint
         run: composer github:lint
 
-  phpstan:
+  analysis:
     name: "github:analyse"
     runs-on: ubuntu-latest
     steps:
@@ -47,7 +47,7 @@ jobs:
       - name: github:analyse
         run: composer github:analyse
 
-  phpunit:
+  tests:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true
