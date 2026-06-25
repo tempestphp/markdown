@@ -34,4 +34,12 @@ class ItalicRuleTest extends ParserTestCase
 
         $this->assertSame('<em>italic</em>', $html);
     }
+
+    #[Test]
+    public function test_asterisk_must_be_terminated(): void
+    {
+        $html = (string) new Parser(highlighter: null, rules: [new NewLineRule(), new ItalicRule(), new ParagraphRule()])->parse("Hello*world\n\nHi");
+
+        $this->assertSame("<p>Hello*world</p>\n\n<p>Hi</p>", $html);
+    }
 }

@@ -12,19 +12,31 @@ use Tempest\Markdown\Tokens\BoldToken;
 final class BoldRule implements Rule, ProvidesFirstChar, ProvidesStopChar
 {
     private(set) string $firstChar = '*_';
-    private(set) string $stopChar = '_*';
+    private(set) string $stopChar = '*_';
 
     public function shouldParse(Parser $parser): bool
     {
-        if ($parser->comesNext('**', length: 2)) {
-            return ! $parser->comesNext('*', length: 1, offset: 2);
+        $stopToken = $parser->lookaheadUntil('*_')[0] ?? null;
+
+        if (! $stopToken) {
+            return false;
         }
 
-        if ($parser->comesNext('__', length: 2)) {
-            return ! $parser->comesNext('_', length: 1, offset: 2);
+        $lookahead = $parser->lookaheadUntil($stopToken, $stopToken, $stopToken, $stopToken);
+
+        if (count($lookahead) !== 4) {
+            return false;
         }
 
-        return false;
+        $content = $lookahead[2];
+
+        $lastChar = substr($content, strlen($content) - 1, 1);
+
+        if ($lastChar !== $stopToken) {
+            return false;
+        }
+
+        return true;
     }
 
     public function parse(Parser $parser): Token
