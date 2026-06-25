@@ -278,21 +278,21 @@ final class MarkdownTest extends ParserTestCase
         $parsed = (string) $this->markdown
             ->parse(<<<'MD'
             ## Hello
-            
+
             @@
             ### World
             @@
-            
+
             _hi_
             MD);
 
         $this->assertSame(<<<HTML
         <h2 id="hello">Hello</h2>
-        
-        
+
+
         ### World
-        
-        
+
+
         <p><em>hi</em></p>
         HTML, $parsed);
     }
