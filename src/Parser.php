@@ -14,6 +14,7 @@ use Tempest\Markdown\Rules\OrderedListRule;
 use Tempest\Markdown\Rules\ParagraphRule;
 use Tempest\Markdown\Rules\PreRule;
 use Tempest\Markdown\Rules\QuoteRule;
+use Tempest\Markdown\Rules\RawRule;
 use Tempest\Markdown\Rules\TableRule;
 use Tempest\Markdown\Rules\ThickRulerRule;
 use Tempest\Markdown\Rules\ThinRulerRule;
@@ -45,6 +46,7 @@ final class Parser
         public ?ResponsiveImageFactory $imageFactory = null,
         array $rules = [
             new NewLineRule(),
+            new RawRule(),
             new FrontMatterRule(),
             new HeadingRule(),
             new QuoteRule(),
