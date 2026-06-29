@@ -28,6 +28,14 @@ final class BoldRule implements Rule, ProvidesFirstChar, ProvidesStopChar
             return false;
         }
 
+        if ($lookahead[1] !== $stopToken) {
+            return false;
+        }
+
+        if ($lookahead[3] !== $stopToken) {
+            return false;
+        }
+
         $content = $lookahead[2];
 
         $lastChar = substr($content, strlen($content) - 1, 1);

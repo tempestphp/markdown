@@ -4,6 +4,7 @@ namespace Tempest\Markdown\Tests\Rules;
 
 use PHPUnit\Framework\Attributes\Test;
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\Rules\BoldRule;
 use Tempest\Markdown\Rules\ItalicRule;
 use Tempest\Markdown\Rules\NewLineRule;
 use Tempest\Markdown\Rules\ParagraphRule;
@@ -41,5 +42,13 @@ class ItalicRuleTest extends ParserTestCase
         $html = (string) new Parser(highlighter: null, rules: [new NewLineRule(), new ItalicRule(), new ParagraphRule()])->parse("Hello*world\n\nHi");
 
         $this->assertSame("<p>Hello*world</p>\n\n<p>Hi</p>", $html);
+    }
+
+    #[Test]
+    public function test_multiple_in_a_row(): void
+    {
+        $html = (string) new Parser(highlighter: null, rules: [new BoldRule(), new ItalicRule()])->parse('_a__b_');
+
+        $this->assertSame('<em>a</em><em>b</em>', $html);
     }
 }
