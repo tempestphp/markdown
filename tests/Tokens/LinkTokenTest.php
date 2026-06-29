@@ -66,6 +66,14 @@ class LinkTokenTest extends ParserTestCase
     }
 
     #[Test]
+    public function test_parse_with_code(): void
+    {
+        $token = new LinkToken('`hello`', '#');
+
+        $this->assertEquals('<a href="#"><code class="language-txt">hello</code></a>', $token->parse(new Parser()));
+    }
+
+    #[Test]
     public function test_inline_formatting_rule_priority(): void
     {
         $parser = new Parser();
