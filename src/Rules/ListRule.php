@@ -37,9 +37,15 @@ final class ListRule implements Rule, ProvidesFirstChar
             $parser->consumeWhile(Parser::NEW_LINE);
         }
 
-        $children = $childContent !== ''
-            ? $parser->withRules(new ListRule())->lex($childContent)[0]
-            : null;
+        $children = null;
+
+        if (substr_count($childContent, '-') > 0) {
+            $children = $parser->withRules(new ListRule())->lex($childContent)[0];
+        }
+
+        if ($children === null && $childContent !== '') {
+            $content .= ' ' . trim(preg_replace('/\s+/u', ' ', $childContent) ?? '');
+        }
 
         $item = new ListItem($content, $children);
 

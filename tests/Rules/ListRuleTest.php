@@ -27,6 +27,14 @@ class ListRuleTest extends ParserTestCase
     }
 
     #[Test]
+    public function test_lex_multiline_items(): void
+    {
+        $html = (string) new Parser(highlighter: null, rules: [new ListRule()])->parse("- one\n   continued\n   further\n- two\n");
+
+        $this->assertSame('<ul><li>one continued further</li><li>two</li></ul>', $html);
+    }
+
+    #[Test]
     public function test_hyphen_without_whitespace_is_not_a_list(): void
     {
         $html = (string) new Parser(highlighter: null, rules: [new ListRule(), new TextRule()])->parse('-not list');
