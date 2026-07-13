@@ -60,7 +60,7 @@ class ImageTokenTest extends ParserTestCase
         $parsed = $parser->parse('![A parrot](/parrot.jpg)');
 
         $this->assertSame(<<<'HTML'
-        <p><img src="/parrot.jpg" alt="A parrot" srcset="/parrot-1920-1280.jpg 1920w, /parrot-1606-1070.jpg 1606w, /parrot-1214-809.jpg 1214w, /parrot-607-404.jpg 607w"></p>
+        <p><img src="/parrot.jpg" alt="A parrot" width="1920" height="1280" srcset="/parrot-1920-1280.jpg 1920w, /parrot-1606-1070.jpg 1606w, /parrot-1214-809.jpg 1214w, /parrot-607-404.jpg 607w"></p>
         HTML, $parsed->html);
 
         $this->assertFileExists($config->makePublicPath('/parrot.jpg'));
