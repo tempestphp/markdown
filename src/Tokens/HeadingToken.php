@@ -17,15 +17,18 @@ final class HeadingToken implements Token
     public function __construct(
         public string $content,
         public int $level,
+        public ?string $id = null,
     ) {}
 
     public function parse(Parser $parser): string
     {
         $tag = "h{$this->level}";
 
-        $slug = $this->content |> trim(...) |> strtolower(...) |> (fn (string $x) => str_replace(' ', '-', $x));
-
-        $id = " id=\"{$slug}\"";
+        if ($this->id) {
+            $id = " id=\"{$this->id}\"";
+        } else {
+            $id = '';
+        }
 
         $content = $parser
             ->forToken($this, [

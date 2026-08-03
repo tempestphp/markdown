@@ -12,7 +12,7 @@ class HeadingTokenTest extends ParserTestCase
     #[Test]
     public function test_parse_h1(): void
     {
-        $token = new HeadingToken('Hello', 1);
+        $token = new HeadingToken('Hello', 1, 'hello');
 
         $this->assertEquals('<h1 id="hello">Hello</h1>', $token->parse(new Parser()));
     }
@@ -20,7 +20,7 @@ class HeadingTokenTest extends ParserTestCase
     #[Test]
     public function test_parse_h2(): void
     {
-        $token = new HeadingToken('Hello', 2);
+        $token = new HeadingToken('Hello', 2, 'hello');
 
         $this->assertEquals('<h2 id="hello">Hello</h2>', $token->parse(new Parser()));
     }
@@ -28,7 +28,7 @@ class HeadingTokenTest extends ParserTestCase
     #[Test]
     public function test_parse_h6(): void
     {
-        $token = new HeadingToken('Hello World', 6);
+        $token = new HeadingToken('Hello World', 6, 'hello-world');
 
         $this->assertEquals('<h6 id="hello-world">Hello World</h6>', $token->parse(new Parser()));
     }
@@ -38,7 +38,7 @@ class HeadingTokenTest extends ParserTestCase
     {
         $token = new HeadingToken('Hello, **world**!', 1);
 
-        $this->assertEquals('<h1 id="hello,-**world**!">Hello, <strong>world</strong>!</h1>', $token->parse(new Parser()));
+        $this->assertEquals('<h1>Hello, <strong>world</strong>!</h1>', $token->parse(new Parser()));
     }
 
     #[Test]
@@ -46,7 +46,7 @@ class HeadingTokenTest extends ParserTestCase
     {
         $token = new HeadingToken('Hello, _world_!', 1);
 
-        $this->assertEquals('<h1 id="hello,-_world_!">Hello, <em>world</em>!</h1>', $token->parse(new Parser()));
+        $this->assertEquals('<h1>Hello, <em>world</em>!</h1>', $token->parse(new Parser()));
     }
 
     #[Test]
@@ -54,7 +54,7 @@ class HeadingTokenTest extends ParserTestCase
     {
         $token = new HeadingToken('Hello, ~~world~~!', 1);
 
-        $this->assertEquals('<h1 id="hello,-~~world~~!">Hello, <s>world</s>!</h1>', $token->parse(new Parser()));
+        $this->assertEquals('<h1>Hello, <s>world</s>!</h1>', $token->parse(new Parser()));
     }
 
     #[Test]
@@ -62,7 +62,7 @@ class HeadingTokenTest extends ParserTestCase
     {
         $token = new HeadingToken('Hello, [world](#)!', 1);
 
-        $this->assertEquals('<h1 id="hello,-[world](#)!">Hello, <a href="#">world</a>!</h1>', $token->parse(new Parser()));
+        $this->assertEquals('<h1>Hello, <a href="#">world</a>!</h1>', $token->parse(new Parser()));
     }
 
     #[Test]
@@ -70,7 +70,7 @@ class HeadingTokenTest extends ParserTestCase
     {
         $token = new HeadingToken('Hello, `world`!', 1);
 
-        $this->assertEquals('<h1 id="hello,-`world`!">Hello, <code class="language-txt">world</code>!</h1>', $token->parse(new Parser()));
+        $this->assertEquals('<h1>Hello, <code class="language-txt">world</code>!</h1>', $token->parse(new Parser()));
     }
 
     #[Test]
@@ -78,7 +78,7 @@ class HeadingTokenTest extends ParserTestCase
     {
         $token = new HeadingToken('Hello, ***world***!', 1);
 
-        $this->assertEquals('<h1 id="hello,-***world***!">Hello, <strong><em>world</em></strong>!</h1>', $token->parse(new Parser()));
+        $this->assertEquals('<h1>Hello, <strong><em>world</em></strong>!</h1>', $token->parse(new Parser()));
     }
 
     #[Test]
@@ -86,11 +86,11 @@ class HeadingTokenTest extends ParserTestCase
     {
         $parser = new Parser();
 
-        $this->assertEquals('<h1 id="***text***"><strong><em>text</em></strong></h1>', new HeadingToken('***text***', 1)->parse($parser));
-        $this->assertEquals('<h1 id="**text**"><strong>text</strong></h1>', new HeadingToken('**text**', 1)->parse($parser));
-        $this->assertEquals('<h1 id="*text*"><em>text</em></h1>', new HeadingToken('*text*', 1)->parse($parser));
-        $this->assertEquals('<h1 id="___text___"><strong><em>text</em></strong></h1>', new HeadingToken('___text___', 1)->parse($parser));
-        $this->assertEquals('<h1 id="__text__"><strong>text</strong></h1>', new HeadingToken('__text__', 1)->parse($parser));
-        $this->assertEquals('<h1 id="_text_"><em>text</em></h1>', new HeadingToken('_text_', 1)->parse($parser));
+        $this->assertEquals('<h1><strong><em>text</em></strong></h1>', new HeadingToken('***text***', 1)->parse($parser));
+        $this->assertEquals('<h1><strong>text</strong></h1>', new HeadingToken('**text**', 1)->parse($parser));
+        $this->assertEquals('<h1><em>text</em></h1>', new HeadingToken('*text*', 1)->parse($parser));
+        $this->assertEquals('<h1><strong><em>text</em></strong></h1>', new HeadingToken('___text___', 1)->parse($parser));
+        $this->assertEquals('<h1><strong>text</strong></h1>', new HeadingToken('__text__', 1)->parse($parser));
+        $this->assertEquals('<h1><em>text</em></h1>', new HeadingToken('_text_', 1)->parse($parser));
     }
 }

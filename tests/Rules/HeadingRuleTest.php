@@ -24,4 +24,12 @@ class HeadingRuleTest extends ParserTestCase
 
         $this->assertSame('<h3 id="hello">Hello</h3>', $html);
     }
+
+    #[Test]
+    public function test_lex_with_heading_id(): void
+    {
+        $html = (string) new Parser(highlighter: null, rules: [new HeadingRule()])->parse('### Hello ### hello-world');
+
+        $this->assertSame('<h3 id="hello-world">Hello</h3>', $html);
+    }
 }

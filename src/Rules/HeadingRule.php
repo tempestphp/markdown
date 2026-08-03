@@ -19,10 +19,31 @@ final class HeadingRule implements Rule, ProvidesFirstChar
 
     public function parse(Parser $parser): Token
     {
-        $buffer = $parser->consumeUntil(Parser::NEW_LINE);
+        $buffer = $parser->consumeUntil(Parser::NEW_LINE) |> trim(...);
 
         $level = strspn($buffer, '#');
 
-        return new HeadingToken(substr($buffer, $level) |> trim(...), $level);
+        $buffer = substr(string: $buffer, offset: $level) |> trim(...);
+
+        $idSeparator = strpos(
+            haystack: $buffer,
+            needle: str_repeat('#', $level),
+            offset: $level,
+        );
+
+        if ($idSeparator !== false) {
+            // An id is specified
+            $id = substr(string: $buffer, offset: $idSeparator + $level) |> trim(...);
+            $buffer = substr(string: $buffer, offset: 0, length: $idSeparator) |> trim(...);
+        } else {
+            // No id is specified, we'll slug the heading
+            $id = $buffer |> strtolower(...) |> (fn (string $x) => str_replace(' ', '-', $x));
+        }
+
+        return new HeadingToken(
+            content: $buffer,
+            level: $level,
+            id: $id,
+        );
     }
 }
