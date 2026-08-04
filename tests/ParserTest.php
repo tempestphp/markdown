@@ -3,6 +3,7 @@
 namespace Tempest\Markdown\Tests;
 
 use PHPUnit\Framework\Attributes\Test;
+use Tempest\Markdown\Exceptions\MaximumNestingDepthWasExceeded;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rules\HeadingRule;
 use Tempest\Markdown\Rules\ParagraphRule;
@@ -129,5 +130,30 @@ final class ParserTest extends ParserTestCase
         $noHighlighter = new Parser(highlighter: null);
 
         $this->assertSame('<p><code><b>x</b></code></p>', $noHighlighter->parse('`<b>x</b>`')->html);
+    }
+
+    #[Test]
+    public function test_max_nesting_depth_limits_nested_tokens(): void
+    {
+        $this->expectException(MaximumNestingDepthWasExceeded::class);
+
+        new Parser(maxNestingDepth: 3)->parse('Hello **world**');
+    }
+
+    #[Test]
+    public function test_max_nesting_depth_limits_nested_lists(): void
+    {
+        $this->expectException(MaximumNestingDepthWasExceeded::class);
+
+        new Parser(maxNestingDepth: 3)->parse("- one\n  - two\n    - three");
+    }
+
+    #[Test]
+    public function test_default_max_nesting_depth_allows_normal_content(): void
+    {
+        $html = (string) new Parser()->parse("Hello **bold** and **more bold**\n\n- one\n  - two");
+
+        $this->assertStringContainsString('<strong>bold</strong>', $html);
+        $this->assertStringContainsString('<li>', $html);
     }
 }
