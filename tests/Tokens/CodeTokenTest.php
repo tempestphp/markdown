@@ -30,7 +30,7 @@ class CodeTokenTest extends ParserTestCase
     {
         $token = new CodeToken('php', 'echo "hi";');
 
-        $this->assertEquals('<code class="language-php">echo "hi";</code>', $token->parse(new Parser(highlighter: null)));
+        $this->assertEquals('<code class="language-php">echo &quot;hi&quot;;</code>', $token->parse(new Parser(highlighter: null)));
     }
 
     #[Test]

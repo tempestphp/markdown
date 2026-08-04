@@ -20,7 +20,7 @@ final readonly class CodeToken implements Token
             $content = $parser->highlighter->parse($this->content, $language);
             $language = $parser->highlighter->getCurrentLanguage()?->getName();
         } else {
-            $content = $this->content;
+            $content = htmlspecialchars($this->content, ENT_QUOTES);
         }
 
         $class = $language ? ' class="language-' . htmlspecialchars($language, ENT_QUOTES) . '"' : '';

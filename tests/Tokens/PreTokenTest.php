@@ -37,7 +37,18 @@ class PreTokenTest extends ParserTestCase
         $token = new PreToken(language: null, content: 'echo "hi";');
 
         $this->assertEquals(
-            '<pre>echo "hi";</pre>',
+            '<pre>echo &quot;hi&quot;;</pre>',
+            $token->parse(new Parser(highlighter: null)),
+        );
+    }
+
+    #[Test]
+    public function test_parse_without_highlighter_escapes_content(): void
+    {
+        $token = new PreToken(language: null, content: '</pre><script>alert(1)</script>');
+
+        $this->assertEquals(
+            '<pre>&lt;/pre&gt;&lt;script&gt;alert(1)&lt;/script&gt;</pre>',
             $token->parse(new Parser(highlighter: null)),
         );
     }
