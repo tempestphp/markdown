@@ -74,6 +74,14 @@ class LinkTokenTest extends ParserTestCase
     }
 
     #[Test]
+    public function test_parse_escapes_quotes_in_href(): void
+    {
+        $token = new LinkToken('a', 'x" onclick="alert(1)');
+
+        $this->assertEquals('<a href="x&quot; onclick=&quot;alert(1)">a</a>', $token->parse(new Parser()));
+    }
+
+    #[Test]
     public function test_inline_formatting_rule_priority(): void
     {
         $parser = new Parser();

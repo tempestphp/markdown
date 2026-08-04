@@ -17,22 +17,19 @@ final readonly class PreToken implements Token
     {
         $language = $this->language;
 
-        if (! $language && $parser->highlighter) {
-            $language = $parser->highlighter->fallbackLanguage?->getName();
-        }
-
         if ($parser->highlighter) {
             $content = $parser->highlighter->parse($this->content, $language);
+            $language = $parser->highlighter->getCurrentLanguage()?->getName();
         } else {
             $content = $this->content;
         }
 
-        $class = $language ? " class=\"language-{$language}\"" : '';
+        $class = $language ? ' class="language-' . htmlspecialchars($language, ENT_QUOTES) . '"' : '';
 
         $html = "<pre{$class}>{$content}</pre>";
 
         if ($this->title) {
-            $html = "<div class=\"code-title\">{$this->title}</div>{$html}";
+            $html = '<div class="code-title">' . htmlspecialchars($this->title, ENT_QUOTES) . "</div>{$html}";
         }
 
         return $html;

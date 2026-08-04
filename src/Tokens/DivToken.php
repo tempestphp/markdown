@@ -39,7 +39,7 @@ final class DivToken implements Token
             ])
             ->parse($this->content);
 
-        $class = $this->class ? " class=\"{$this->class}\"" : '';
+        $class = $this->class ? ' class="' . htmlspecialchars($this->class, ENT_QUOTES) . '"' : '';
 
         return "<div{$class}>{$content}</div>";
     }

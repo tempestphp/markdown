@@ -52,4 +52,26 @@ class PreTokenTest extends ParserTestCase
             $token->parse(new Parser()),
         );
     }
+
+    #[Test]
+    public function test_parse_resolves_unknown_language_to_fallback(): void
+    {
+        $token = new PreToken(language: 'a"onmouseover="alert(1)', content: 'code');
+
+        $this->assertEquals(
+            '<pre class="language-txt">code</pre>',
+            $token->parse(new Parser()),
+        );
+    }
+
+    #[Test]
+    public function test_parse_escapes_quotes_in_language(): void
+    {
+        $token = new PreToken(language: 'a"onmouseover="alert(1)', content: 'code');
+
+        $this->assertEquals(
+            '<pre class="language-a&quot;onmouseover=&quot;alert(1)">code</pre>',
+            $token->parse(new Parser(highlighter: null)),
+        );
+    }
 }

@@ -44,6 +44,22 @@ class ImageTokenTest extends ParserTestCase
     }
 
     #[Test]
+    public function test_parse_escapes_quotes_in_src(): void
+    {
+        $token = new ImageToken('x" onerror="alert(1)', null);
+
+        $this->assertEquals('<img src="x&quot; onerror=&quot;alert(1)">', $token->parse(new Parser()));
+    }
+
+    #[Test]
+    public function test_parse_escapes_quotes_in_alt(): void
+    {
+        $token = new ImageToken('img.png', 'a" onerror="alert(1)');
+
+        $this->assertEquals('<img src="img.png" alt="a&quot; onerror=&quot;alert(1)">', $token->parse(new Parser()));
+    }
+
+    #[Test]
     public function test_with_responsive_image(): void
     {
         $config = new ResponsiveImageConfig(
