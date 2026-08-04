@@ -119,4 +119,15 @@ final class ParserTest extends ParserTestCase
         $this->assertTrue($parser->comesNext('_', offset: 2));
         $this->assertFalse($parser->comesNext('_', offset: 10));
     }
+
+    #[Test]
+    public function test_configuration_does_not_leak_between_instances(): void
+    {
+        $withHighlighter = new Parser();
+        $withHighlighter->parse('`x`');
+
+        $noHighlighter = new Parser(highlighter: null);
+
+        $this->assertSame('<p><code><b>x</b></code></p>', $noHighlighter->parse('`<b>x</b>`')->html);
+    }
 }
