@@ -12,10 +12,12 @@ final class Markdown
     public function __construct(
         public ?Highlighter $highlighter = new Highlighter(),
         private ?ResponsiveImageFactory $imageFactory = null,
+        public int $maxNestingDepth = Parser::DEFAULT_MAX_NESTING_DEPTH,
     ) {
         $this->parser = new Parser(
             $this->highlighter,
             $this->imageFactory,
+            $this->maxNestingDepth,
         );
     }
 

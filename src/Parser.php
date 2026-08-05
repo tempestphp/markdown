@@ -3,6 +3,7 @@
 namespace Tempest\Markdown;
 
 use Tempest\Highlight\Highlighter;
+use Tempest\Markdown\Exceptions\MaximumNestingDepthWasExceeded;
 use Tempest\Markdown\Rules\DivRule;
 use Tempest\Markdown\Rules\FrontMatterRule;
 use Tempest\Markdown\Rules\HeadingRule;
@@ -25,6 +26,7 @@ final class Parser
 {
     public const string WHITESPACE = "\r\n\t\f ";
     public const string NEW_LINE = "\r\n";
+    public const int DEFAULT_MAX_NESTING_DEPTH = 128;
 
     private(set) int $position = 0;
     private(set) int $length = 0;
@@ -41,9 +43,12 @@ final class Parser
     /** @var \Tempest\Markdown\Parser[] */
     private array $cache = [];
 
+    private static int $depth = 0;
+
     public function __construct(
         public ?Highlighter $highlighter = new Highlighter(),
         public ?ResponsiveImageFactory $imageFactory = null,
+        public int $maxNestingDepth = self::DEFAULT_MAX_NESTING_DEPTH,
         array $rules = [
             new NewLineRule(),
             new RawRule(),
@@ -184,51 +189,74 @@ final class Parser
 
     public function lex(string $content): TokenCollection
     {
-        $parser = clone $this;
+        $this->increaseNestingDepth();
 
-        $parser->setContent($content);
+        try {
+            $parser = clone $this;
 
-        $tokens = [];
+            $parser->setContent($content);
 
-        while ($parser->current !== null) {
-            foreach ($parser->perCharRules[$parser->current] ?? $parser->defaultRules as $rule) {
-                if (! $rule->shouldParse($parser)) {
-                    continue;
+            $tokens = [];
+
+            while ($parser->current !== null) {
+                foreach ($parser->perCharRules[$parser->current] ?? $parser->defaultRules as $rule) {
+                    if (! $rule->shouldParse($parser)) {
+                        continue;
+                    }
+
+                    $token = $rule->parse($parser);
+
+                    if ($token instanceof Token) {
+                        $tokens[] = $token;
+                        $parser->lastToken = $token;
+                    }
+
+                    continue 2;
                 }
 
-                $token = $rule->parse($parser);
-
-                if ($token instanceof Token) {
-                    $tokens[] = $token;
-                    $parser->lastToken = $token;
-                }
-
-                continue 2;
+                $parser->consume();
             }
 
-            $parser->consume();
+            return new TokenCollection($tokens);
+        } finally {
+            self::$depth--;
         }
-
-        return new TokenCollection($tokens);
     }
 
     public function parse(string $content): ParsedMarkdown
     {
-        $tokens = $this->lex($content);
+        $this->increaseNestingDepth();
 
-        $html = '';
+        try {
+            $tokens = $this->lex($content);
 
-        $frontMatter = [];
+            $html = '';
 
-        foreach ($tokens as $token) {
-            $html .= $token->parse($this);
+            $frontMatter = [];
 
-            if ($token instanceof FrontMatterToken) {
-                $frontMatter = [...$frontMatter, ...$token->data];
+            foreach ($tokens as $token) {
+                $html .= $token->parse($this);
+
+                if ($token instanceof FrontMatterToken) {
+                    $frontMatter = [...$frontMatter, ...$token->data];
+                }
             }
+
+            return new ParsedMarkdown($html, $frontMatter);
+        } finally {
+            self::$depth--;
+        }
+    }
+
+    // Guards both recursion paths: nested lists recurse through lex(), nested tokens through parse().
+    // Each caller decrements self::$depth in a finally block.
+    private function increaseNestingDepth(): void
+    {
+        if (self::$depth >= $this->maxNestingDepth) {
+            throw new MaximumNestingDepthWasExceeded($this->maxNestingDepth);
         }
 
-        return new ParsedMarkdown($html, $frontMatter);
+        self::$depth++;
     }
 
     public function comesNext(string $search, ?int $length = null, int $offset = 0): bool
