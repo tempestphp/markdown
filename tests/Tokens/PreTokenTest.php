@@ -37,7 +37,18 @@ class PreTokenTest extends ParserTestCase
         $token = new PreToken(language: null, content: 'echo "hi";');
 
         $this->assertEquals(
-            '<pre>echo "hi";</pre>',
+            '<pre>echo &quot;hi&quot;;</pre>',
+            $token->parse(new Parser(highlighter: null)),
+        );
+    }
+
+    #[Test]
+    public function test_parse_without_highlighter_escapes_content(): void
+    {
+        $token = new PreToken(language: null, content: '</pre><script>alert(1)</script>');
+
+        $this->assertEquals(
+            '<pre>&lt;/pre&gt;&lt;script&gt;alert(1)&lt;/script&gt;</pre>',
             $token->parse(new Parser(highlighter: null)),
         );
     }
@@ -50,6 +61,28 @@ class PreTokenTest extends ParserTestCase
         $this->assertEquals(
             '<div class="code-title">Hello</div><pre class="language-txt">echo &quot;hi&quot;;</pre>',
             $token->parse(new Parser()),
+        );
+    }
+
+    #[Test]
+    public function test_parse_resolves_unknown_language_to_fallback(): void
+    {
+        $token = new PreToken(language: 'a"onmouseover="alert(1)', content: 'code');
+
+        $this->assertEquals(
+            '<pre class="language-txt">code</pre>',
+            $token->parse(new Parser()),
+        );
+    }
+
+    #[Test]
+    public function test_parse_escapes_quotes_in_language(): void
+    {
+        $token = new PreToken(language: 'a"onmouseover="alert(1)', content: 'code');
+
+        $this->assertEquals(
+            '<pre class="language-a&quot;onmouseover=&quot;alert(1)">code</pre>',
+            $token->parse(new Parser(highlighter: null)),
         );
     }
 }

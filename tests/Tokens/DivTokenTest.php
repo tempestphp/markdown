@@ -34,6 +34,14 @@ class DivTokenTest extends ParserTestCase
     }
 
     #[Test]
+    public function test_parse_escapes_quotes_in_class(): void
+    {
+        $token = new DivToken(class: 'x" onmouseover="alert(1)', content: 'Hello');
+
+        $this->assertEquals('<div class="x&quot; onmouseover=&quot;alert(1)">Hello</div>', $token->parse(new Parser()));
+    }
+
+    #[Test]
     public function test_parse_with_bold(): void
     {
         $token = new DivToken(class: null, content: 'Hello **world**');

@@ -16,17 +16,14 @@ final readonly class CodeToken implements Token
     {
         $language = $this->language;
 
-        if (! $language && $parser->highlighter) {
-            $language = $parser->highlighter->fallbackLanguage?->getName();
-        }
-
         if ($parser->highlighter) {
             $content = $parser->highlighter->parse($this->content, $language);
+            $language = $parser->highlighter->getCurrentLanguage()?->getName();
         } else {
-            $content = $this->content;
+            $content = htmlspecialchars($this->content, ENT_QUOTES);
         }
 
-        $class = $language ? " class=\"language-{$language}\"" : '';
+        $class = $language ? ' class="language-' . htmlspecialchars($language, ENT_QUOTES) . '"' : '';
 
         return "<code{$class}>{$content}</code>";
     }

@@ -34,6 +34,14 @@ class HeadingTokenTest extends ParserTestCase
     }
 
     #[Test]
+    public function test_parse_escapes_quotes_in_id(): void
+    {
+        $token = new HeadingToken('h', 1, 'h-" onclick="alert(1)');
+
+        $this->assertEquals('<h1 id="h-&quot; onclick=&quot;alert(1)">h</h1>', $token->parse(new Parser()));
+    }
+
+    #[Test]
     public function test_parse_with_bold(): void
     {
         $token = new HeadingToken('Hello, **world**!', 1);

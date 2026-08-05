@@ -30,6 +30,22 @@ class CodeTokenTest extends ParserTestCase
     {
         $token = new CodeToken('php', 'echo "hi";');
 
-        $this->assertEquals('<code class="language-php">echo "hi";</code>', $token->parse(new Parser(highlighter: null)));
+        $this->assertEquals('<code class="language-php">echo &quot;hi&quot;;</code>', $token->parse(new Parser(highlighter: null)));
+    }
+
+    #[Test]
+    public function test_parse_resolves_unknown_language_to_fallback(): void
+    {
+        $token = new CodeToken('a"onmouseover="alert(1)', 'code');
+
+        $this->assertEquals('<code class="language-txt">code</code>', $token->parse(new Parser()));
+    }
+
+    #[Test]
+    public function test_parse_escapes_quotes_in_language(): void
+    {
+        $token = new CodeToken('a"onmouseover="alert(1)', 'code');
+
+        $this->assertEquals('<code class="language-a&quot;onmouseover=&quot;alert(1)">code</code>', $token->parse(new Parser(highlighter: null)));
     }
 }
