@@ -59,6 +59,7 @@ final class ParsedMarkdownCollection implements IteratorAggregate, ArrayAccess, 
         return $this->chunks[$offset] ?? null;
     }
 
+    /** @param int|string|null $offset */
     public function offsetSet(mixed $offset, mixed $value): void
     {
         if ($offset !== null) {

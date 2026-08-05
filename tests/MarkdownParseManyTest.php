@@ -126,11 +126,15 @@ final class MarkdownParseManyTest extends ParserTestCase
     public function test_the_infrastructure_fixture_parses_into_a_consistent_topology(): void
     {
         $content = file_get_contents(__DIR__ . '/Fixtures/infrastructure.md');
+        $this->assertIsString($content);
+
         $chunks = $this->markdown->parseMany($content);
 
+        /** @var array<string, array<string, mixed>> $byName */
         $byName = [];
 
         foreach ($chunks as $chunk) {
+            $this->assertNotNull($chunk->name);
             $byName[$chunk->name] = $chunk->frontmatter;
         }
 
@@ -139,7 +143,10 @@ final class MarkdownParseManyTest extends ParserTestCase
 
         foreach ($byName as $frontmatter) {
             foreach (['runs_on', 'depends_on', 'composed_of'] as $relation) {
-                foreach ($frontmatter[$relation] ?? [] as $reference) {
+                $references = $frontmatter[$relation] ?? [];
+                $this->assertIsArray($references);
+
+                foreach ($references as $reference) {
                     $this->assertArrayHasKey($reference, $byName);
                 }
             }

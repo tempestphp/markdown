@@ -9,11 +9,16 @@ final class MultiMarkdownSplitter
      */
     public function split(string $content, ?string $baseName = null, string $keyword = 'next'): array
     {
+        $matches = [];
         preg_match_all($this->markerPattern($keyword), $content, $matches, PREG_OFFSET_CAPTURE);
 
         $markers = [];
 
+        // @mago-expect analysis:invalid-destructuring-source
         foreach ($matches[0] as $i => [$fullMatch, $offset]) {
+            $fullMatch = (string) $fullMatch;
+            $offset = (int) $offset;
+
             $markers[] = [
                 'rawName' => trim($matches[1][$i][0] ?? ''),
                 'start' => $offset,
