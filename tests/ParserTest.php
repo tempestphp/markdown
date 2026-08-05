@@ -129,7 +129,7 @@ final class ParserTest extends ParserTestCase
 
         $noHighlighter = new Parser(highlighter: null);
 
-        $this->assertSame('<p><code><b>x</b></code></p>', $noHighlighter->parse('`<b>x</b>`')->html);
+        $this->assertSame('<p><code>&lt;b&gt;x&lt;/b&gt;</code></p>', $noHighlighter->parse('`<b>x</b>`')->html);
     }
 
     #[Test]
