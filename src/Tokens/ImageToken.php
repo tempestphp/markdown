@@ -18,8 +18,8 @@ final readonly class ImageToken implements Token
             return $parser->imageFactory->create($this->src, $this->alt)->html;
         }
 
-        $alt = $this->alt ? " alt=\"{$this->alt}\"" : '';
+        $alt = $this->alt ? ' alt="' . htmlspecialchars($this->alt, ENT_QUOTES) . '"' : '';
 
-        return "<img src=\"{$this->src}\"{$alt}>";
+        return '<img src="' . htmlspecialchars($this->src, ENT_QUOTES) . '"' . $alt . '>';
     }
 }

@@ -25,7 +25,7 @@ final class HeadingToken implements Token
         $tag = "h{$this->level}";
 
         if ($this->id) {
-            $id = " id=\"{$this->id}\"";
+            $id = ' id="' . htmlspecialchars($this->id, ENT_QUOTES) . '"';
         } else {
             $id = '';
         }

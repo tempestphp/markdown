@@ -41,6 +41,6 @@ final class LinkToken implements Token
             $blank = ' target="_blank" rel="noopener noreferrer"';
         }
 
-        return "<a href=\"{$href}\"{$blank}>{$content}</a>";
+        return '<a href="' . htmlspecialchars($href, ENT_QUOTES) . "\"{$blank}>{$content}</a>";
     }
 }
