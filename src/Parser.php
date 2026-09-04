@@ -318,7 +318,7 @@ final class Parser
         $specialChars = '\\' . $stopAt . ($allowNestedAt ?? '');
 
         while ($this->current !== null) {
-            // Scan forward until we hit and interesting
+            // Scan forward until we hit an interesting
             // character in our compiled string.
             $offset = strcspn(
                 $this->content,
