@@ -312,9 +312,14 @@ final class Parser
         $result = '';
         $depth = 0;
 
+        // Compile a string of characters that require
+        // special handling while scanning. This includes escapes,
+        // the closing delimiter, and (optionally) a nested opening delimiter.
         $specialChars = '\\' . $stopAt . ($allowNestedAt ?? '');
 
         while ($this->current !== null) {
+            // Scan forward until we hit and interesting
+            // character in our compiled string.
             $offset = strcspn(
                 $this->content,
                 $specialChars,
@@ -331,6 +336,8 @@ final class Parser
                 break;
             }
 
+            // Consume the backslash and append the escaped
+            // character literally.
             if ($current === '\\') {
                 $this->consume();
 
@@ -341,6 +348,7 @@ final class Parser
                 continue;
             }
 
+            // Handle nested characters.
             if ($allowNestedAt !== null && $current === $allowNestedAt) {
                 $depth++;
                 $result .= $this->consume();
