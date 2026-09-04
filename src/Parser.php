@@ -307,6 +307,60 @@ final class Parser
         return $this->consume($pos - $this->position);
     }
 
+    public function consumeUntilUnescaped(string $stopAt, ?string $nestedAt = null): string
+    {
+        $start = $this->position;
+        $result = '';
+        $depth = 0;
+
+        $specialChars = '\\' . $stopAt . ($nestedAt ?? '');
+
+        while ($this->current !== null) {
+            $offset = strcspn(
+                $this->content,
+                $specialChars,
+                $this->position,
+            );
+
+            if ($offset > 0) {
+                $result .= $this->consume($offset);
+            }
+
+            $current = $this->current;
+
+            if ($current === null) {
+                break;
+            }
+
+            if ($current === '\\') {
+                $this->consume();
+
+                if ($this->current !== null) {
+                    $result .= $this->consume();
+                }
+
+                continue;
+            }
+
+            if ($nestedAt !== null && $current === $nestedAt) {
+                $depth++;
+                $result .= $this->consume();
+                continue;
+            }
+
+            if ($current === $stopAt) {
+                if ($depth === 0) {
+                    break;
+                }
+
+                $depth--;
+                $result .= $this->consume();
+            }
+        }
+
+        return $result;
+    }
+
     public function consumeWhile(string $continueWhile): string
     {
         $offset = strspn($this->content, $continueWhile, $this->position);
