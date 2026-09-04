@@ -29,7 +29,7 @@ final class LinkRule implements Rule, ProvidesFirstChar, ProvidesStopChar
 
         if ($parser->comesNext('(', 1)) {
             $parser->consumeIncluding('(');
-            $href = $parser->consumeUntilUnescaped(stopAt: ')', nestedAt: '(');
+            $href = $parser->consumeUntilUnescaped(stopAt: ')', allowNestedAt: '(');
             $parser->consumeIncluding(')');
         }
 
@@ -56,86 +56,5 @@ final class LinkRule implements Rule, ProvidesFirstChar, ProvidesStopChar
         }
 
         return $content;
-    }
-
-    private function consumeHref(Parser $parser): string
-    {
-        $href = '';
-        $parenthesisDepth = 0;
-
-        while ($parser->current !== null) {
-            // Escaped character: consume the backslash and the following
-            // character as part of the URL.
-            if ($parser->comesNext('\\')) {
-                $parser->consume();
-
-                if ($parser->current !== null) {
-                    $href .= $parser->consume();
-                }
-
-                continue;
-            }
-
-            // The following parentheses indicates an
-            // opening parentheses in the URL, which should
-            // be parsed as part of the URL.
-            if ($parser->comesNext('(')) {
-                $parenthesisDepth++;
-                $href .= $parser->consume();
-                continue;
-            }
-
-            if ($parser->comesNext(')')) {
-                if ($parenthesisDepth === 0) {
-                    break;
-                }
-
-                $parenthesisDepth--;
-                $href .= $parser->consume();
-                continue;
-            }
-
-            $href .= $parser->consume();
-        }
-
-        return $href;
-    }
-
-    private function consumeHrefTwo(Parser $parser): string
-    {
-        $href = '';
-        $depth = 0;
-
-        while (($current = $parser->current) !== null) {
-            if ($current !== '(' && $current !== ')' && $current !== '\\') {
-                $href .= $parser->consume();
-                continue;
-            }
-
-            if ($current === '(') {
-                $depth++;
-                $href .= $parser->consume();
-                continue;
-            }
-
-            if ($current === ')') {
-                if ($depth === 0) {
-                    break;
-                }
-
-                $depth--;
-                $href .= $parser->consume();
-                continue;
-            }
-
-            // Backslash
-            $parser->consume();
-
-            if ($parser->current !== null) {
-                $href .= $parser->consume();
-            }
-        }
-
-        return $href;
     }
 }

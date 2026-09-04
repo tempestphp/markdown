@@ -307,13 +307,12 @@ final class Parser
         return $this->consume($pos - $this->position);
     }
 
-    public function consumeUntilUnescaped(string $stopAt, ?string $nestedAt = null): string
+    public function consumeUntilUnescaped(string $stopAt, ?string $allowNestedAt = null): string
     {
-        $start = $this->position;
         $result = '';
         $depth = 0;
 
-        $specialChars = '\\' . $stopAt . ($nestedAt ?? '');
+        $specialChars = '\\' . $stopAt . ($allowNestedAt ?? '');
 
         while ($this->current !== null) {
             $offset = strcspn(
@@ -342,7 +341,7 @@ final class Parser
                 continue;
             }
 
-            if ($nestedAt !== null && $current === $nestedAt) {
+            if ($allowNestedAt !== null && $current === $allowNestedAt) {
                 $depth++;
                 $result .= $this->consume();
                 continue;
