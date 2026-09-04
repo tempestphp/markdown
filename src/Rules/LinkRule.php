@@ -29,7 +29,7 @@ final class LinkRule implements Rule, ProvidesFirstChar, ProvidesStopChar
 
         if ($parser->comesNext('(', 1)) {
             $parser->consumeIncluding('(');
-            $href = $this->consumeHref($parser);
+            $href = $this->consumeHrefTwo($parser);
             $parser->consumeIncluding(')');
         }
 
@@ -96,6 +96,44 @@ final class LinkRule implements Rule, ProvidesFirstChar, ProvidesStopChar
             }
 
             $href .= $parser->consume();
+        }
+
+        return $href;
+    }
+
+    private function consumeHrefTwo(Parser $parser): string
+    {
+        $href = '';
+        $depth = 0;
+
+        while (($current = $parser->current) !== null) {
+            if ($current !== '(' && $current !== ')' && $current !== '\\') {
+                $href .= $parser->consume();
+                continue;
+            }
+
+            if ($current === '(') {
+                $depth++;
+                $href .= $parser->consume();
+                continue;
+            }
+
+            if ($current === ')') {
+                if ($depth === 0) {
+                    break;
+                }
+
+                $depth--;
+                $href .= $parser->consume();
+                continue;
+            }
+
+            // Backslash
+            $parser->consume();
+
+            if ($parser->current !== null) {
+                $href .= $parser->consume();
+            }
         }
 
         return $href;
