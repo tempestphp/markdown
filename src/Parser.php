@@ -307,6 +307,67 @@ final class Parser
         return $this->consume($pos - $this->position);
     }
 
+    public function consumeUntilUnescaped(string $stopAt, ?string $allowNestedAt = null): string
+    {
+        $result = '';
+        $depth = 0;
+
+        // Compile a string of characters that require
+        // special handling while scanning. This includes escapes,
+        // the closing delimiter, and (optionally) a nested opening delimiter.
+        $specialChars = '\\' . $stopAt . ($allowNestedAt ?? '');
+
+        while ($this->current !== null) {
+            // Scan forward until we hit an interesting
+            // character in our compiled string.
+            $offset = strcspn(
+                $this->content,
+                $specialChars,
+                $this->position,
+            );
+
+            if ($offset > 0) {
+                $result .= $this->consume($offset);
+            }
+
+            $current = $this->current;
+
+            if ($current === null) {
+                break;
+            }
+
+            // Consume the backslash and append the escaped
+            // character literally.
+            if ($current === '\\') {
+                $this->consume();
+
+                if ($this->current !== null) {
+                    $result .= $this->consume();
+                }
+
+                continue;
+            }
+
+            // Handle nested characters.
+            if ($allowNestedAt !== null && $current === $allowNestedAt) {
+                $depth++;
+                $result .= $this->consume();
+                continue;
+            }
+
+            if ($current === $stopAt) {
+                if ($depth === 0) {
+                    break;
+                }
+
+                $depth--;
+                $result .= $this->consume();
+            }
+        }
+
+        return $result;
+    }
+
     public function consumeWhile(string $continueWhile): string
     {
         $offset = strspn($this->content, $continueWhile, $this->position);

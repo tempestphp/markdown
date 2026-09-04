@@ -32,4 +32,30 @@ class LinkRuleTest extends ParserTestCase
 
         $this->assertSame('<a href="/link"><img src="/image.jpg" alt="alt"></a>', $html);
     }
+
+    #[Test]
+    public function lex_with_parenthesis_content(): void
+    {
+        $html = (string) new Parser(highlighter: null, rules: [new LinkRule()])->parse(
+            '[.NET best practices](https://learn.microsoft.com/en-us/previous-versions/dotnet/netframework-4.0/ms229043(v=vs.100)?redirectedfrom=MSDN)',
+        );
+
+        $this->assertSame(
+            '<a href="https://learn.microsoft.com/en-us/previous-versions/dotnet/netframework-4.0/ms229043(v=vs.100)?redirectedfrom=MSDN">.NET best practices</a>',
+            $html,
+        );
+    }
+
+    #[Test]
+    public function lex_with_end_parenthesis_without_start_parenthesis(): void
+    {
+        $html = (string) new Parser(highlighter: null, rules: [new LinkRule()])->parse(
+            '[.NET best practices](https://learn.microsoft.com/en-us/previous-versions/dotnet/netframework-4.0/ms229043v=vs.100\)?redirectedfrom=MSDN)',
+        );
+
+        $this->assertSame(
+            '<a href="https://learn.microsoft.com/en-us/previous-versions/dotnet/netframework-4.0/ms229043v=vs.100)?redirectedfrom=MSDN">.NET best practices</a>',
+            $html,
+        );
+    }
 }
