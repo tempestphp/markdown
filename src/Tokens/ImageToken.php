@@ -10,6 +10,7 @@ final readonly class ImageToken implements Token
     public function __construct(
         public string $src,
         public ?string $alt,
+        public ?string $title = null,
     ) {}
 
     public function parse(Parser $parser): string
@@ -22,11 +23,16 @@ final readonly class ImageToken implements Token
             ? ' alt="' . htmlspecialchars($this->alt, ENT_QUOTES) . '"'
             : '';
 
+        $title = $this->title === null
+            ? ''
+            : ' title="' . htmlspecialchars($this->title, ENT_QUOTES) . '"';
+
         return (
             '<img src="'
             . htmlspecialchars($this->src, ENT_QUOTES)
             . '"'
             . $alt
+            . $title
             . '>'
         );
     }

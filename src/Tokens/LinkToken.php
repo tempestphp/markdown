@@ -17,6 +17,7 @@ final class LinkToken implements Token
     public function __construct(
         public string $content,
         public ?string $href,
+        public ?string $title = null,
 
         // @todo(aidan-casey): This is a temporary solution to the problem that we don't support Markdown escaping yet.
         public bool $parseContent = true,
@@ -48,10 +49,16 @@ final class LinkToken implements Token
             $blank = ' target="_blank" rel="noopener noreferrer"';
         }
 
+        $title = $this->title === null
+            ? ''
+            : ' title="' . htmlspecialchars($this->title, ENT_QUOTES) . '"';
+
         return (
             '<a href="'
             . htmlspecialchars($href, ENT_QUOTES)
-            . "\"{$blank}>{$content}</a>"
+            . '"'
+            . $title
+            . "{$blank}>{$content}</a>"
         );
     }
 }
