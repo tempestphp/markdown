@@ -13,10 +13,12 @@ class ListRuleTest extends ParserTestCase
     #[Test]
     public function test_lex(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new ListRule()])->parse(
-                "- item\n",
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new ListRule(),
+            new TextRule(),
+        ])->parse(
+            "- item\n",
+        );
 
         $this->assertSame('<ul><li>item</li></ul>', $html);
     }
@@ -24,10 +26,12 @@ class ListRuleTest extends ParserTestCase
     #[Test]
     public function test_lex_multiple_items(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new ListRule()])->parse(
-                "- one\n- two\n",
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new ListRule(),
+            new TextRule(),
+        ])->parse(
+            "- one\n- two\n",
+        );
 
         $this->assertSame('<ul><li>one</li><li>two</li></ul>', $html);
     }
@@ -35,7 +39,10 @@ class ListRuleTest extends ParserTestCase
     #[Test]
     public function test_asterisk_and_plus_markers(): void
     {
-        $parser = new Parser(highlighter: null, rules: [new ListRule()]);
+        $parser = new Parser(highlighter: null, rules: [
+            new ListRule(),
+            new TextRule(),
+        ]);
 
         $this->assertSame(
             '<ul><li>one</li><li>two</li></ul>',
@@ -50,7 +57,10 @@ class ListRuleTest extends ParserTestCase
     #[Test]
     public function test_lazy_continuation(): void
     {
-        $parser = new Parser(highlighter: null, rules: [new ListRule()]);
+        $parser = new Parser(highlighter: null, rules: [
+            new ListRule(),
+            new TextRule(),
+        ]);
 
         $this->assertSame(
             '<ul><li>one continued</li><li>two</li></ul>',
@@ -95,10 +105,12 @@ class ListRuleTest extends ParserTestCase
     #[Test]
     public function test_lex_multiline_items(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new ListRule()])->parse(
-                "- one\n   continued\n   further\n- two\n",
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new ListRule(),
+            new TextRule(),
+        ])->parse(
+            "- one\n   continued\n   further\n- two\n",
+        );
 
         $this->assertSame(
             '<ul><li>one continued further</li><li>two</li></ul>',
@@ -120,10 +132,12 @@ class ListRuleTest extends ParserTestCase
     #[Test]
     public function test_lex_nested(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new ListRule()])->parse(
-                "- parent\n  - child\n",
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new ListRule(),
+            new TextRule(),
+        ])->parse(
+            "- parent\n  - child\n",
+        );
 
         $this->assertSame(
             '<ul><li>parent<ul><li>child</li></ul></li></ul>',
@@ -134,10 +148,12 @@ class ListRuleTest extends ParserTestCase
     #[Test]
     public function test_lex_nested_multiple_children(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new ListRule()])->parse(
-                "- parent\n  - child one\n  - child two\n",
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new ListRule(),
+            new TextRule(),
+        ])->parse(
+            "- parent\n  - child one\n  - child two\n",
+        );
 
         $this->assertSame(
             '<ul><li>parent<ul><li>child one</li><li>child two</li></ul></li></ul>',
@@ -148,10 +164,12 @@ class ListRuleTest extends ParserTestCase
     #[Test]
     public function test_lex_nested_sibling_after_sublist(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new ListRule()])->parse(
-                "- one\n  - child\n- two\n",
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new ListRule(),
+            new TextRule(),
+        ])->parse(
+            "- one\n  - child\n- two\n",
+        );
 
         $this->assertSame(
             '<ul><li>one<ul><li>child</li></ul></li><li>two</li></ul>',

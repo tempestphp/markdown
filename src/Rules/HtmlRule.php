@@ -2,6 +2,7 @@
 
 namespace Tempest\Markdown\Rules;
 
+use Tempest\Markdown\IsRule;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\ProvidesFirstChar;
 use Tempest\Markdown\Rule;
@@ -10,6 +11,8 @@ use Tempest\Markdown\Tokens\HtmlToken;
 
 final class HtmlRule implements Rule, ProvidesFirstChar
 {
+    use IsRule;
+
     /**
      * Elements whose content is raw text rather than Markdown.
      *

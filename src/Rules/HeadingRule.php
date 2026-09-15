@@ -2,14 +2,18 @@
 
 namespace Tempest\Markdown\Rules;
 
+use Tempest\Markdown\IsRule;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\ProvidesFirstChar;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
+use Tempest\Markdown\Tokens\DivToken;
 use Tempest\Markdown\Tokens\HeadingToken;
 
 final class HeadingRule implements Rule, ProvidesFirstChar
 {
+    use IsRule;
+
     public string $firstChar = '#';
 
     public function __construct(
@@ -18,7 +22,9 @@ final class HeadingRule implements Rule, ProvidesFirstChar
          * content. An id written as `## Title ## id` is kept either way.
          */
         public bool $generateIds = true,
-    ) {}
+    ) {
+        $this->addTokenSupport(DivToken::class);
+    }
 
     public function shouldParse(Parser $parser): bool
     {

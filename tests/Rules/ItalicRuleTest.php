@@ -8,6 +8,7 @@ use Tempest\Markdown\Rules\BoldRule;
 use Tempest\Markdown\Rules\ItalicRule;
 use Tempest\Markdown\Rules\NewLineRule;
 use Tempest\Markdown\Rules\ParagraphRule;
+use Tempest\Markdown\Rules\TextRule;
 use Tempest\Markdown\Tests\ParserTestCase;
 
 class ItalicRuleTest extends ParserTestCase
@@ -15,10 +16,12 @@ class ItalicRuleTest extends ParserTestCase
     #[Test]
     public function test_lex_with_underscore(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new ItalicRule()])->parse(
-                '_italic_',
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new ItalicRule(),
+            new TextRule(),
+        ])->parse(
+            '_italic_',
+        );
 
         $this->assertSame('<em>italic</em>', $html);
     }
@@ -30,6 +33,7 @@ class ItalicRuleTest extends ParserTestCase
             new NewLineRule(),
             new ItalicRule(),
             new ParagraphRule(),
+            new TextRule(),
         ])->parse("Hello_world\n\nHi");
 
         $this->assertSame("<p>Hello_world</p>\n\n<p>Hi</p>", $html);
@@ -38,10 +42,12 @@ class ItalicRuleTest extends ParserTestCase
     #[Test]
     public function test_lex_with_asterisk(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new ItalicRule()])->parse(
-                '*italic*',
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new ItalicRule(),
+            new TextRule(),
+        ])->parse(
+            '*italic*',
+        );
 
         $this->assertSame('<em>italic</em>', $html);
     }
@@ -53,6 +59,7 @@ class ItalicRuleTest extends ParserTestCase
             new NewLineRule(),
             new ItalicRule(),
             new ParagraphRule(),
+            new TextRule(),
         ])->parse("Hello*world\n\nHi");
 
         $this->assertSame("<p>Hello*world</p>\n\n<p>Hi</p>", $html);
@@ -64,6 +71,7 @@ class ItalicRuleTest extends ParserTestCase
         $html = (string) new Parser(highlighter: null, rules: [
             new BoldRule(),
             new ItalicRule(),
+            new TextRule(),
         ])->parse('_a__b_');
 
         $this->assertSame('<em>a</em><em>b</em>', $html);

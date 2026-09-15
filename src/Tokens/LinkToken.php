@@ -3,13 +3,6 @@
 namespace Tempest\Markdown\Tokens;
 
 use Tempest\Markdown\Parser;
-use Tempest\Markdown\Rules\BoldAndItalicRule;
-use Tempest\Markdown\Rules\BoldRule;
-use Tempest\Markdown\Rules\CodeRule;
-use Tempest\Markdown\Rules\ImageRule;
-use Tempest\Markdown\Rules\ItalicRule;
-use Tempest\Markdown\Rules\StrikethroughRule;
-use Tempest\Markdown\Rules\TextRule;
 use Tempest\Markdown\Token;
 
 final class LinkToken implements Token
@@ -28,15 +21,7 @@ final class LinkToken implements Token
 
         if ($this->parseContent) {
             $content = $parser
-                ->forToken($this, [
-                    new CodeRule(),
-                    new BoldAndItalicRule(),
-                    new BoldRule(),
-                    new ItalicRule(),
-                    new StrikethroughRule(),
-                    new ImageRule(),
-                    new TextRule(),
-                ])
+                ->forToken($this)
                 ->parse($this->content);
         }
 

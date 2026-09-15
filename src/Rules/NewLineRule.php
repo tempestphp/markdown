@@ -2,6 +2,7 @@
 
 namespace Tempest\Markdown\Rules;
 
+use Tempest\Markdown\IsRule;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\ProvidesFirstChar;
 use Tempest\Markdown\Rule;
@@ -10,6 +11,8 @@ use Tempest\Markdown\Tokens\NewLineToken;
 
 final class NewLineRule implements Rule, ProvidesFirstChar
 {
+    use IsRule;
+
     public string $firstChar = "\n\r";
 
     public function shouldParse(Parser $parser): bool

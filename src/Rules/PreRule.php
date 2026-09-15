@@ -2,15 +2,26 @@
 
 namespace Tempest\Markdown\Rules;
 
+use Tempest\Markdown\IsRule;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\ProvidesFirstChar;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
+use Tempest\Markdown\Tokens\DivToken;
+use Tempest\Markdown\Tokens\ParagraphToken;
 use Tempest\Markdown\Tokens\PreToken;
 
 final class PreRule implements Rule, ProvidesFirstChar
 {
+    use IsRule;
+
     public string $firstChar = '`~';
+
+    public function __construct()
+    {
+        $this->addTokenSupport(DivToken::class);
+        $this->addTokenSupport(ParagraphToken::class);
+    }
 
     public function shouldParse(Parser $parser): bool
     {

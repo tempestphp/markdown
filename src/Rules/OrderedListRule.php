@@ -2,6 +2,7 @@
 
 namespace Tempest\Markdown\Rules;
 
+use Tempest\Markdown\IsRule;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\ProvidesFirstChar;
 use Tempest\Markdown\Rule;
@@ -11,6 +12,8 @@ use Tempest\Markdown\Tokens\OrderedListToken;
 
 final class OrderedListRule implements Rule, ProvidesFirstChar
 {
+    use IsRule;
+
     public string $firstChar = '0123456789';
 
     public function shouldParse(Parser $parser): bool

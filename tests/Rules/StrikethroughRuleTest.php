@@ -15,10 +15,12 @@ class StrikethroughRuleTest extends ParserTestCase
     #[Test]
     public function test_lex(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new StrikethroughRule()])->parse(
-                '~~strikethrough~~',
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new StrikethroughRule(),
+            new TextRule(),
+        ])->parse(
+            '~~strikethrough~~',
+        );
 
         $this->assertSame('<s>strikethrough</s>', $html);
     }
@@ -26,10 +28,12 @@ class StrikethroughRuleTest extends ParserTestCase
     #[Test]
     public function test_lex_single_tilde(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new StrikethroughRule()])->parse(
-                '~strikethrough~',
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new StrikethroughRule(),
+            new TextRule(),
+        ])->parse(
+            '~strikethrough~',
+        );
 
         $this->assertSame('<s>strikethrough</s>', $html);
     }

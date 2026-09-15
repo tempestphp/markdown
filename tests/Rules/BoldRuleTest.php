@@ -8,6 +8,7 @@ use Tempest\Markdown\Rules\BoldRule;
 use Tempest\Markdown\Rules\ItalicRule;
 use Tempest\Markdown\Rules\NewLineRule;
 use Tempest\Markdown\Rules\ParagraphRule;
+use Tempest\Markdown\Rules\TextRule;
 use Tempest\Markdown\Tests\ParserTestCase;
 
 class BoldRuleTest extends ParserTestCase
@@ -15,10 +16,12 @@ class BoldRuleTest extends ParserTestCase
     #[Test]
     public function test_lex_double_asterisk(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new BoldRule()])->parse(
-                '**bold**',
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new BoldRule(),
+            new TextRule(),
+        ])->parse(
+            '**bold**',
+        );
 
         $this->assertSame('<strong>bold</strong>', $html);
     }
@@ -30,6 +33,7 @@ class BoldRuleTest extends ParserTestCase
             new NewLineRule(),
             new BoldRule(),
             new ParagraphRule(),
+            new TextRule(),
         ])->parse("Hello**world\n\nHi");
 
         $this->assertSame("<p>Hello**world</p>\n\n<p>Hi</p>", $html);
@@ -41,6 +45,7 @@ class BoldRuleTest extends ParserTestCase
         $html = (string) new Parser(highlighter: null, rules: [
             new BoldRule(),
             new ItalicRule(),
+            new TextRule(),
         ])->parse('**_bold_**');
 
         $this->assertSame('<strong><em>bold</em></strong>', $html);
@@ -49,21 +54,25 @@ class BoldRuleTest extends ParserTestCase
     #[Test]
     public function test_does_not_lex_single_asterisk(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new BoldRule()])->parse(
-                '*bold*',
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new BoldRule(),
+            new TextRule(),
+        ])->parse(
+            '*bold*',
+        );
 
-        $this->assertSame('', $html);
+        $this->assertSame('*bold*', $html);
     }
 
     #[Test]
     public function test_lex_double_underscore(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new BoldRule()])->parse(
-                '__bold__',
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new BoldRule(),
+            new TextRule(),
+        ])->parse(
+            '__bold__',
+        );
 
         $this->assertSame('<strong>bold</strong>', $html);
     }
@@ -75,6 +84,7 @@ class BoldRuleTest extends ParserTestCase
             new NewLineRule(),
             new BoldRule(),
             new ParagraphRule(),
+            new TextRule(),
         ])->parse("Hello__world\n\nHi");
 
         $this->assertSame("<p>Hello__world</p>\n\n<p>Hi</p>", $html);
@@ -83,21 +93,24 @@ class BoldRuleTest extends ParserTestCase
     #[Test]
     public function test_does_not_lex_single_underscore(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new BoldRule()])->parse(
-                '_bold_',
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new BoldRule(),
+            new TextRule(),
+        ])->parse(
+            '_bold_',
+        );
 
-        $this->assertSame('', $html);
+        $this->assertSame('_bold_', $html);
     }
 
     #[Test]
     public function test_underscore_with_asterisk(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new BoldRule()])->parse(
-                '__*bold*__',
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new BoldRule(),
+            new ItalicRule(),
+            new TextRule(),
+        ])->parse('__*bold*__');
 
         $this->assertSame('<strong><em>bold</em></strong>', $html);
     }

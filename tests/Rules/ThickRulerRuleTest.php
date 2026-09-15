@@ -4,6 +4,7 @@ namespace Tempest\Markdown\Tests\Rules;
 
 use PHPUnit\Framework\Attributes\Test;
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\Rules\TextRule;
 use Tempest\Markdown\Rules\ThickRulerRule;
 use Tempest\Markdown\Tests\ParserTestCase;
 
@@ -12,10 +13,12 @@ class ThickRulerRuleTest extends ParserTestCase
     #[Test]
     public function test_lex(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new ThickRulerRule()])->parse(
-                '===',
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new ThickRulerRule(),
+            new TextRule(),
+        ])->parse(
+            '===',
+        );
 
         $this->assertSame('<hr/>', $html);
     }
@@ -23,10 +26,12 @@ class ThickRulerRuleTest extends ParserTestCase
     #[Test]
     public function test_lex_long(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new ThickRulerRule()])->parse(
-                '=====',
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new ThickRulerRule(),
+            new TextRule(),
+        ])->parse(
+            '=====',
+        );
 
         $this->assertSame('<hr/>', $html);
     }

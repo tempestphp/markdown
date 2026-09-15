@@ -2,17 +2,30 @@
 
 namespace Tempest\Markdown\Rules;
 
+use Tempest\Markdown\IsRule;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\ProvidesFirstChar;
 use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Rule;
+use Tempest\Markdown\RuleContext;
 use Tempest\Markdown\Token;
+use Tempest\Markdown\Tokens\BoldAndItalicToken;
 use Tempest\Markdown\Tokens\BoldToken;
 
 final class BoldRule implements Rule, ProvidesFirstChar, ProvidesStopChar
 {
+    use IsRule;
+
     private(set) string $firstChar = '*_';
     private(set) string $stopChar = '*_';
+
+    public function __construct()
+    {
+        $this->contexts = [RuleContext::INLINE];
+
+        $this->removeTokenSupport(BoldToken::class);
+        $this->removeTokenSupport(BoldAndItalicToken::class);
+    }
 
     public function shouldParse(Parser $parser): bool
     {

@@ -4,11 +4,17 @@ namespace Tempest\Markdown;
 
 use Tempest\Highlight\Highlighter;
 use Tempest\Markdown\Exceptions\MaximumNestingDepthWasExceeded;
+use Tempest\Markdown\Rules\BoldAndItalicRule;
+use Tempest\Markdown\Rules\BoldRule;
+use Tempest\Markdown\Rules\CodeRule;
 use Tempest\Markdown\Rules\DivRule;
 use Tempest\Markdown\Rules\FrontMatterRule;
 use Tempest\Markdown\Rules\HeadingRule;
 use Tempest\Markdown\Rules\HtmlCommentRule;
 use Tempest\Markdown\Rules\HtmlRule;
+use Tempest\Markdown\Rules\ImageRule;
+use Tempest\Markdown\Rules\ItalicRule;
+use Tempest\Markdown\Rules\LinkRule;
 use Tempest\Markdown\Rules\ListRule;
 use Tempest\Markdown\Rules\NewLineRule;
 use Tempest\Markdown\Rules\OrderedListRule;
@@ -16,7 +22,10 @@ use Tempest\Markdown\Rules\ParagraphRule;
 use Tempest\Markdown\Rules\PreRule;
 use Tempest\Markdown\Rules\QuoteRule;
 use Tempest\Markdown\Rules\RawRule;
+use Tempest\Markdown\Rules\SocialHandleRule;
+use Tempest\Markdown\Rules\StrikethroughRule;
 use Tempest\Markdown\Rules\TableRule;
+use Tempest\Markdown\Rules\TextRule;
 use Tempest\Markdown\Rules\ThickRulerRule;
 use Tempest\Markdown\Rules\ThinRulerRule;
 use Tempest\Markdown\Tokens\FrontMatterToken;
@@ -33,6 +42,7 @@ final class Parser
     private(set) ?string $current;
     private(set) string $content;
     private(set) ?Token $lastToken = null;
+    /** Every registered rule, whether or not it runs here. */
     /** @var \Tempest\Markdown\Rule[] */
     private(set) array $rules = [];
     /** @var \Tempest\Markdown\Rule[] */
@@ -45,6 +55,7 @@ final class Parser
 
     private static int $depth = 0;
 
+    /** @param \Tempest\Markdown\Rule[] $rules */
     public function __construct(
         public ?Highlighter $highlighter = new Highlighter(),
         public ?ResponsiveImageFactory $imageFactory = null,
@@ -65,12 +76,27 @@ final class Parser
             new HtmlRule(),
             new TableRule(),
             new ParagraphRule(),
+            new BoldAndItalicRule(),
+            new BoldRule(),
+            new ItalicRule(),
+            new StrikethroughRule(),
+            new CodeRule(),
+            new LinkRule(),
+            new SocialHandleRule(),
+            new ImageRule(),
+            new TextRule(),
         ],
     ) {
         $this->setRules($rules);
     }
 
-    public function forToken(Token $token, array $rules): self
+    /**
+     * A parser for the content of $token, running every registered rule that
+     * supports it. Rules are never rebuilt here: they are the configured
+     * instances, so adding, removing or reconfiguring a rule reaches nested
+     * content too.
+     */
+    public function forToken(Token $token): self
     {
         if (isset($this->cache[$token::class])) {
             return $this->cache[$token::class];
@@ -78,11 +104,26 @@ final class Parser
 
         $clone = clone $this;
 
-        $clone->setRules($rules);
+        $clone->activateRules(array_values(array_filter(
+            $this->rules,
+            static fn (Rule $rule) => $rule->supportsToken($token),
+        )));
 
         $this->cache[$token::class] = $clone;
 
         return $clone;
+    }
+
+    /** @param class-string<\Tempest\Markdown\Rule> $rule */
+    public function getRule(string $rule): ?Rule
+    {
+        foreach ($this->rules as $registered) {
+            if ($registered::class === $rule) {
+                return $registered;
+            }
+        }
+
+        return null;
     }
 
     public function withRules(Rule ...$rules): self
@@ -125,24 +166,41 @@ final class Parser
         return $clone;
     }
 
+    /** @param \Tempest\Markdown\Rule[] $rules */
     private function setRules(array $rules): self
     {
-        /** @var \Tempest\Markdown\NeedsStopChars[] $needsStopChars */
-        $needsStopChars = [];
+        $this->rules = $rules;
+
+        return $this->activateRules($rules);
+    }
+
+    /** @param \Tempest\Markdown\Rule[] $rules */
+    private function activateRules(array $rules): self
+    {
         $providedStopChars = '';
 
         foreach ($rules as $rule) {
-            if ($rule instanceof ProvidesStopChar) {
-                $providedStopChars .= $rule->stopChar;
+            if (! $rule instanceof ProvidesStopChar) {
+                continue;
             }
 
-            if ($rule instanceof NeedsStopChars) {
-                $needsStopChars[] = $rule;
-            }
+            $providedStopChars .= $rule->stopChar;
         }
 
-        foreach ($needsStopChars as $rule) {
-            $rule->stopChars .= $providedStopChars;
+        foreach ($rules as $key => $rule) {
+            if (! $rule instanceof NeedsStopChars) {
+                continue;
+            }
+
+            if ($rule->stopChars === $providedStopChars) {
+                continue;
+            }
+
+            // Stop chars belong to a rule set, not to a rule: the registered
+            // instance is shared between sets, so this set gets its own copy
+            // instead of overwriting the stop chars of the previous one.
+            $rules[$key] = clone $rule;
+            $rules[$key]->stopChars = $providedStopChars;
         }
 
         $perCharRules = [];
@@ -167,12 +225,11 @@ final class Parser
             }
         }
 
-        /** @var \Tempest\Markdown\Rule[] $rules */
         /** @var \Tempest\Markdown\Rule[] $defaultRules */
         /** @var \Tempest\Markdown\Rule[][] $perCharRules */
-        $this->rules = $rules;
         $this->defaultRules = $defaultRules;
         $this->perCharRules = $perCharRules;
+        $this->cache = [];
 
         return $this;
     }
@@ -226,6 +283,12 @@ final class Parser
 
     public function parse(string $content): ParsedMarkdown
     {
+        if (self::$depth === 0) {
+            // Rules are mutable, so the sub-parsers derived from them only
+            // stay valid for the document they were built for.
+            $this->cache = [];
+        }
+
         $this->increaseNestingDepth();
 
         try {

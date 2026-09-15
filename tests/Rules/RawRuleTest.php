@@ -13,10 +13,12 @@ class RawRuleTest extends ParserTestCase
     #[Test]
     public function test_raw_content_is_passed_through(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new RawRule()])->parse(
-                '@@<b>raw</b>@@',
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new RawRule(),
+            new TextRule(),
+        ])->parse(
+            '@@<b>raw</b>@@',
+        );
 
         $this->assertSame('<b>raw</b>', $html);
     }
@@ -24,10 +26,12 @@ class RawRuleTest extends ParserTestCase
     #[Test]
     public function test_raw_html_is_not_escaped(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new RawRule()])->parse(
-                '@@<script>alert("xss")</script>@@',
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new RawRule(),
+            new TextRule(),
+        ])->parse(
+            '@@<script>alert("xss")</script>@@',
+        );
 
         $this->assertSame('<script>alert("xss")</script>', $html);
     }
@@ -59,10 +63,12 @@ class RawRuleTest extends ParserTestCase
     {
         $input = "@@line1\nline2@@";
 
-        $html =
-            (string) new Parser(highlighter: null, rules: [new RawRule()])->parse(
-                $input,
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new RawRule(),
+            new TextRule(),
+        ])->parse(
+            $input,
+        );
 
         $this->assertSame("line1\nline2", $html);
     }

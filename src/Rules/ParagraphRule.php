@@ -2,14 +2,17 @@
 
 namespace Tempest\Markdown\Rules;
 
+use Tempest\Markdown\IsRule;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\HeadingToken;
 use Tempest\Markdown\Tokens\ParagraphToken;
 
-final readonly class ParagraphRule implements Rule
+final class ParagraphRule implements Rule
 {
+    use IsRule;
+
     public function shouldParse(Parser $parser): bool
     {
         return true;
