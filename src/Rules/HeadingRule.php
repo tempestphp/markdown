@@ -22,7 +22,21 @@ final class HeadingRule implements Rule, ProvidesFirstChar
 
     public function shouldParse(Parser $parser): bool
     {
-        return $parser->comesNext('#', 1);
+        if (! $parser->comesNext('#', 1)) {
+            return false;
+        }
+
+        // An ATX heading is one to six `#` followed by whitespace or by the
+        // end of the line; `#title` and `#######` are paragraphs.
+        $level = strspn($parser->content, '#', $parser->position);
+
+        if ($level > 6) {
+            return false;
+        }
+
+        $next = $parser->content[$parser->position + $level] ?? null;
+
+        return $next === null || str_contains(Parser::WHITESPACE, $next);
     }
 
     public function parse(Parser $parser): Token

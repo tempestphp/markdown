@@ -5,6 +5,7 @@ namespace Tempest\Markdown\Tests\Rules;
 use PHPUnit\Framework\Attributes\Test;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rules\HeadingRule;
+use Tempest\Markdown\Rules\ParagraphRule;
 use Tempest\Markdown\Tests\ParserTestCase;
 
 class HeadingRuleTest extends ParserTestCase
@@ -110,5 +111,41 @@ class HeadingRuleTest extends ParserTestCase
         ])->parse('## A heading ## custom-id');
 
         $this->assertSame('<h2 id="custom-id">A heading</h2>', $html);
+    }
+
+    #[Test]
+    public function lex_without_a_space_after_the_marker_is_not_a_heading(): void
+    {
+        $parser = new Parser(highlighter: null, rules: [
+            new HeadingRule(),
+            new ParagraphRule(),
+        ]);
+
+        $this->assertSame('<p>#titre</p>', (string) $parser->parse('#titre'));
+        $this->assertSame(
+            '<p>#hashtag</p>',
+            (string) $parser->parse('#hashtag'),
+        );
+        $this->assertSame('<p>#5 bolt</p>', (string) $parser->parse('#5 bolt'));
+    }
+
+    #[Test]
+    public function lex_more_than_six_markers_is_not_a_heading(): void
+    {
+        $html = (string) new Parser(highlighter: null, rules: [
+            new HeadingRule(),
+            new ParagraphRule(),
+        ])->parse('####### seven');
+
+        $this->assertSame('<p>####### seven</p>', $html);
+    }
+
+    #[Test]
+    public function lex_marker_alone_is_an_empty_heading(): void
+    {
+        $parser = new Parser(highlighter: null, rules: [new HeadingRule()]);
+
+        $this->assertSame('<h1></h1>', (string) $parser->parse('#'));
+        $this->assertSame('<h2></h2>', (string) $parser->parse('##'));
     }
 }
