@@ -296,4 +296,21 @@ final class MarkdownTest extends ParserTestCase
         <p><em>hi</em></p>
         HTML, $parsed);
     }
+
+    #[Test]
+    public function test_parse_leaves_name_null_by_default(): void
+    {
+        $parsed = $this->markdown->parse('**Hello**');
+
+        $this->assertNull($parsed->name);
+    }
+
+    #[Test]
+    public function test_parse_accepts_an_optional_name(): void
+    {
+        $parsed = $this->markdown->parse('**Hello**', name: 'greeting');
+
+        $this->assertSame('greeting', $parsed->name);
+        $this->assertSame('<p><strong>Hello</strong></p>', $parsed->html);
+    }
 }

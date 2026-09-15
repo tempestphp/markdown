@@ -9,6 +9,8 @@ final class Markdown
 {
     private Parser $parser;
 
+    private MultiMarkdownSplitter $splitter;
+
     public function __construct(
         public ?Highlighter $highlighter = new Highlighter(),
         private ?ResponsiveImageFactory $imageFactory = null,
@@ -19,11 +21,25 @@ final class Markdown
             $this->imageFactory,
             $this->maxNestingDepth,
         );
+
+        $this->splitter = new MultiMarkdownSplitter();
     }
 
-    public function parse(string $content): ParsedMarkdown
+    public function parse(string $content, ?string $name = null): ParsedMarkdown
     {
-        return $this->parser->parse($content);
+        $parsed = $this->parser->parse($content);
+
+        return $name === null ? $parsed : new ParsedMarkdown($parsed->html, $parsed->frontmatter, $name);
+    }
+
+    public function parseMany(string $content, ?string $baseName = null, string $keyword = 'next'): ParsedMarkdownCollection
+    {
+        $chunks = $this->splitter->split($content, $baseName, $keyword);
+
+        return new ParsedMarkdownCollection(array_map(
+            fn (array $chunk): ParsedMarkdown => $this->parse($chunk['content'], $chunk['name']),
+            $chunks,
+        ));
     }
 
     public function withRules(Rule ...$rules): self
