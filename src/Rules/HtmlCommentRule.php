@@ -19,9 +19,11 @@ final class HtmlCommentRule implements Rule, ProvidesFirstChar
 
     public function parse(Parser $parser): Token
     {
-        $buffer = $parser->consumeWhile('<!--');
-        $buffer .= $parser->consumeUntil('-->');
-        $buffer .= $parser->consumeWhile('-->');
+        // consumeUntil() takes a set of characters, so it stops on the first
+        // `-` in the body; a comment ends at the `-->` string.
+        $buffer = $parser->consume(4);
+        $buffer .= $parser->consumeUntilString('-->');
+        $buffer .= $parser->consume(3);
 
         return new HtmlCommentToken($buffer);
     }
