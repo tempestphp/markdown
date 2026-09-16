@@ -13,10 +13,12 @@ class OrderedListRuleTest extends ParserTestCase
     #[Test]
     public function test_lex(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new OrderedListRule()])->parse(
-                "1. item\n",
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new OrderedListRule(),
+            new TextRule(),
+        ])->parse(
+            "1. item\n",
+        );
 
         $this->assertSame('<ol><li>item</li></ol>', $html);
     }
@@ -24,10 +26,12 @@ class OrderedListRuleTest extends ParserTestCase
     #[Test]
     public function test_lex_multiple_items(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new OrderedListRule()])->parse(
-                "1. one\n2. two\n",
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new OrderedListRule(),
+            new TextRule(),
+        ])->parse(
+            "1. one\n2. two\n",
+        );
 
         $this->assertSame('<ol><li>one</li><li>two</li></ol>', $html);
     }
@@ -35,10 +39,12 @@ class OrderedListRuleTest extends ParserTestCase
     #[Test]
     public function test_lex_multi_digit_numbers(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new OrderedListRule()])->parse(
-                "10. ten\n11. eleven\n",
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new OrderedListRule(),
+            new TextRule(),
+        ])->parse(
+            "10. ten\n11. eleven\n",
+        );
 
         $this->assertSame(
             '<ol start="10"><li>ten</li><li>eleven</li></ol>',
@@ -71,10 +77,12 @@ class OrderedListRuleTest extends ParserTestCase
     #[Test]
     public function test_lex_nested(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new OrderedListRule()])->parse(
-                "1. parent\n  1. child\n",
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new OrderedListRule(),
+            new TextRule(),
+        ])->parse(
+            "1. parent\n  1. child\n",
+        );
 
         $this->assertSame(
             '<ol><li>parent<ol><li>child</li></ol></li></ol>',
@@ -85,10 +93,12 @@ class OrderedListRuleTest extends ParserTestCase
     #[Test]
     public function test_lex_nested_multiple_children(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new OrderedListRule()])->parse(
-                "1. parent\n  1. child one\n  2. child two\n",
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new OrderedListRule(),
+            new TextRule(),
+        ])->parse(
+            "1. parent\n  1. child one\n  2. child two\n",
+        );
 
         $this->assertSame(
             '<ol><li>parent<ol><li>child one</li><li>child two</li></ol></li></ol>',
@@ -99,10 +109,12 @@ class OrderedListRuleTest extends ParserTestCase
     #[Test]
     public function test_lex_nested_sibling_after_sublist(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new OrderedListRule()])->parse(
-                "1. one\n  1. child\n2. two\n",
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new OrderedListRule(),
+            new TextRule(),
+        ])->parse(
+            "1. one\n  1. child\n2. two\n",
+        );
 
         $this->assertSame(
             '<ol><li>one<ol><li>child</li></ol></li><li>two</li></ol>',
@@ -113,21 +125,25 @@ class OrderedListRuleTest extends ParserTestCase
     #[Test]
     public function test_only_numbers_are_allowed(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new OrderedListRule()])->parse(
-                '1a. one',
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new OrderedListRule(),
+            new TextRule(),
+        ])->parse(
+            '1a. one',
+        );
 
-        $this->assertSame('', $html);
+        $this->assertSame('1a. one', $html);
     }
 
     #[Test]
     public function lex_keeps_the_start_number(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new OrderedListRule()])->parse(
-                "2. two\n3. three\n",
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new OrderedListRule(),
+            new TextRule(),
+        ])->parse(
+            "2. two\n3. three\n",
+        );
 
         $this->assertSame(
             '<ol start="2"><li>two</li><li>three</li></ol>',
@@ -138,10 +154,12 @@ class OrderedListRuleTest extends ParserTestCase
     #[Test]
     public function lex_omits_the_start_attribute_when_the_list_starts_at_one(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new OrderedListRule()])->parse(
-                "1. one\n5. five\n",
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new OrderedListRule(),
+            new TextRule(),
+        ])->parse(
+            "1. one\n5. five\n",
+        );
 
         $this->assertSame('<ol><li>one</li><li>five</li></ol>', $html);
     }

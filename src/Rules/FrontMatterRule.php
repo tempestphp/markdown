@@ -7,6 +7,7 @@ use Symfony\Component\Yaml\Yaml;
 use Tempest\Markdown\Exceptions\FrontMatterCouldNotBeParsed;
 use Tempest\Markdown\Exceptions\FrontMatterShouldBeAnArray;
 use Tempest\Markdown\Exceptions\FrontMatterWasNotProperlyClosed;
+use Tempest\Markdown\IsRule;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\ProvidesFirstChar;
 use Tempest\Markdown\Rule;
@@ -15,6 +16,8 @@ use Tempest\Markdown\Tokens\FrontMatterToken;
 
 final class FrontMatterRule implements Rule, ProvidesFirstChar
 {
+    use IsRule;
+
     public string $firstChar = '-';
 
     public function shouldParse(Parser $parser): bool

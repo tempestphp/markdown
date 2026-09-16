@@ -2,17 +2,26 @@
 
 namespace Tempest\Markdown\Rules;
 
+use Tempest\Markdown\IsRule;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\ProvidesFirstChar;
 use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Rule;
+use Tempest\Markdown\RuleContext;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\CodeToken;
 
 final class CodeRule implements Rule, ProvidesFirstChar, ProvidesStopChar
 {
+    use IsRule;
+
     private(set) string $firstChar = '`';
     private(set) string $stopChar = '`';
+
+    public function __construct()
+    {
+        $this->contexts = [RuleContext::INLINE];
+    }
 
     public function shouldParse(Parser $parser): bool
     {

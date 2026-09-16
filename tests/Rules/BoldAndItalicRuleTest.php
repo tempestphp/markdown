@@ -7,6 +7,7 @@ use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rules\BoldAndItalicRule;
 use Tempest\Markdown\Rules\BoldRule;
 use Tempest\Markdown\Rules\ItalicRule;
+use Tempest\Markdown\Rules\TextRule;
 use Tempest\Markdown\Tests\ParserTestCase;
 
 class BoldAndItalicRuleTest extends ParserTestCase
@@ -18,6 +19,7 @@ class BoldAndItalicRuleTest extends ParserTestCase
             new BoldAndItalicRule(),
             new BoldRule(),
             new ItalicRule(),
+            new TextRule(),
         ])->parse('***text***');
 
         $this->assertSame('<strong><em>text</em></strong>', $html);
@@ -30,6 +32,7 @@ class BoldAndItalicRuleTest extends ParserTestCase
             new BoldAndItalicRule(),
             new BoldRule(),
             new ItalicRule(),
+            new TextRule(),
         ])->parse('___text___');
 
         $this->assertSame('<strong><em>text</em></strong>', $html);
@@ -42,6 +45,7 @@ class BoldAndItalicRuleTest extends ParserTestCase
             new BoldAndItalicRule(),
             new BoldRule(),
             new ItalicRule(),
+            new TextRule(),
         ])->parse('_**text**_');
 
         $this->assertSame('<em><strong>text</strong></em>', $html);
@@ -54,6 +58,7 @@ class BoldAndItalicRuleTest extends ParserTestCase
             new BoldAndItalicRule(),
             new BoldRule(),
             new ItalicRule(),
+            new TextRule(),
         ])->parse('*__text__*');
 
         $this->assertSame('<em><strong>text</strong></em>', $html);
@@ -66,6 +71,7 @@ class BoldAndItalicRuleTest extends ParserTestCase
             new BoldAndItalicRule(),
             new BoldRule(),
             new ItalicRule(),
+            new TextRule(),
         ])->parse('__*text*__');
 
         $this->assertSame('<strong><em>text</em></strong>', $html);
@@ -78,6 +84,7 @@ class BoldAndItalicRuleTest extends ParserTestCase
             new BoldAndItalicRule(),
             new BoldRule(),
             new ItalicRule(),
+            new TextRule(),
         ])->parse('**_text_**');
 
         $this->assertSame('<strong><em>text</em></strong>', $html);
@@ -86,33 +93,39 @@ class BoldAndItalicRuleTest extends ParserTestCase
     #[Test]
     public function test_does_not_lex_double_asterisk(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new BoldAndItalicRule()])->parse(
-                '**text**',
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new BoldAndItalicRule(),
+            new TextRule(),
+        ])->parse(
+            '**text**',
+        );
 
-        $this->assertSame('', $html);
+        $this->assertSame('**text**', $html);
     }
 
     #[Test]
     public function test_does_not_lex_single_asterisk(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new BoldAndItalicRule()])->parse(
-                '*text*',
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new BoldAndItalicRule(),
+            new TextRule(),
+        ])->parse(
+            '*text*',
+        );
 
-        $this->assertSame('', $html);
+        $this->assertSame('*text*', $html);
     }
 
     #[Test]
     public function test_does_not_lex_double_underscore(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new BoldAndItalicRule()])->parse(
-                '__text__',
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new BoldAndItalicRule(),
+            new TextRule(),
+        ])->parse(
+            '__text__',
+        );
 
-        $this->assertSame('', $html);
+        $this->assertSame('__text__', $html);
     }
 }

@@ -7,6 +7,7 @@ use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rules\HtmlCommentRule;
 use Tempest\Markdown\Rules\NewLineRule;
 use Tempest\Markdown\Rules\ParagraphRule;
+use Tempest\Markdown\Rules\TextRule;
 use Tempest\Markdown\Tests\ParserTestCase;
 
 class HtmlCommentRuleTest extends ParserTestCase
@@ -14,10 +15,12 @@ class HtmlCommentRuleTest extends ParserTestCase
     #[Test]
     public function test_lex(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new HtmlCommentRule()])->parse(
-                '<!-- comment -->',
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new HtmlCommentRule(),
+            new TextRule(),
+        ])->parse(
+            '<!-- comment -->',
+        );
 
         $this->assertSame('<!-- comment -->', $html);
     }
@@ -27,10 +30,12 @@ class HtmlCommentRuleTest extends ParserTestCase
     {
         $comment = "<!--\nmultiline\ncomment\n-->";
 
-        $html =
-            (string) new Parser(highlighter: null, rules: [new HtmlCommentRule()])->parse(
-                $comment,
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new HtmlCommentRule(),
+            new TextRule(),
+        ])->parse(
+            $comment,
+        );
 
         $this->assertSame($comment, $html);
     }
@@ -42,6 +47,7 @@ class HtmlCommentRuleTest extends ParserTestCase
             new NewLineRule(),
             new HtmlCommentRule(),
             new ParagraphRule(),
+            new TextRule(),
         ])->parse("Hello\n\n<!-- comment -->\n\nWorld");
 
         $this->assertSame(

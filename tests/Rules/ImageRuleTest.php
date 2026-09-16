@@ -7,6 +7,7 @@ use Tempest\Markdown\Exceptions\ImageSourceWasMissing;
 use Tempest\Markdown\Exceptions\ImageSourceWasNotClosed;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rules\ImageRule;
+use Tempest\Markdown\Rules\TextRule;
 use Tempest\Markdown\Tests\ParserTestCase;
 
 class ImageRuleTest extends ParserTestCase
@@ -14,10 +15,12 @@ class ImageRuleTest extends ParserTestCase
     #[Test]
     public function test_lex(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new ImageRule()])->parse(
-                '![alt](src)',
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new ImageRule(),
+            new TextRule(),
+        ])->parse(
+            '![alt](src)',
+        );
 
         $this->assertSame('<img src="src" alt="alt">', $html);
     }
@@ -25,10 +28,12 @@ class ImageRuleTest extends ParserTestCase
     #[Test]
     public function test_lex_without_alt(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new ImageRule()])->parse(
-                '![](src)',
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new ImageRule(),
+            new TextRule(),
+        ])->parse(
+            '![](src)',
+        );
 
         $this->assertSame('<img src="src">', $html);
     }
@@ -37,7 +42,10 @@ class ImageRuleTest extends ParserTestCase
     public function test_invalid_image_throws_exception(): void
     {
         try {
-            new Parser(highlighter: null, rules: [new ImageRule()])->parse(
+            new Parser(highlighter: null, rules: [
+                new ImageRule(),
+                new TextRule(),
+            ])->parse(
                 'Hello ![alt] world',
             );
         } catch (ImageSourceWasMissing $e) {
@@ -51,7 +59,10 @@ class ImageRuleTest extends ParserTestCase
     public function test_invalid_image_source_throws_exception(): void
     {
         try {
-            new Parser(highlighter: null, rules: [new ImageRule()])->parse(
+            new Parser(highlighter: null, rules: [
+                new ImageRule(),
+                new TextRule(),
+            ])->parse(
                 'Hello ![alt](foo world',
             );
         } catch (ImageSourceWasNotClosed $e) {

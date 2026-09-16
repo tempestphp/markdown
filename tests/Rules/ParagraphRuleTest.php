@@ -6,6 +6,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rules\NewLineRule;
 use Tempest\Markdown\Rules\ParagraphRule;
+use Tempest\Markdown\Rules\TextRule;
 use Tempest\Markdown\Tests\ParserTestCase;
 
 class ParagraphRuleTest extends ParserTestCase
@@ -13,10 +14,12 @@ class ParagraphRuleTest extends ParserTestCase
     #[Test]
     public function test_single_line(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new ParagraphRule()])->parse(
-                "Hello, world!\n",
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new ParagraphRule(),
+            new TextRule(),
+        ])->parse(
+            "Hello, world!\n",
+        );
 
         $this->assertSame("<p>Hello, world!\n</p>", $html);
     }
@@ -24,10 +27,12 @@ class ParagraphRuleTest extends ParserTestCase
     #[Test]
     public function test_multi_line_paragraph(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new ParagraphRule()])->parse(
-                "First line\nSecond line\n",
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new ParagraphRule(),
+            new TextRule(),
+        ])->parse(
+            "First line\nSecond line\n",
+        );
 
         $this->assertSame("<p>First line\nSecond line\n</p>", $html);
     }
@@ -38,6 +43,7 @@ class ParagraphRuleTest extends ParserTestCase
         $html = (string) new Parser(highlighter: null, rules: [
             new NewLineRule(),
             new ParagraphRule(),
+            new TextRule(),
         ])->parse("First\nSecond\n\nThird");
 
         $this->assertSame("<p>First\nSecond</p>\n\n<p>Third</p>", $html);
@@ -46,10 +52,12 @@ class ParagraphRuleTest extends ParserTestCase
     #[Test]
     public function test_paragraph_without_trailing_newline(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new ParagraphRule()])->parse(
-                'Hello, world!',
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new ParagraphRule(),
+            new TextRule(),
+        ])->parse(
+            'Hello, world!',
+        );
 
         $this->assertSame('<p>Hello, world!</p>', $html);
     }
@@ -57,7 +65,10 @@ class ParagraphRuleTest extends ParserTestCase
     #[Test]
     public function test_setext_headings(): void
     {
-        $parser = new Parser(highlighter: null, rules: [new ParagraphRule()]);
+        $parser = new Parser(highlighter: null, rules: [
+            new ParagraphRule(),
+            new TextRule(),
+        ]);
 
         $this->assertSame(
             '<h1 id="first-heading">First heading</h1>',
@@ -72,7 +83,10 @@ class ParagraphRuleTest extends ParserTestCase
     #[Test]
     public function test_setext_heading_can_span_multiple_lines(): void
     {
-        $parser = new Parser(highlighter: null, rules: [new ParagraphRule()]);
+        $parser = new Parser(highlighter: null, rules: [
+            new ParagraphRule(),
+            new TextRule(),
+        ]);
 
         $this->assertSame(
             "<h2 id=\"first-second\">First\nSecond</h2>",

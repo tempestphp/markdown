@@ -2,17 +2,26 @@
 
 namespace Tempest\Markdown\Rules;
 
+use Tempest\Markdown\IsRule;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\ProvidesFirstChar;
 use Tempest\Markdown\ProvidesStopChar;
 use Tempest\Markdown\Rule;
 use Tempest\Markdown\Token;
 use Tempest\Markdown\Tokens\DivToken;
+use Tempest\Markdown\Tokens\ParagraphToken;
 
 final class DivRule implements Rule, ProvidesFirstChar, ProvidesStopChar
 {
+    use IsRule;
+
     public string $stopChar = ':';
     public string $firstChar = ':';
+
+    public function __construct()
+    {
+        $this->addTokenSupport(ParagraphToken::class);
+    }
 
     public function shouldParse(Parser $parser): bool
     {

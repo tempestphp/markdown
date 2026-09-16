@@ -6,6 +6,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rules\ParagraphRule;
 use Tempest\Markdown\Rules\TableRule;
+use Tempest\Markdown\Rules\TextRule;
 use Tempest\Markdown\Tests\ParserTestCase;
 
 class TableRuleTest extends ParserTestCase
@@ -13,10 +14,12 @@ class TableRuleTest extends ParserTestCase
     #[Test]
     public function test_lex_header_only(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new TableRule()])->parse(
-                "| A | B |\n| --- | --- |",
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new TableRule(),
+            new TextRule(),
+        ])->parse(
+            "| A | B |\n| --- | --- |",
+        );
 
         $this->assertSame(
             '<table><thead><tr><th>A</th><th>B</th></tr></thead></table>',
@@ -27,10 +30,12 @@ class TableRuleTest extends ParserTestCase
     #[Test]
     public function test_lex_full_table(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new TableRule()])->parse(
-                "| A | B |\n| --- | --- |\n| 1 | 2 |",
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new TableRule(),
+            new TextRule(),
+        ])->parse(
+            "| A | B |\n| --- | --- |\n| 1 | 2 |",
+        );
 
         $this->assertSame(
             '<table><thead><tr><th>A</th><th>B</th></tr></thead><tbody><tr><td>1</td><td>2</td></tr></tbody></table>',
@@ -41,10 +46,12 @@ class TableRuleTest extends ParserTestCase
     #[Test]
     public function test_lex_multiple_data_rows(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new TableRule()])->parse(
-                "| A | B |\n| --- | --- |\n| 1 | 2 |\n| 3 | 4 |",
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new TableRule(),
+            new TextRule(),
+        ])->parse(
+            "| A | B |\n| --- | --- |\n| 1 | 2 |\n| 3 | 4 |",
+        );
 
         $this->assertSame(
             '<table><thead><tr><th>A</th><th>B</th></tr></thead><tbody><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></tbody></table>',
@@ -55,10 +62,12 @@ class TableRuleTest extends ParserTestCase
     #[Test]
     public function test_lex_separator_with_alignment(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new TableRule()])->parse(
-                "| A | B | C |\n| :--- | :---: | ---: |\n| 1 | 2 | 3 |",
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new TableRule(),
+            new TextRule(),
+        ])->parse(
+            "| A | B | C |\n| :--- | :---: | ---: |\n| 1 | 2 | 3 |",
+        );
 
         $this->assertSame(
             '<table><thead><tr><th>A</th><th>B</th><th>C</th></tr></thead><tbody><tr><td>1</td><td>2</td><td>3</td></tr></tbody></table>',
@@ -69,10 +78,12 @@ class TableRuleTest extends ParserTestCase
     #[Test]
     public function test_table_with_empty_cells(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new TableRule()])->parse(
-                "| A | B | C |\n| :--- | :---: | ---: |\n| | | 3 |",
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new TableRule(),
+            new TextRule(),
+        ])->parse(
+            "| A | B | C |\n| :--- | :---: | ---: |\n| | | 3 |",
+        );
 
         $this->assertSame(
             '<table><thead><tr><th>A</th><th>B</th><th>C</th></tr></thead><tbody><tr><td></td><td></td><td>3</td></tr></tbody></table>',
@@ -83,10 +94,12 @@ class TableRuleTest extends ParserTestCase
     #[Test]
     public function test_table_with_all_empty_cells(): void
     {
-        $html =
-            (string) new Parser(highlighter: null, rules: [new TableRule()])->parse(
-                "| A | B |\n| --- | --- |\n| | |",
-            );
+        $html = (string) new Parser(highlighter: null, rules: [
+            new TableRule(),
+            new TextRule(),
+        ])->parse(
+            "| A | B |\n| --- | --- |\n| | |",
+        );
 
         $this->assertSame(
             '<table><thead><tr><th>A</th><th>B</th></tr></thead><tbody><tr><td></td><td></td></tr></tbody></table>',
@@ -100,6 +113,7 @@ class TableRuleTest extends ParserTestCase
         $html = (string) new Parser(highlighter: null, rules: [
             new TableRule(),
             new ParagraphRule(),
+            new TextRule(),
         ])->parse("| Hello |\nHello");
 
         $this->assertStringNotContainsString('<table>', $html);
@@ -112,6 +126,7 @@ class TableRuleTest extends ParserTestCase
         $html = (string) new Parser(highlighter: null, rules: [
             new TableRule(),
             new ParagraphRule(),
+            new TextRule(),
         ])->parse("| not | table |\n| : | : |");
 
         $this->assertStringNotContainsString('<table>', $html);

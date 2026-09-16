@@ -3,16 +3,6 @@
 namespace Tempest\Markdown\Tokens;
 
 use Tempest\Markdown\Parser;
-use Tempest\Markdown\Rules\BoldAndItalicRule;
-use Tempest\Markdown\Rules\BoldRule;
-use Tempest\Markdown\Rules\CodeRule;
-use Tempest\Markdown\Rules\ImageRule;
-use Tempest\Markdown\Rules\ItalicRule;
-use Tempest\Markdown\Rules\LinkRule;
-use Tempest\Markdown\Rules\QuoteRule;
-use Tempest\Markdown\Rules\SocialHandleRule;
-use Tempest\Markdown\Rules\StrikethroughRule;
-use Tempest\Markdown\Rules\TextRule;
 use Tempest\Markdown\Token;
 
 final class QuoteToken implements Token
@@ -24,18 +14,7 @@ final class QuoteToken implements Token
     public function parse(Parser $parser): string
     {
         $content = $parser
-            ->forToken($this, [
-                new BoldAndItalicRule(),
-                new BoldRule(),
-                new ItalicRule(),
-                new StrikethroughRule(),
-                new CodeRule(),
-                new QuoteRule(),
-                new LinkRule(),
-                new SocialHandleRule(),
-                new ImageRule(),
-                new TextRule(),
-            ])
+            ->forToken($this)
             ->parse($this->content);
 
         return "<blockquote>{$content}</blockquote>";

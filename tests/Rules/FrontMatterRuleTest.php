@@ -11,6 +11,7 @@ use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rules\FrontMatterRule;
 use Tempest\Markdown\Rules\NewLineRule;
 use Tempest\Markdown\Rules\ParagraphRule;
+use Tempest\Markdown\Rules\TextRule;
 use Tempest\Markdown\Rules\ThinRulerRule;
 use Tempest\Markdown\Tests\ParserTestCase;
 
@@ -23,6 +24,7 @@ final class FrontMatterRuleTest extends ParserTestCase
             new FrontMatterRule(),
             new ThinRulerRule(),
             new NewLineRule(),
+            new TextRule(),
         ]);
 
         $this->assertSame('<hr/>', $parser->parse('---')->html);
@@ -57,6 +59,7 @@ final class FrontMatterRuleTest extends ParserTestCase
             new FrontMatterRule(),
             new NewLineRule(),
             new ParagraphRule(),
+            new TextRule(),
         ])->parse(<<<'MD'
         ---
         title: Hello
@@ -80,6 +83,7 @@ final class FrontMatterRuleTest extends ParserTestCase
             new FrontMatterRule(),
             new NewLineRule(),
             new ParagraphRule(),
+            new TextRule(),
         ])->parse(<<<'MD'
         -----
         title: Hello
@@ -104,6 +108,7 @@ final class FrontMatterRuleTest extends ParserTestCase
                 new FrontMatterRule(),
                 new NewLineRule(),
                 new ParagraphRule(),
+                new TextRule(),
             ])->parse(<<<'MD'
             ---
             just text
@@ -127,6 +132,7 @@ final class FrontMatterRuleTest extends ParserTestCase
             new FrontMatterRule(),
             new NewLineRule(),
             new ParagraphRule(),
+            new TextRule(),
         ])->parse(<<<'MD'
         ---
         title: Introduction
@@ -151,7 +157,10 @@ final class FrontMatterRuleTest extends ParserTestCase
     public function invalid_frontmatter_throws_exception(): void
     {
         try {
-            new Parser(highlighter: null, rules: [new FrontMatterRule()])->parse(
+            new Parser(highlighter: null, rules: [
+                new FrontMatterRule(),
+                new TextRule(),
+            ])->parse(
                 <<<'MD'
                 ---
                 title: "Introduction
@@ -171,7 +180,10 @@ final class FrontMatterRuleTest extends ParserTestCase
     public function unclosed_frontmatter_throws_exception(): void
     {
         try {
-            new Parser(highlighter: null, rules: [new FrontMatterRule()])->parse(
+            new Parser(highlighter: null, rules: [
+                new FrontMatterRule(),
+                new TextRule(),
+            ])->parse(
                 <<<'MD'
                 ---
                 title: "Introduction"

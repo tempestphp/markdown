@@ -53,4 +53,15 @@ final class Markdown
 
         return $this;
     }
+
+    /**
+     * The registered instance of $rule, to reconfigure it or to change the
+     * tokens it supports.
+     *
+     * @param class-string<\Tempest\Markdown\Rule> $rule
+     */
+    public function getRule(string $rule): ?Rule
+    {
+        return $this->parser->getRule($rule);
+    }
 }

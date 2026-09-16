@@ -4,6 +4,7 @@ namespace Tempest\Markdown\Tests;
 
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
+use Tempest\Markdown\IsRule;
 use Tempest\Markdown\Markdown;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rule;
@@ -32,6 +33,8 @@ final class MarkdownTest extends ParserTestCase
     public function test_prepend_rules_takes_priority_over_default_rules(): void
     {
         $customRule = new class implements Rule {
+            use IsRule;
+
             public function shouldParse(Parser $parser): bool
             {
                 return $parser->comesNext('#');
@@ -63,6 +66,8 @@ final class MarkdownTest extends ParserTestCase
     public function test_prepend_rules_can_be_chained(): void
     {
         $customRule = new class implements Rule {
+            use IsRule;
+
             public function shouldParse(Parser $parser): bool
             {
                 return $parser->comesNext('#');
@@ -86,6 +91,8 @@ final class MarkdownTest extends ParserTestCase
         };
 
         $neverMatchRule = new class implements Rule {
+            use IsRule;
+
             public function shouldParse(Parser $parser): bool
             {
                 return false;
@@ -109,6 +116,8 @@ final class MarkdownTest extends ParserTestCase
     public function test_with_rules_replaces_all_default_rules(): void
     {
         $customRule = new class implements Rule {
+            use IsRule;
+
             public function shouldParse(Parser $parser): bool
             {
                 return $parser->comesNext('#');
@@ -140,6 +149,8 @@ final class MarkdownTest extends ParserTestCase
     public function test_with_rules_returns_same_instance(): void
     {
         $customRule = new class implements Rule {
+            use IsRule;
+
             public function shouldParse(Parser $parser): bool
             {
                 return false;
@@ -160,6 +171,8 @@ final class MarkdownTest extends ParserTestCase
     public function test_append_rules_matches_after_with_rules_removes_catch_all(): void
     {
         $headingRule = new class implements Rule {
+            use IsRule;
+
             public function shouldParse(Parser $parser): bool
             {
                 return $parser->comesNext('#');
@@ -194,6 +207,8 @@ final class MarkdownTest extends ParserTestCase
     public function test_append_rules_loses_to_default_rules_when_both_match(): void
     {
         $customRule = new class implements Rule {
+            use IsRule;
+
             public function shouldParse(Parser $parser): bool
             {
                 return $parser->comesNext('#');
@@ -226,6 +241,8 @@ final class MarkdownTest extends ParserTestCase
     public function test_prepend_rules_returns_same_instance(): void
     {
         $customRule = new class implements Rule {
+            use IsRule;
+
             public function shouldParse(Parser $parser): bool
             {
                 return false;
@@ -246,6 +263,8 @@ final class MarkdownTest extends ParserTestCase
     public function test_append_rules_returns_same_instance(): void
     {
         $customRule = new class implements Rule {
+            use IsRule;
+
             public function shouldParse(Parser $parser): bool
             {
                 return false;

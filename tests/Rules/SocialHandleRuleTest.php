@@ -73,8 +73,10 @@ final class SocialHandleRuleTest extends ParserTestCase
     #[Test]
     public function social_handle_preserves_underscores_in_default_label(): void
     {
-        $parser =
-            new Parser(highlighter: null, rules: [new SocialHandleRule()]);
+        $parser = new Parser(highlighter: null, rules: [
+            new SocialHandleRule(),
+            new TextRule(),
+        ]);
 
         $html = $parser->parse('{x:my_test_account}')->html;
 
