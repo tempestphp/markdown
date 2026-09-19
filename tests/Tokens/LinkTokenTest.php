@@ -10,6 +10,17 @@ use Tempest\Markdown\Tokens\LinkToken;
 class LinkTokenTest extends ParserTestCase
 {
     #[Test]
+    public function positional_false_preserves_literal_content(): void
+    {
+        $token = new LinkToken('**literal**', '/', false);
+
+        $this->assertSame(
+            '<a href="/">**literal**</a>',
+            $token->parse(new Parser(highlighter: null)),
+        );
+    }
+
+    #[Test]
     public function test_parse(): void
     {
         $token = new LinkToken('click here', '#');

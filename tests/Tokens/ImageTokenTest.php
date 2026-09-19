@@ -103,4 +103,24 @@ class ImageTokenTest extends ParserTestCase
         ));
         $this->assertFileExists($config->makePublicPath('/parrot-607-404.jpg'));
     }
+
+    #[Test]
+    public function responsive_image_preserves_title(): void
+    {
+        $parser = new Parser(
+            highlighter: null,
+            imageFactory: new ResponsiveImageFactory(
+                new ResponsiveImageConfig(
+                    srcPath: __DIR__ . '/../Fixtures/src',
+                    publicPath: __DIR__ . '/../Fixtures/public',
+                ),
+            ),
+        );
+
+        $html = new ImageToken('/parrot.jpg', 'A parrot', 'Title')->parse(
+            $parser,
+        );
+
+        $this->assertStringContainsString(' title="Title"', $html);
+    }
 }
