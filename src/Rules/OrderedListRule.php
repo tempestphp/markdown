@@ -58,7 +58,9 @@ final class OrderedListRule implements Rule, ProvidesFirstChar
         }
 
         $children = $childContent !== ''
-            ? $parser->withRules(new OrderedListRule())->lex($childContent)[0]
+            ? $parser->withRules(new ListRule(), new OrderedListRule())->lex(
+                $childContent,
+            )[0]
             : null;
 
         $item = new ListItem($content, $children);

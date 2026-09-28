@@ -4,6 +4,7 @@ namespace Tempest\Markdown\Tests\Rules;
 
 use PHPUnit\Framework\Attributes\Test;
 use Tempest\Markdown\Parser;
+use Tempest\Markdown\Rules\ListRule;
 use Tempest\Markdown\Rules\OrderedListRule;
 use Tempest\Markdown\Rules\TextRule;
 use Tempest\Markdown\Tests\ParserTestCase;
@@ -106,6 +107,20 @@ class OrderedListRuleTest extends ParserTestCase
 
         $this->assertSame(
             '<ol><li>one<ol><li>child</li></ol></li><li>two</li></ol>',
+            $html,
+        );
+    }
+
+    #[Test]
+    public function test_lex_nested_bullet_list(): void
+    {
+        $html = (string) new Parser(highlighter: null, rules: [
+            new OrderedListRule(),
+            new ListRule(),
+        ])->parse("1. one\n   * child\n   * other\n2. two\n");
+
+        $this->assertSame(
+            '<ol><li>one<ul><li>child</li><li>other</li></ul></li><li>two</li></ol>',
             $html,
         );
     }
