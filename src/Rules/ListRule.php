@@ -41,7 +41,10 @@ final class ListRule implements Rule, ProvidesFirstChar
                     $newlines = $parser->consumeWhile(Parser::NEW_LINE);
                 }
 
-                if (preg_match('/(?:^|\n)[-*+] /', $childContent)) {
+                if (preg_match(
+                    '/(?:^|\n)(?:[-*+]|[0-9]+\.) /',
+                    $childContent,
+                )) {
                     break;
                 }
 
@@ -77,7 +80,9 @@ final class ListRule implements Rule, ProvidesFirstChar
 
         $children = $childContent === ''
             ? null
-            : $parser->withRules(new ListRule())->lex($childContent)[0];
+            : $parser->withRules(new ListRule(), new OrderedListRule())->lex(
+                $childContent,
+            )[0];
 
         $item = new ListItem($content, $children);
 
