@@ -6,6 +6,7 @@ use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rules\BoldAndItalicRule;
 use Tempest\Markdown\Rules\BoldRule;
 use Tempest\Markdown\Rules\CodeRule;
+use Tempest\Markdown\Rules\EscapeRule;
 use Tempest\Markdown\Rules\ImageRule;
 use Tempest\Markdown\Rules\ItalicRule;
 use Tempest\Markdown\Rules\LinkRule;
@@ -35,6 +36,7 @@ final class OrderedListToken implements Token
             new SocialHandleRule(),
             new ImageRule(),
             new CodeRule(),
+            new EscapeRule(),
             new TextRule(),
         ]);
 
