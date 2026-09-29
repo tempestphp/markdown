@@ -5,6 +5,7 @@ namespace Tempest\Markdown\Tokens;
 use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rules\BoldRule;
 use Tempest\Markdown\Rules\CodeRule;
+use Tempest\Markdown\Rules\EscapeRule;
 use Tempest\Markdown\Rules\ImageRule;
 use Tempest\Markdown\Rules\LinkRule;
 use Tempest\Markdown\Rules\SocialHandleRule;
@@ -28,6 +29,7 @@ final class ItalicToken implements Token
                 new LinkRule(),
                 new SocialHandleRule(),
                 new ImageRule(),
+                new EscapeRule(),
                 new TextRule(),
             ])
             ->parse($this->content);

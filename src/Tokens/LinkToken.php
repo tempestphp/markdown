@@ -6,6 +6,7 @@ use Tempest\Markdown\Parser;
 use Tempest\Markdown\Rules\BoldAndItalicRule;
 use Tempest\Markdown\Rules\BoldRule;
 use Tempest\Markdown\Rules\CodeRule;
+use Tempest\Markdown\Rules\EscapeRule;
 use Tempest\Markdown\Rules\ImageRule;
 use Tempest\Markdown\Rules\ItalicRule;
 use Tempest\Markdown\Rules\StrikethroughRule;
@@ -35,6 +36,7 @@ final class LinkToken implements Token
                     new ItalicRule(),
                     new StrikethroughRule(),
                     new ImageRule(),
+                    new EscapeRule(),
                     new TextRule(),
                 ])
                 ->parse($this->content);
