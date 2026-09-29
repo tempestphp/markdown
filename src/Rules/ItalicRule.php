@@ -11,6 +11,8 @@ use Tempest\Markdown\Tokens\ItalicToken;
 
 final class ItalicRule implements Rule, ProvidesFirstChar, ProvidesStopChar
 {
+    use ChecksFlanking;
+
     private(set) string $firstChar = '*_';
     private(set) string $stopChar = '*_';
 
@@ -41,7 +43,7 @@ final class ItalicRule implements Rule, ProvidesFirstChar, ProvidesStopChar
             return false;
         }
 
-        return true;
+        return $this->isFlanked(substr($end, 0, -1));
     }
 
     public function parse(Parser $parser): Token

@@ -14,15 +14,28 @@ final class BoldAndItalicRule implements
     ProvidesFirstChar,
     ProvidesStopChar
 {
+    use ChecksFlanking;
+
     private(set) string $firstChar = '*_';
     private(set) string $stopChar = '_*';
 
     public function shouldParse(Parser $parser): bool
     {
-        return (
-            $parser->comesNext('***', length: 3)
-            || $parser->comesNext('___', length: 3)
-        );
+        if (
+            ! $parser->comesNext('***', length: 3)
+            && ! $parser->comesNext('___', length: 3)
+        ) {
+            return false;
+        }
+
+        $start = $parser->position + 3;
+        $end = strpos($parser->content, $parser->current ?? '', $start);
+
+        return $this->isFlanked(substr(
+            $parser->content,
+            $start,
+            $end === false ? null : $end - $start,
+        ));
     }
 
     public function parse(Parser $parser): Token
