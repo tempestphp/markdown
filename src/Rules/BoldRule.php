@@ -11,6 +11,8 @@ use Tempest\Markdown\Tokens\BoldToken;
 
 final class BoldRule implements Rule, ProvidesFirstChar, ProvidesStopChar
 {
+    use ChecksFlanking;
+
     private(set) string $firstChar = '*_';
     private(set) string $stopChar = '*_';
 
@@ -49,7 +51,7 @@ final class BoldRule implements Rule, ProvidesFirstChar, ProvidesStopChar
             return false;
         }
 
-        return true;
+        return $this->isFlanked(substr($content, 0, -1));
     }
 
     public function parse(Parser $parser): Token
