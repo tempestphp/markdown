@@ -50,30 +50,27 @@ final class TableRule implements Rule, ProvidesFirstChar
         $line = $parser->consumeUntil(Parser::NEW_LINE);
         $parser->consumeWhile(Parser::NEW_LINE);
 
-        // Filter out separator rows
-        $isSeparator = trim($line, ':| -') === '' && str_contains($line, '-');
+        $token = $parser->lastToken;
+
+        // Only the row right after the header is a separator, later rows that look like one are data rows
+        $isSeparator =
+            $token instanceof TableToken
+            && $token->alignments === []
+            && trim($line, ':| -') === ''
+            && str_contains($line, '-');
 
         if ($isSeparator) {
-            // TODO: determine alignment based on the separator
+            $token->alignments = array_map(
+                $this->alignment(...),
+                $this->cells($line),
+            );
+
             return null;
         }
 
-        // Create cells
-        if (str_starts_with($line, '|')) {
-            $line = substr($line, 1);
-        }
-
-        if (str_ends_with($line, '|')) {
-            $line = substr($line, 0, -1);
-        }
-
-        $cells = $line
-            |> (fn ($x) => explode('|', $x))
-            |> (fn ($x) => array_map(trim(...), $x))
-            |> array_values(...);
+        $cells = $this->cells($line);
 
         // Determine if is header row
-        $token = $parser->lastToken;
         $isHeader = ! $token instanceof TableToken;
 
         $row = new TableRow($cells, $isHeader);
@@ -86,5 +83,40 @@ final class TableRule implements Rule, ProvidesFirstChar
         $token->rows[] = $row;
 
         return null;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function cells(string $line): array
+    {
+        if (str_starts_with($line, '|')) {
+            $line = substr($line, 1);
+        }
+
+        if (str_ends_with($line, '|')) {
+            $line = substr($line, 0, -1);
+        }
+
+        return $line
+            |> (fn ($x) => explode('|', $x))
+            |> (fn ($x) => array_map(trim(...), $x))
+            |> array_values(...);
+    }
+
+    /**
+     * `:---` aligns left, `:---:` center and `---:` right
+     */
+    private function alignment(string $separator): ?string
+    {
+        return match ([
+            str_starts_with($separator, ':'),
+            str_ends_with($separator, ':'),
+        ]) {
+            [true, true] => 'center',
+            [true, false] => 'left',
+            [false, true] => 'right',
+            default => null,
+        };
     }
 }

@@ -19,6 +19,8 @@ final class TableToken implements Token
     public function __construct(
         /** @var \Tempest\Markdown\Tokens\TableRow[] */
         public array $rows = [],
+        /** @var list<string|null> Alignment of each column: left, center, right or null */
+        public array $alignments = [],
     ) {}
 
     public function parse(Parser $parser): string
@@ -52,8 +54,13 @@ final class TableToken implements Token
             foreach ($headerRows as $row) {
                 $table .= '<tr>';
 
-                foreach ($row->cells as $cell) {
-                    $table .= '<th>' . $parser->parse($cell)->html . '</th>';
+                foreach ($row->cells as $column => $cell) {
+                    $table .=
+                        '<th'
+                        . $this->align($column)
+                        . '>'
+                        . $parser->parse($cell)->html
+                        . '</th>';
                 }
 
                 $table .= '</tr>';
@@ -68,8 +75,13 @@ final class TableToken implements Token
             foreach ($dataRows as $row) {
                 $table .= '<tr>';
 
-                foreach ($row->cells as $cell) {
-                    $table .= '<td>' . $parser->parse($cell)->html . '</td>';
+                foreach ($row->cells as $column => $cell) {
+                    $table .=
+                        '<td'
+                        . $this->align($column)
+                        . '>'
+                        . $parser->parse($cell)->html
+                        . '</td>';
                 }
 
                 $table .= '</tr>';
@@ -81,5 +93,12 @@ final class TableToken implements Token
         $table .= '</table>';
 
         return $table;
+    }
+
+    private function align(int $column): string
+    {
+        $alignment = $this->alignments[$column] ?? null;
+
+        return $alignment === null ? '' : ' align="' . $alignment . '"';
     }
 }

@@ -65,6 +65,23 @@ class TableTokenTest extends ParserTestCase
     }
 
     #[Test]
+    public function test_parse_with_alignments(): void
+    {
+        $token = new TableToken(
+            rows: [
+                new TableRow(['A', 'B', 'C'], isHeader: true),
+                new TableRow(['1', '2', '3'], isHeader: false),
+            ],
+            alignments: ['left', null, 'right'],
+        );
+
+        $this->assertEquals(
+            '<table><thead><tr><th align="left">A</th><th>B</th><th align="right">C</th></tr></thead><tbody><tr><td align="left">1</td><td>2</td><td align="right">3</td></tr></tbody></table>',
+            $token->parse(new Parser()),
+        );
+    }
+
+    #[Test]
     public function test_parse_multiple_rows(): void
     {
         $token = new TableToken([
